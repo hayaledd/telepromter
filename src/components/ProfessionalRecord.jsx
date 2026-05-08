@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
+import { useNavigate } from 'react-router-dom';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 export default function ProfessionalRecord() {
   const navigate = useNavigate();
@@ -160,7 +161,7 @@ export default function ProfessionalRecord() {
       <div className={`flex-1 w-full relative flex flex-col landscape:flex-row group ${layoutMode} mb-[72px] landscape:mb-0 landscape:mr-[72px]`} id="layout-container">
         {/* Camera Feed Area */}
         <div className="relative bg-surface-container-lowest w-full transition-all duration-300 group-[.split-mode]:flex-[3] group-[.split-mode]:landscape:flex-1 group-[.overlay-mode]:absolute group-[.overlay-mode]:inset-0 group-[.overlay-mode]:w-full group-[.overlay-mode]:h-full z-0">
-          <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover opacity-80" />
+          <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-contain bg-black opacity-80" />
           {/* Grid overlay */}
           <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none opacity-20">
             <div className="border-b border-r border-outline-variant"></div>
@@ -183,7 +184,7 @@ export default function ProfessionalRecord() {
             <div className="w-0 h-0 border-t-[6px] border-t-transparent border-r-[10px] border-r-primary/90 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
           </div>
           {/* Scrolling Text Container */}
-          <div ref={scrollContainerRef} className="w-full h-full max-w-4xl px-edge-margin-tablet pt-[40vh] pb-[60vh] overflow-y-hidden space-y-12 text-center relative z-10 group-[.overlay-mode]:text-shadow-lg" style={{ scrollBehavior: 'auto' }}>
+          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full max-w-4xl mx-auto px-edge-margin-tablet pt-[40vh] pb-[60vh] overflow-y-auto space-y-12 text-center z-10 group-[.overlay-mode]:text-shadow-lg" style={{ scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {scriptLines.map((line, idx) => (
               <p key={idx} className="font-prompter-display text-on-surface font-bold drop-shadow-md" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4 }}>
                 {line}
@@ -279,13 +280,24 @@ export default function ProfessionalRecord() {
               Discard & Retake
             </button>
             <button 
-              onClick={() => {
-                const a = document.createElement('a');
-                a.style = 'display: none';
-                a.href = recordedVideoUrl;
-                a.download = `ScriptFlow_Recording_${new Date().getTime()}.webm`;
-                document.body.appendChild(a);
-                a.click();
+              onClick={async () => {
+                try {
+                  const response = await fetch(recordedVideoUrl);
+                  const blob = await response.blob();
+                  const reader = new FileReader();
+                  reader.readAsDataURL(blob);
+                  reader.onloadend = async () => {
+                    const base64data = reader.result;
+                    await Filesystem.writeFile({
+                      path: `ScriptFlow_Recording_${new Date().getTime()}.webm`,
+                      data: base64data,
+                      directory: Directory.Documents
+                    });
+                    alert("Video başarıyla Belgeler (Documents) klasörüne kaydedildi!");
+                  };
+                } catch (e) {
+                  alert("Kayıt hatası: " + e);
+                }
               }}
               className="bg-primary text-on-primary font-headline-md px-8 py-3 rounded-full hover:bg-primary-fixed transition-colors shadow-lg shadow-primary/20 flex items-center gap-2"
             >
