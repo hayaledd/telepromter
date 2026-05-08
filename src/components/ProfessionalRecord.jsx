@@ -21,6 +21,7 @@ export default function ProfessionalRecord() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(5);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
+  const [isMirrored, setIsMirrored] = useState(false);
   
   // Refs
   const videoRef = useRef(null);
@@ -177,14 +178,14 @@ export default function ProfessionalRecord() {
         </div>
 
         {/* Teleprompter Area */}
-        <div className="relative w-full flex flex-col items-center overflow-hidden transition-all duration-300 group-[.split-mode]:flex-[2] group-[.split-mode]:landscape:flex-1 group-[.split-mode]:border-t group-[.split-mode]:landscape:border-t-0 group-[.split-mode]:landscape:border-l border-white/5 group-[.split-mode]:bg-surface-dim/80 group-[.split-mode]:backdrop-blur-md group-[.overlay-mode]:absolute group-[.overlay-mode]:inset-0 group-[.overlay-mode]:w-full group-[.overlay-mode]:h-full group-[.overlay-mode]:bg-surface-dim/50 group-[.overlay-mode]:backdrop-blur-lg group-[.overlay-mode]:z-10">
+        <div className="relative w-full flex flex-col items-center overflow-hidden transition-all duration-300 group-[.split-mode]:flex-[2] group-[.split-mode]:landscape:flex-1 group-[.split-mode]:border-t group-[.split-mode]:landscape:border-t-0 group-[.split-mode]:landscape:border-l border-white/5 group-[.split-mode]:bg-surface-dim/80 group-[.split-mode]:backdrop-blur-md group-[.overlay-mode]:absolute group-[.overlay-mode]:inset-0 group-[.overlay-mode]:w-full group-[.overlay-mode]:h-full group-[.overlay-mode]:bg-black/50 group-[.overlay-mode]:z-10">
           {/* Reading Line Indicator */}
           <div className="absolute top-1/3 w-full border-t border-primary/80 shadow-[0_0_10px_rgba(173,198,255,0.5)] z-20 pointer-events-none flex items-center justify-between px-2">
             <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-primary/90 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
             <div className="w-0 h-0 border-t-[6px] border-t-transparent border-r-[10px] border-r-primary/90 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
           </div>
           {/* Scrolling Text Container */}
-          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full max-w-4xl mx-auto px-edge-margin-tablet pt-[40vh] pb-[60vh] overflow-y-auto space-y-12 text-center z-10 group-[.overlay-mode]:text-shadow-lg" style={{ scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full max-w-4xl mx-auto px-edge-margin-tablet pt-[40vh] pb-[60vh] overflow-y-auto space-y-12 text-center z-10 group-[.overlay-mode]:text-shadow-lg" style={{ scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
             {scriptLines.map((line, idx) => (
               <p key={idx} className="font-prompter-display text-on-surface font-bold drop-shadow-md" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4 }}>
                 {line}
@@ -216,10 +217,13 @@ export default function ProfessionalRecord() {
           {/* Left Actions */}
           <div className="flex landscape:flex-col gap-4">
             <div className="flex flex-col items-center gap-1">
-              <button className="w-12 h-12 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
-                <span className="material-symbols-outlined text-[24px]">settings</span>
+              <button 
+                onClick={() => setIsMirrored(!isMirrored)}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${isMirrored ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
+              >
+                <span className="material-symbols-outlined text-[24px]">flip</span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Settings</span>
+              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Mirror</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <button 
