@@ -3,8 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply dark;
+  }
   body {
     min-height: max(884px, 100dvh);
+    background-color: #111317;
+    color: #e2e2e8;
   }
 }
 
