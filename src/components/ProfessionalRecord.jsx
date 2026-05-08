@@ -22,6 +22,21 @@ export default function ProfessionalRecord() {
   const [speed, setSpeed] = useState(5);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
   const [isMirrored, setIsMirrored] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('normal');
+
+  const FILTERS = [
+    { id: 'normal',   label: 'Normal',   icon: 'videocam',        style: 'none' },
+    { id: 'neon',     label: 'Neon',     icon: 'lens_blur',       style: 'saturate(2) hue-rotate(200deg) brightness(1.2) contrast(1.3)' },
+    { id: 'cinema',   label: 'Cinema',   icon: 'movie',           style: 'sepia(0.5) contrast(1.2) brightness(0.9) saturate(0.8)' },
+    { id: 'golden',   label: 'Golden',   icon: 'wb_sunny',        style: 'sepia(0.3) saturate(1.5) brightness(1.1) hue-rotate(-10deg)' },
+    { id: 'noir',     label: 'Noir',     icon: 'exposure',        style: 'grayscale(1) contrast(1.4) brightness(0.85)' },
+    { id: 'cool',     label: 'Cool',     icon: 'ac_unit',         style: 'hue-rotate(180deg) saturate(1.3) brightness(1.05)' },
+    { id: 'vivid',    label: 'Vivid',    icon: 'palette',         style: 'saturate(2.5) contrast(1.2) brightness(1.05)' },
+    { id: 'matrix',   label: 'Matrix',   icon: 'terminal',        style: 'hue-rotate(90deg) saturate(3) brightness(0.8) contrast(1.5)' },
+  ];
+
+  const currentFilter = FILTERS.find(f => f.id === activeFilter)?.style || 'none';
   
   // Refs
   const videoRef = useRef(null);
@@ -162,7 +177,10 @@ export default function ProfessionalRecord() {
       <div className={`flex-1 w-full relative flex flex-col landscape:flex-row group ${layoutMode} mb-[72px] landscape:mb-0 landscape:mr-[72px]`} id="layout-container">
         {/* Camera Feed Area */}
         <div className="relative bg-surface-container-lowest w-full transition-all duration-300 group-[.split-mode]:flex-[3] group-[.split-mode]:landscape:flex-1 group-[.overlay-mode]:absolute group-[.overlay-mode]:inset-0 group-[.overlay-mode]:w-full group-[.overlay-mode]:h-full z-0">
-          <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-contain bg-black opacity-80" />
+          <video ref={videoRef} autoPlay playsInline muted
+            className="w-full h-full object-contain bg-black opacity-90"
+            style={{ filter: currentFilter, transform: isMirrored ? 'scaleX(-1)' : 'none' }}
+          />
           {/* Grid overlay */}
           <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none opacity-20">
             <div className="border-b border-r border-outline-variant"></div>
@@ -218,12 +236,12 @@ export default function ProfessionalRecord() {
           <div className="flex landscape:flex-col gap-4">
             <div className="flex flex-col items-center gap-1">
               <button 
-                onClick={() => setIsMirrored(!isMirrored)}
-                className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${isMirrored ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
+                onClick={() => setShowFilters(!showFilters)}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${showFilters ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
               >
-                <span className="material-symbols-outlined text-[24px]">flip</span>
+                <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Mirror</span>
+              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Filters</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <button 
@@ -264,7 +282,37 @@ export default function ProfessionalRecord() {
         </div>
       </div>
 
-      {/* Video Preview Overlay */}
+      {/* Filters Panel */}
+      {showFilters && (
+        <div className="fixed bottom-[72px] left-0 w-full z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border-t border-white/10 px-4 py-4 shadow-[0_-8px_32px_rgba(0,0,0,0.6)]">
+          <div className="flex items-center justify-between mb-3">
+            <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">Camera Filters</span>
+            <button onClick={() => setShowFilters(false)} className="text-on-surface-variant">
+              <span className="material-symbols-outlined text-[20px]">close</span>
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+            {FILTERS.map(f => (
+              <button
+                key={f.id}
+                onClick={() => setActiveFilter(f.id)}
+                className={`flex-shrink-0 flex flex-col items-center gap-1.5 px-3 py-2 rounded-xl border transition-all ${
+                  activeFilter === f.id
+                    ? 'bg-primary/20 border-primary text-primary'
+                    : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
+                }`}
+              >
+                <div className="w-12 h-12 rounded-lg bg-black/40 flex items-center justify-center overflow-hidden border border-white/10">
+                  <span className="material-symbols-outlined text-[22px]" style={{ filter: f.style !== 'none' ? f.style : undefined }}>{f.icon}</span>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wide">{f.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+
       {recordedVideoUrl && (
         <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center p-4">
           <h2 className="font-headline-md text-headline-md text-on-surface mb-6">Review Recording</h2>
