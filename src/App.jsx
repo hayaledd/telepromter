@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import { ScriptProvider } from './context/ScriptContext'
 import SplashScreen from './components/SplashScreen'
 import MyScripts from './components/MyScripts'
