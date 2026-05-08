@@ -1,0 +1,6 @@
+{
+  "appId": "com.hayaledd.scriptflow",
+  "appName": "ScriptFlow",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

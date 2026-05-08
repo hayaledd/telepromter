@@ -258,7 +258,6 @@ export default function ProfessionalRecord() {
           </div>
         </div>
       </div>
-      </div>
 
       {/* Video Preview Overlay */}
       {recordedVideoUrl && (
