@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function SplashScreen() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function SplashScreen() {
             Tele<span className="text-primary">Promt</span>
           </h1>
           <p className="font-body-lg text-on-surface-variant text-[14px] font-medium tracking-wide max-w-[250px] mx-auto opacity-80">
-            Profesyonel çekimler için akıllı prompter
+            {t('splashTagline')}
           </p>
         </div>
       </div>
@@ -67,8 +69,8 @@ export default function SplashScreen() {
           ></div>
         </div>
         <p className="text-center text-[10px] text-on-surface-variant font-bold tracking-widest uppercase mt-3 opacity-50">
-          Hazırlanıyor...
-        </p>
+            {t('splashLoading')}
+          </p>
       </div>
     </div>
   );

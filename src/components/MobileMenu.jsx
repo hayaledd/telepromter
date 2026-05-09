@@ -40,7 +40,7 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
           </button>
           <button onClick={() => { navigate('/recordings'); onClose(); }} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:bg-white/5 transition-colors">
             <span className="material-symbols-outlined">video_library</span>
-            <span>Videolarım</span>
+            <span>{t('myVideos')}</span>
           </button>
           <div className="h-[1px] bg-white/10 my-2 mx-4"></div>
           <button onClick={() => { navigate('/tutorial'); onClose(); }} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:bg-white/5 transition-colors">
@@ -50,7 +50,7 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
         </div>
         <button onClick={toggleLang} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-white/5 transition-colors border border-white/10">
           <span className="material-symbols-outlined">language</span>
-          <span>{lang === 'tr' ? 'Switch to English' : "Türkçe'ye Geç"}</span>
+          <span>{t('langSwitch')}</span>
         </button>
       </div>
     </div>

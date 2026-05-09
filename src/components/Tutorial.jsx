@@ -10,23 +10,23 @@ export default function Tutorial() {
   const steps = [
     {
       icon: 'description',
-      title: t('tutorialStep1Title') || 'Metin Ekleme',
-      desc: t('tutorialStep1Desc') || 'Metinlerim ekranında "Yeni Metin" butonuna basarak okuyacağınız metni yazın veya var olan bir metni cihaza kaydedip uygulamaya aktarın.'
+      title: t('tutorialStep1Title'),
+      desc: t('tutorialStep1Desc')
     },
     {
       icon: 'text_fields',
-      title: t('tutorialStep2Title') || 'Düzenleme',
-      desc: t('tutorialStep2Desc') || 'Metnini düzenlerken alttaki A- A+ butonlarını kullanarak metnin okuma boyutunu kendi gözünüze uygun hale getirin.'
+      title: t('tutorialStep2Title'),
+      desc: t('tutorialStep2Desc')
     },
     {
       icon: 'videocam',
-      title: t('tutorialStep3Title') || 'Kayıt ve Prompter',
-      desc: t('tutorialStep3Desc') || 'Kayıt ekranına geçin. Kamera ikonundan ön/arka kamerayı seçin. Metin akış hızını sağdaki + - butonlarından ayarlayarak kayda başlayın.'
+      title: t('tutorialStep3Title'),
+      desc: t('tutorialStep3Desc')
     },
     {
       icon: 'share',
-      title: t('tutorialStep4Title') || 'Paylaşım',
-      desc: t('tutorialStep4Desc') || 'Kayıt bittiğinde "Cihaza Kaydet" diyerek galeriye atabilir, ardından anında sosyal medyada arkadaşlarınızla paylaşabilirsiniz.'
+      title: t('tutorialStep4Title'),
+      desc: t('tutorialStep4Desc')
     }
   ];
 
@@ -42,7 +42,7 @@ export default function Tutorial() {
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
           <h1 className="font-display text-[24px] font-bold text-white tracking-tight">
-            {t('tutorial') || 'Nasıl Kullanılır?'}
+            {t('tutorial')}
           </h1>
         </div>
       </header>
@@ -85,7 +85,7 @@ export default function Tutorial() {
                 onClick={() => setCurrentStep(prev => prev - 1)}
                 className="flex-1 py-4 rounded-2xl bg-surface-variant text-on-surface-variant font-bold text-[15px] active:scale-95 transition-transform"
               >
-                Geri
+                {t('tutorialBack')}
               </button>
             )}
             
@@ -99,7 +99,7 @@ export default function Tutorial() {
               }}
               className="flex-[2] py-4 rounded-2xl bg-primary text-on-primary font-bold text-[15px] active:scale-95 transition-transform shadow-[0_0_20px_rgba(173,198,255,0.2)]"
             >
-              {currentStep < steps.length - 1 ? 'İleri' : 'Başla'}
+              {currentStep < steps.length - 1 ? t('tutorialNext') : t('tutorialFinish')}
             </button>
           </div>
 
