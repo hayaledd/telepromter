@@ -73,7 +73,7 @@ export default function MyScripts() {
         </button>
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_camera_front</span>
-          <h1 className="font-bold text-[18px] tracking-tight text-white">Script<span className="text-primary">Flow</span></h1>
+          <h1 className="font-bold text-[18px] tracking-tight text-white">Tele<span className="text-primary">Promt</span></h1>
         </div>
         <button onClick={toggleLang} className="text-on-surface-variant hover:bg-white/10 transition-colors active:scale-95 duration-100 px-3 py-1.5 rounded-full text-[11px] font-bold border border-white/10">
           {lang === 'tr' ? 'EN' : 'TR'}
@@ -81,7 +81,7 @@ export default function MyScripts() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 w-full max-w-2xl mx-auto px-4 py-6 md:pl-[352px]">
+      <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-6 md:pl-[352px]">
 
         {/* Karşılama & Özet */}
         <div className="mb-8">
@@ -95,7 +95,7 @@ export default function MyScripts() {
         </div>
 
         {/* Aksiyon Butonları (Üste alındı) */}
-        <div className="grid grid-cols-2 gap-3 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {/* Yeni Metin */}
           <button
             onClick={handleCreateNew}
@@ -121,7 +121,7 @@ export default function MyScripts() {
         </div>
 
         {/* Scripts Listesi */}
-        <div className="flex flex-col gap-3 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
           {scripts.map((script, idx) => {
             const accent = CARD_ACCENTS[idx % CARD_ACCENTS.length];
             const words = wordCount(script.content);

@@ -105,7 +105,7 @@ export default function Recordings() {
       </header>
 
       {/* Main Gallery Area */}
-      <main className="flex-grow p-4 pb-24">
+      <main className="flex-grow p-4 pb-24 max-w-6xl mx-auto w-full">
         {loading ? (
           <div className="flex justify-center items-center h-40">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -116,7 +116,7 @@ export default function Recordings() {
             <p>{t('noVideosDesc')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {videos.map((video, idx) => (
               <VideoCard
                 key={idx}

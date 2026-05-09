@@ -8,10 +8,26 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    /* Prevents layout bounce on iOS/Android when keyboard opens */
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
   body {
     min-height: max(884px, 100dvh);
     background-color: #111317;
     color: #e2e2e8;
+    /* Prevent pull-to-refresh browser gesture interfering */
+    overscroll-behavior: none;
+    /* Smoother scrolling everywhere */
+    -webkit-overflow-scrolling: touch;
+  }
+  * {
+    /* Prevent text selection on UI elements for a native feel */
+    -webkit-tap-highlight-color: transparent;
+  }
+  img, video {
+    max-width: 100%;
   }
 }
 
