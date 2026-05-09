@@ -572,86 +572,126 @@ export default function ProfessionalRecord() {
 
 
       {recordedVideoUrl && (
-        <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center p-4">
-          <h2 className="font-headline-md text-headline-md text-on-surface mb-4">Kaydı İncele</h2>
+        <div className="fixed inset-0 z-[100] bg-surface-container-lowest/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
+          
+          {/* Header */}
+          <div className="absolute top-0 left-0 w-full p-6 flex justify-center">
+             <div className="bg-surface-container-high/50 backdrop-blur-md px-6 py-2 rounded-full border border-white/5 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-[18px]">verified</span>
+                <span className="text-white font-bold tracking-wide text-[14px] uppercase">Kayıt Tamamlandı</span>
+             </div>
+          </div>
 
-          {/* Durum mesajı */}
-          {saveStatus && (
-            <div className={`mb-4 px-5 py-2 rounded-full text-[13px] font-bold flex items-center gap-2 ${
-              saveStatus === 'saving' ? 'bg-surface-variant text-on-surface-variant' :
-              saveStatus === 'ok'     ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                                       'bg-error/20 text-error border border-error/30'
-            }`}>
-              {saveStatus === 'saving' && <span className="animate-spin material-symbols-outlined text-[16px]">progress_activity</span>}
-              {saveStatus === 'ok'     && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
-              {saveStatus === 'error'  && <span className="material-symbols-outlined text-[16px]">error</span>}
-              {saveStatus === 'saving' ? 'Kaydediliyor...' :
-               saveStatus === 'ok'    ? 'Video başarıyla kaydedildi!' :
-                                       'Kayıt hatası oluştu!'}
+          {/* Video Player */}
+          <div className="w-full max-w-sm mt-8 mb-8 relative group">
+            {/* Arka plan parlama efekti */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 to-tertiary/30 blur-2xl opacity-50 rounded-[40px] -z-10 transition-opacity duration-500 group-hover:opacity-70"></div>
+            
+            <div className="rounded-[32px] overflow-hidden border-4 border-surface-container-high shadow-2xl relative bg-black aspect-[9/16] max-h-[60vh] flex items-center justify-center">
+              <video 
+                src={recordedVideoUrl} 
+                controls 
+                playsInline 
+                autoPlay
+                className="w-full h-full object-cover"
+              ></video>
             </div>
-          )}
-          
-          <div className="w-full max-w-lg bg-surface-container rounded-2xl overflow-hidden shadow-2xl border border-white/10 mb-6 relative">
-            <video src={recordedVideoUrl} controls playsInline className="w-full h-auto max-h-[55vh] object-contain bg-black"></video>
-          </div>
-          
-          <div className="flex gap-4">
-            <button 
-              onClick={() => {
-                setRecordedVideoUrl(null);
-                setSaveStatus(null);
-                recordedChunksRef.current = [];
-              }}
-              className="px-6 py-3 rounded-full font-body-md text-on-surface-variant hover:bg-surface-variant transition-colors border border-outline-variant"
-            >
-              Sil ve Yeniden Çek
-            </button>
-            <button 
-              disabled={saveStatus === 'saving' || saveStatus === 'ok'}
-              onClick={async () => {
-                setSaveStatus('saving');
-                try {
-                  const response = await fetch(recordedVideoUrl);
-                  const blob = await response.blob();
-                  const ext = recordedMimeType.includes('mp4') ? 'mp4' : 'webm';
-                  const fileName = `ScriptFlow_Recording_${Date.now()}.${ext}`;
-                  await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = async () => {
-                      try {
-                        await Filesystem.writeFile({
-                          path: fileName,
-                          data: reader.result,
-                          directory: Directory.Documents
-                        });
-                        resolve();
-                      } catch(err) { reject(err); }
-                    };
-                    reader.onerror = reject;
-                  });
-                  setSaveStatus('ok');
-                } catch (e) {
-                  console.error('Save error:', e);
-                  setSaveStatus('error');
-                }
-              }}
-              className="bg-primary text-on-primary font-headline-md px-8 py-3 rounded-full hover:bg-primary-fixed transition-colors shadow-lg shadow-primary/20 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span className="material-symbols-outlined">download</span>
-              Videoyu Kaydet
-            </button>
           </div>
 
-          {/* Kaydedildikten sonra geri dön */}
-          {saveStatus === 'ok' && (
-            <button
-              onClick={() => { setRecordedVideoUrl(null); setSaveStatus(null); recordedChunksRef.current = []; }}
-              className="mt-4 text-primary underline text-[13px]"
-            >
-              Yeni kayıt yap
-            </button>
-          )}
+          {/* Durum Mesajı */}
+          <div className="h-10 mb-4 flex items-center justify-center">
+            {saveStatus && (
+              <div className={`px-5 py-2 rounded-full text-[13px] font-bold flex items-center gap-2 animate-in slide-in-from-bottom-2 ${
+                saveStatus === 'saving' ? 'bg-surface-variant text-on-surface-variant' :
+                saveStatus === 'ok'     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                                         'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+              }`}>
+                {saveStatus === 'saving' && <span className="animate-spin material-symbols-outlined text-[16px]">progress_activity</span>}
+                {saveStatus === 'ok'     && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
+                {saveStatus === 'error'  && <span className="material-symbols-outlined text-[16px]">error</span>}
+                {saveStatus === 'saving' ? 'Kaydediliyor...' :
+                 saveStatus === 'ok'    ? 'Videolarım klasörüne eklendi!' :
+                                         'Kayıt hatası oluştu!'}
+              </div>
+            )}
+          </div>
+          
+          {/* Aksiyon Butonları */}
+          <div className="w-full max-w-sm flex flex-col gap-3">
+            {!saveStatus || saveStatus === 'error' ? (
+              <>
+                <button 
+                  disabled={saveStatus === 'saving'}
+                  onClick={async () => {
+                    setSaveStatus('saving');
+                    try {
+                      const response = await fetch(recordedVideoUrl);
+                      const blob = await response.blob();
+                      const ext = recordedMimeType.includes('mp4') ? 'mp4' : 'webm';
+                      const fileName = `ScriptFlow_Recording_${Date.now()}.${ext}`;
+                      await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(blob);
+                        reader.onloadend = async () => {
+                          try {
+                            await Filesystem.writeFile({
+                              path: fileName,
+                              data: reader.result,
+                              directory: Directory.Documents
+                            });
+                            resolve();
+                          } catch(err) { reject(err); }
+                        };
+                        reader.onerror = reject;
+                      });
+                      setSaveStatus('ok');
+                    } catch (e) {
+                      console.error('Save error:', e);
+                      setSaveStatus('error');
+                    }
+                  }}
+                  className="w-full bg-primary text-on-primary font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] transition-all shadow-[0_8px_32px_rgba(173,198,255,0.25)] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {saveStatus === 'saving' ? (
+                    <>
+                       <span className="animate-spin material-symbols-outlined text-[20px]">sync</span>
+                       Kaydediliyor...
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-[22px]">download</span>
+                      Cihaza Kaydet
+                    </>
+                  )}
+                </button>
+
+                <button 
+                  disabled={saveStatus === 'saving'}
+                  onClick={() => {
+                    setRecordedVideoUrl(null);
+                    setSaveStatus(null);
+                    recordedChunksRef.current = [];
+                  }}
+                  className="w-full bg-white/5 text-white/70 font-bold text-[15px] py-4 rounded-2xl hover:bg-white/10 active:scale-[0.98] transition-all border border-white/5 flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[20px]">delete</span>
+                  Sil ve Yeniden Çek
+                </button>
+              </>
+            ) : (
+               <button 
+                onClick={() => {
+                  setRecordedVideoUrl(null);
+                  setSaveStatus(null);
+                  recordedChunksRef.current = [];
+                }}
+                className="w-full bg-white/10 text-white font-bold text-[16px] py-4 rounded-2xl hover:bg-white/15 active:scale-[0.98] transition-all border border-white/10 flex items-center justify-center gap-2"
+              >
+                <span className="material-symbols-outlined text-[20px]">videocam</span>
+                Yeni Kayda Geç
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
