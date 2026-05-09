@@ -143,9 +143,13 @@ export default function MyScripts() {
       </main>
 
       {/* Floating Action Button (Mobile Only) */}
-      <button className="md:hidden fixed bottom-[calc(72px+24px)] right-6 w-14 h-14 bg-primary-container text-on-primary-container rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-transform z-40">
+      <button
+        onClick={handleCreateNew}
+        className="md:hidden fixed bottom-[calc(72px+24px)] right-6 w-14 h-14 bg-primary-container text-on-primary-container rounded-2xl flex items-center justify-center shadow-lg active:scale-95 transition-transform z-40"
+      >
         <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
       </button>
+
 
       {/* BottomNavBar (Mobile) */}
       <nav className="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-edge-margin-mobile py-2 bg-surface-container dark:bg-surface-container-high border-t border-outline-variant pb-safe" style={{ paddingBottom: 'env(safe-area-inset-bottom, 8px)' }}>
