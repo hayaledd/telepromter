@@ -21,6 +21,7 @@ export default function ProfessionalRecord() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(5);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
+  const [recordedMimeType, setRecordedMimeType] = useState('video/webm');
   const [isMirrored, setIsMirrored] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilter, setActiveFilter] = useState('clean');
@@ -32,6 +33,21 @@ export default function ProfessionalRecord() {
   const [countdownDuration, setCountdownDuration] = useState(3);
   const [facingMode, setFacingMode] = useState('user');
   const [textWidth, setTextWidth] = useState('100%');
+  const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'ok' | 'error'
+
+  // Detect best supported MIME type for this device
+  const getSupportedMimeType = () => {
+    const types = [
+      'video/mp4',
+      'video/webm;codecs=vp8,opus',
+      'video/webm;codecs=vp9,opus',
+      'video/webm',
+    ];
+    for (const type of types) {
+      if (MediaRecorder.isTypeSupported(type)) return type;
+    }
+    return '';
+  };
 
   const TEXT_COLORS = [
     { id: 'white',  value: '#ffffff', bg: 'bg-white' },
@@ -116,7 +132,13 @@ export default function ProfessionalRecord() {
       if (mediaStreamRef.current) {
         try {
           recordedChunksRef.current = [];
-          const mimeType = 'video/webm';
+          const mimeType = getSupportedMimeType();
+          if (!mimeType) {
+            console.error('MediaRecorder: No supported MIME type found on this device!');
+            setSaveStatus('error');
+            return;
+          }
+          setRecordedMimeType(mimeType);
           const selectedQuality = QUALITY_OPTIONS.find(q => q.id === videoQuality);
           const mediaRecorder = new MediaRecorder(mediaStreamRef.current, {
             mimeType,
@@ -130,9 +152,11 @@ export default function ProfessionalRecord() {
             const blob = new Blob(recordedChunksRef.current, { type: mimeType });
             setRecordedVideoUrl(URL.createObjectURL(blob));
           };
-          mediaRecorder.start();
+          // timeslice=1000 → her saniye ondataavailable tetiklenir (chunk garantisi)
+          mediaRecorder.start(1000);
         } catch (e) {
           console.error('MediaRecorder start failed:', e);
+          setSaveStatus('error');
         }
       }
       setIsPlaying(true);
@@ -496,16 +520,33 @@ export default function ProfessionalRecord() {
 
       {recordedVideoUrl && (
         <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center p-4">
-          <h2 className="font-headline-md text-headline-md text-on-surface mb-6">Kaydı İncele</h2>
+          <h2 className="font-headline-md text-headline-md text-on-surface mb-4">Kaydı İncele</h2>
+
+          {/* Durum mesajı */}
+          {saveStatus && (
+            <div className={`mb-4 px-5 py-2 rounded-full text-[13px] font-bold flex items-center gap-2 ${
+              saveStatus === 'saving' ? 'bg-surface-variant text-on-surface-variant' :
+              saveStatus === 'ok'     ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                                       'bg-error/20 text-error border border-error/30'
+            }`}>
+              {saveStatus === 'saving' && <span className="animate-spin material-symbols-outlined text-[16px]">progress_activity</span>}
+              {saveStatus === 'ok'     && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
+              {saveStatus === 'error'  && <span className="material-symbols-outlined text-[16px]">error</span>}
+              {saveStatus === 'saving' ? 'Kaydediliyor...' :
+               saveStatus === 'ok'    ? 'Video başarıyla kaydedildi!' :
+                                       'Kayıt hatası oluştu!'}
+            </div>
+          )}
           
-          <div className="w-full max-w-lg bg-surface-container rounded-2xl overflow-hidden shadow-2xl border border-white/10 mb-8 relative">
-            <video src={recordedVideoUrl} controls className="w-full h-auto max-h-[60vh] object-contain bg-black"></video>
+          <div className="w-full max-w-lg bg-surface-container rounded-2xl overflow-hidden shadow-2xl border border-white/10 mb-6 relative">
+            <video src={recordedVideoUrl} controls playsInline className="w-full h-auto max-h-[55vh] object-contain bg-black"></video>
           </div>
           
           <div className="flex gap-4">
             <button 
               onClick={() => {
                 setRecordedVideoUrl(null);
+                setSaveStatus(null);
                 recordedChunksRef.current = [];
               }}
               className="px-6 py-3 rounded-full font-body-md text-on-surface-variant hover:bg-surface-variant transition-colors border border-outline-variant"
@@ -513,31 +554,51 @@ export default function ProfessionalRecord() {
               Sil ve Yeniden Çek
             </button>
             <button 
+              disabled={saveStatus === 'saving' || saveStatus === 'ok'}
               onClick={async () => {
+                setSaveStatus('saving');
                 try {
                   const response = await fetch(recordedVideoUrl);
                   const blob = await response.blob();
-                  const reader = new FileReader();
-                  reader.readAsDataURL(blob);
-                  reader.onloadend = async () => {
-                    const base64data = reader.result;
-                    await Filesystem.writeFile({
-                      path: `ScriptFlow_Recording_${new Date().getTime()}.webm`,
-                      data: base64data,
-                      directory: Directory.Documents
-                    });
-                    alert("Video başarıyla Belgeler (Documents) klasörüne kaydedildi!");
-                  };
+                  const ext = recordedMimeType.includes('mp4') ? 'mp4' : 'webm';
+                  const fileName = `ScriptFlow_Recording_${Date.now()}.${ext}`;
+                  await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = async () => {
+                      try {
+                        await Filesystem.writeFile({
+                          path: fileName,
+                          data: reader.result,
+                          directory: Directory.Documents
+                        });
+                        resolve();
+                      } catch(err) { reject(err); }
+                    };
+                    reader.onerror = reject;
+                  });
+                  setSaveStatus('ok');
                 } catch (e) {
-                  alert("Kayıt hatası: " + e);
+                  console.error('Save error:', e);
+                  setSaveStatus('error');
                 }
               }}
-              className="bg-primary text-on-primary font-headline-md px-8 py-3 rounded-full hover:bg-primary-fixed transition-colors shadow-lg shadow-primary/20 flex items-center gap-2"
+              className="bg-primary text-on-primary font-headline-md px-8 py-3 rounded-full hover:bg-primary-fixed transition-colors shadow-lg shadow-primary/20 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined">download</span>
               Videoyu Kaydet
             </button>
           </div>
+
+          {/* Kaydedildikten sonra geri dön */}
+          {saveStatus === 'ok' && (
+            <button
+              onClick={() => { setRecordedVideoUrl(null); setSaveStatus(null); recordedChunksRef.current = []; }}
+              className="mt-4 text-primary underline text-[13px]"
+            >
+              Yeni kayıt yap
+            </button>
+          )}
         </div>
       )}
     </div>

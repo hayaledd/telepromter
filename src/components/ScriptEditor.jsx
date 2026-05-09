@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -9,6 +9,7 @@ export default function ScriptEditor() {
   const { t } = useLanguage();
 
   const script = getActiveScript();
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     if (!script) {
@@ -19,9 +20,10 @@ export default function ScriptEditor() {
   if (!script) return null;
 
   const handleSave = () => {
-    // Context auto-updates, just visual feedback
-    alert("Metin başarıyla kaydedildi!");
-    navigate('/scripts');
+    setSaved(true);
+    setTimeout(() => {
+      navigate('/scripts');
+    }, 900);
   };
 
   return (
@@ -39,6 +41,12 @@ export default function ScriptEditor() {
           <h1 className="font-headline-md text-headline-md text-on-surface hidden md:block">Metni Düzenle</h1>
         </div>
         <div className="flex items-center gap-2">
+          {saved && (
+            <span className="text-green-400 text-[13px] font-bold flex items-center gap-1 animate-pulse">
+              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+              Kaydedildi!
+            </span>
+          )}
           <button 
             onClick={handleSave}
             className="text-primary font-bold px-4 py-2 rounded-full hover:bg-primary-container/50 transition-colors active:scale-95 text-[14px]"
