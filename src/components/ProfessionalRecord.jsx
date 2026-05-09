@@ -242,11 +242,17 @@ export default function ProfessionalRecord() {
         </div>
 
         {/* Teleprompter Area */}
-        <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 bg-black/40 ${
+        <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 bg-transparent ${
           layoutMode === 'bottom' 
-            ? 'bottom-0 h-[50vh] border-t border-white/10' 
+            ? 'bottom-0 h-[50vh] border-t border-white/20 backdrop-blur-sm' 
             : 'inset-0 h-full'
         }`}>
+          {layoutMode === 'bottom' && (
+            <div className="absolute top-[20%] w-full border-t border-primary/50 shadow-[0_0_10px_rgba(173,198,255,0.3)] z-20 pointer-events-none flex items-center justify-between px-2">
+              <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-primary/70 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
+              <div className="w-0 h-0 border-t-[6px] border-t-transparent border-r-[10px] border-r-primary/70 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
+            </div>
+          )}
 
           {/* Scrolling Text Container */}
           <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full max-w-4xl mx-auto px-edge-margin-tablet overflow-y-auto space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
@@ -256,9 +262,9 @@ export default function ProfessionalRecord() {
               </p>
             ))}
           </div>
-          {/* Gradient fade masks */}
-          <div className="absolute top-0 w-full h-24 bg-gradient-to-b from-black/80 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none"></div>
+          {/* Gradient fade masks - very subtle */}
+          <div className="absolute top-0 w-full h-16 bg-gradient-to-b from-black/20 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-black/20 to-transparent z-10 pointer-events-none"></div>
           {/* Floating Speed Control */}
           <div className="absolute right-edge-margin-tablet top-1/2 -translate-y-1/2 z-30 bg-surface-container-high/40 backdrop-blur-xl rounded-full p-2 flex flex-col items-center gap-4 border border-white/10 shadow-2xl">
             <button onClick={() => adjustSpeed(1)} className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
@@ -276,10 +282,10 @@ export default function ProfessionalRecord() {
       </div>
 
       {/* Persistent Bottom Control Bar */}
-      <div className="fixed bottom-0 landscape:bottom-auto landscape:right-0 landscape:h-screen left-0 w-full landscape:w-control-bar-height bg-surface-container-lowest/80 backdrop-blur-2xl h-control-bar-height flex landscape:flex-col items-center justify-center px-4 landscape:py-4 z-50 border-t landscape:border-t-0 landscape:border-l border-white/5 shadow-[0_-4px_24px_rgba(0,0,0,0.5)]">
-        <div className="flex landscape:flex-col items-center gap-6 w-full landscape:h-full max-w-2xl justify-between">
+      <div className="fixed bottom-0 landscape:bottom-auto landscape:right-0 landscape:h-screen left-0 w-full landscape:w-control-bar-height bg-surface-container-lowest/80 backdrop-blur-2xl h-control-bar-height flex landscape:flex-col items-center justify-center px-2 landscape:py-4 z-50 border-t landscape:border-t-0 landscape:border-l border-white/5 shadow-[0_-4px_24px_rgba(0,0,0,0.5)]">
+        <div className="flex landscape:flex-col items-center gap-2 w-full landscape:h-full max-w-2xl justify-between">
           {/* Left Actions */}
-          <div className="flex landscape:flex-col gap-4">
+          <div className="flex landscape:flex-col gap-1">
             <div className="flex flex-col items-center gap-1">
               <button 
                 onClick={() => setShowFilters(!showFilters)}
@@ -287,7 +293,7 @@ export default function ProfessionalRecord() {
               >
                 <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Filtreler</span>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">Filtreler</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <button 
@@ -299,32 +305,40 @@ export default function ProfessionalRecord() {
                   {layoutMode === 'full' ? 'fullscreen' : 'splitscreen'}
                 </span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Görünüm</span>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">Görünüm</span>
             </div>
           </div>
           {/* Primary Record/Stop Action */}
-          <div className="flex flex-col items-center relative -top-3 landscape:top-0 landscape:-left-3">
-            <button onClick={togglePlayback} className="w-20 h-20 bg-surface-container-lowest rounded-full flex items-center justify-center border-[4px] border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] active:scale-95 transition-transform backdrop-blur-xl">
-              <div className={`w-8 h-8 rounded-sm transition-all duration-300 ${isPlaying ? 'bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' : 'bg-primary rounded-full'}`}></div>
+          <div className="flex flex-col items-center relative -top-3 landscape:top-0 landscape:-left-3 shrink-0">
+            <button onClick={togglePlayback} className="w-16 h-16 md:w-20 md:h-20 bg-surface-container-lowest rounded-full flex items-center justify-center border-[4px] border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] active:scale-95 transition-transform backdrop-blur-xl">
+              <div className={`w-6 h-6 md:w-8 md:h-8 rounded-sm transition-all duration-300 ${isPlaying ? 'bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' : 'bg-primary rounded-full'}`}></div>
             </button>
-            <span className={`text-[10px] uppercase font-bold tracking-widest mt-2 drop-shadow-sm ${isPlaying ? 'text-error' : 'text-primary'}`}>{isPlaying ? 'Durdur' : 'Başlat'}</span>
+            <span className={`text-[10px] uppercase font-bold tracking-widest mt-1 md:mt-2 drop-shadow-sm ${isPlaying ? 'text-error' : 'text-primary'}`}>{isPlaying ? 'Durdur' : 'Başlat'}</span>
           </div>
           {/* Right Actions */}
-          <div className="flex landscape:flex-col gap-4">
+          <div className="flex landscape:flex-col gap-1">
             <div className="flex flex-col items-center gap-1">
-              <button 
-                onClick={() => setGlobalFontSize(prev => prev >= 72 ? 24 : prev + 8)}
-                className="w-12 h-12 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[24px]">text_increase</span>
-              </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Boyut</span>
+              <div className="flex items-center bg-surface-variant/30 rounded-full h-12 px-1 gap-0.5 border border-white/5">
+                <button 
+                  onClick={() => setGlobalFontSize(prev => Math.max(16, prev - 4))}
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-[16px]">text_decrease</span>
+                </button>
+                <button 
+                  onClick={() => setGlobalFontSize(prev => Math.min(96, prev + 4))}
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-[20px]">text_increase</span>
+                </button>
+              </div>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">Boyut</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <button onClick={() => navigate('/editor')} className="w-12 h-12 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
                 <span className="material-symbols-outlined text-[24px]">close</span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Kapat</span>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">Kapat</span>
             </div>
           </div>
         </div>
