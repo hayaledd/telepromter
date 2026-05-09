@@ -8,6 +8,7 @@ import MyScripts from './components/MyScripts'
 import ScriptEditor from './components/ScriptEditor'
 import ProfessionalRecord from './components/ProfessionalRecord'
 import Recordings from './components/Recordings'
+import Tutorial from './components/Tutorial'
 
 // Toast bileşeni
 function Toast({ message, visible }) {
@@ -91,6 +92,7 @@ function App() {
             <Route path="/editor" element={<ScriptEditor />} />
             <Route path="/record" element={<ProfessionalRecord />} />
             <Route path="/recordings" element={<Recordings />} />
+            <Route path="/tutorial" element={<Tutorial />} />
           </Routes>
         </Router>
       </ScriptProvider>
