@@ -15,7 +15,7 @@ export default function ProfessionalRecord() {
     }
   }, [script, navigate]);
 
-  const [layoutMode, setLayoutMode] = useState('split-mode');
+  const [layoutMode, setLayoutMode] = useState('full');
   
   // Teleprompter State
   const [isPlaying, setIsPlaying] = useState(false);
@@ -23,11 +23,19 @@ export default function ProfessionalRecord() {
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
   const [isMirrored, setIsMirrored] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [activeFilter, setActiveFilter] = useState('normal');
+  const [activeFilter, setActiveFilter] = useState('clean');
   const [showSettings, setShowSettings] = useState(false);
   const [countdown, setCountdown] = useState(null); // null | 3 | 2 | 1
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [videoQuality, setVideoQuality] = useState('1080p');
+  const [textColor, setTextColor] = useState('#ffffff');
+
+  const TEXT_COLORS = [
+    { id: 'white',  value: '#ffffff', bg: 'bg-white' },
+    { id: 'yellow', value: '#facc15', bg: 'bg-yellow-400' },
+    { id: 'green',  value: '#4ade80', bg: 'bg-green-400' },
+    { id: 'cyan',   value: '#22d3ee', bg: 'bg-cyan-400' },
+  ];
 
   const QUALITY_OPTIONS = [
     { id: '480p',  label: '480p',  width: 854,  height: 480,  bps: 1_000_000 },
@@ -59,7 +67,7 @@ export default function ProfessionalRecord() {
   const recordedChunksRef = useRef([]);
 
   const toggleLayout = () => {
-    setLayoutMode(prev => prev === 'split-mode' ? 'overlay-mode' : 'split-mode');
+    setLayoutMode(prev => prev === 'full' ? 'bottom' : 'full');
   };
 
   // Real elapsed time counter
@@ -224,33 +232,37 @@ export default function ProfessionalRecord() {
         </div>
       </div>
 
-      <div className={`flex-1 w-full relative flex flex-col landscape:flex-row group ${layoutMode} mb-[72px] landscape:mb-0 landscape:mr-[72px]`} id="layout-container">
-        {/* Camera Feed Area */}
-        <div className="relative bg-surface-container-lowest w-full transition-all duration-300 group-[.split-mode]:flex-[3] group-[.split-mode]:landscape:flex-1 group-[.overlay-mode]:absolute group-[.overlay-mode]:inset-0 group-[.overlay-mode]:w-full group-[.overlay-mode]:h-full z-0">
+      <div className={`flex-1 w-full relative flex flex-col group ${layoutMode} mb-[72px] landscape:mb-0 landscape:mr-[72px]`} id="layout-container">
+        {/* Camera Feed Area (Always Fullscreen in Background) */}
+        <div className="absolute inset-0 w-full h-full z-0 bg-black">
           <video ref={videoRef} autoPlay playsInline muted
-            className="w-full h-full object-contain bg-black opacity-90"
+            className="w-full h-full object-cover opacity-90"
             style={{ filter: currentFilter, transform: isMirrored ? 'scaleX(-1)' : 'none' }}
           />
         </div>
 
         {/* Teleprompter Area */}
-        <div className="relative w-full flex flex-col items-center overflow-hidden transition-all duration-300 group-[.split-mode]:flex-[2] group-[.split-mode]:landscape:flex-1 group-[.split-mode]:border-t group-[.split-mode]:landscape:border-t-0 group-[.split-mode]:landscape:border-l border-white/5 group-[.split-mode]:bg-surface-dim/80 group-[.split-mode]:backdrop-blur-md group-[.overlay-mode]:absolute group-[.overlay-mode]:inset-0 group-[.overlay-mode]:w-full group-[.overlay-mode]:h-full group-[.overlay-mode]:bg-black/50 group-[.overlay-mode]:z-10">
+        <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 bg-black/50 backdrop-blur-sm ${
+          layoutMode === 'bottom' 
+            ? 'bottom-0 h-[50vh] border-t border-white/10' 
+            : 'inset-0 h-full'
+        }`}>
           {/* Reading Line Indicator */}
-          <div className="absolute top-1/3 w-full border-t border-primary/80 shadow-[0_0_10px_rgba(173,198,255,0.5)] z-20 pointer-events-none flex items-center justify-between px-2">
+          <div className={`absolute w-full border-t border-primary/80 shadow-[0_0_10px_rgba(173,198,255,0.5)] z-20 pointer-events-none flex items-center justify-between px-2 ${layoutMode === 'bottom' ? 'top-1/4' : 'top-1/3'}`}>
             <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-primary/90 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
             <div className="w-0 h-0 border-t-[6px] border-t-transparent border-r-[10px] border-r-primary/90 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
           </div>
           {/* Scrolling Text Container */}
-          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full max-w-4xl mx-auto px-edge-margin-tablet pt-[40vh] pb-[60vh] overflow-y-auto space-y-12 text-center z-10 group-[.overlay-mode]:text-shadow-lg" style={{ scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
+          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full max-w-4xl mx-auto px-edge-margin-tablet overflow-y-auto space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
             {scriptLines.map((line, idx) => (
-              <p key={idx} className="font-prompter-display text-on-surface font-bold drop-shadow-md" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4 }}>
+              <p key={idx} className="font-prompter-display font-bold drop-shadow-xl" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor }}>
                 {line}
               </p>
             ))}
           </div>
           {/* Gradient fade masks */}
-          <div className="absolute top-0 w-full h-32 bg-gradient-to-b from-surface-dim via-surface-dim/80 to-transparent z-10 pointer-events-none group-[.overlay-mode]:hidden"></div>
-          <div className="absolute bottom-0 w-full h-40 bg-gradient-to-t from-surface-dim via-surface-dim/80 to-transparent z-10 pointer-events-none group-[.overlay-mode]:hidden"></div>
+          <div className="absolute top-0 w-full h-24 bg-gradient-to-b from-black/80 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none"></div>
           {/* Floating Speed Control */}
           <div className="absolute right-edge-margin-tablet top-1/2 -translate-y-1/2 z-30 bg-surface-container-high/40 backdrop-blur-xl rounded-full p-2 flex flex-col items-center gap-4 border border-white/10 shadow-2xl">
             <button onClick={() => adjustSpeed(1)} className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
@@ -283,12 +295,12 @@ export default function ProfessionalRecord() {
             </div>
             <div className="flex flex-col items-center gap-1">
               <button 
-                className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${layoutMode === 'overlay-mode' ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${layoutMode === 'full' ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
                 onClick={toggleLayout} 
                 title="Tam/Yarım Ekran"
               >
                 <span className="material-symbols-outlined text-[24px]">
-                  {layoutMode === 'split-mode' ? 'splitscreen' : 'fullscreen'}
+                  {layoutMode === 'full' ? 'fullscreen' : 'splitscreen'}
                 </span>
               </button>
               <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Görünüm</span>
@@ -336,7 +348,7 @@ export default function ProfessionalRecord() {
 
       {/* Video Settings Panel */}
       {showSettings && (
-        <div className="fixed top-[72px] right-4 z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-2xl min-w-[220px]">
+        <div className="fixed top-[72px] right-4 landscape:right-[88px] z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-2xl min-w-[220px]">
           <div className="flex items-center justify-between mb-4">
             <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">Video Ayarları</span>
             <button onClick={() => setShowSettings(false)} className="text-on-surface-variant">
@@ -344,6 +356,23 @@ export default function ProfessionalRecord() {
             </button>
           </div>
           
+          <div className="mb-4">
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Yazı Rengi</p>
+            <div className="flex gap-2">
+              {TEXT_COLORS.map(c => (
+                <button
+                  key={c.id}
+                  onClick={() => setTextColor(c.value)}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-transform ${
+                    textColor === c.value ? 'border-primary scale-110' : 'border-transparent'
+                  }`}
+                >
+                  <span className={`w-6 h-6 rounded-full shadow-inner ${c.bg}`}></span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="mb-4">
             <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Kalite</p>
             <div className="flex gap-2">
