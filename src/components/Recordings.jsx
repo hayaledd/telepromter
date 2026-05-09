@@ -118,46 +118,174 @@ export default function Recordings() {
         ) : (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             {videos.map((video, idx) => (
-              <div key={idx} className="bg-surface-container rounded-2xl overflow-hidden border border-white/5 shadow-md flex flex-col group">
-                <div className="relative aspect-[9/16] bg-black">
-                  <video 
-                    src={video.url} 
-                    className="w-full h-full object-cover" 
-                    controls 
-                    preload="metadata"
-                  ></video>
-                </div>
-                <div className="p-3 flex flex-col gap-1">
-                  <h3 className="font-bold text-[12px] text-on-surface truncate" title={video.name}>
-                    {video.name.replace('ScriptFlow_Recording_', 'Kayıt ')}
-                  </h3>
-                  <div className="flex justify-between items-center mt-1">
-                    <p className="text-[10px] text-on-surface-variant">{video.date}</p>
-                    <div className="flex gap-1">
-                      <button 
-                        onClick={() => shareVideo(video)}
-                        className="text-primary hover:bg-primary/10 p-1 rounded-full transition-colors"
-                        title="Paylaş"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">share</span>
-                      </button>
-                      <button 
-                        onClick={() => deleteVideo(video.name)}
-                        className="text-error hover:bg-error/10 p-1 rounded-full transition-colors"
-                        title="Sil"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">delete</span>
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-[10px] text-on-surface-variant font-mono">{video.size}</p>
-                </div>
-              </div>
+              <VideoCard
+                key={idx}
+                video={video}
+                onShare={shareVideo}
+                onDelete={deleteVideo}
+              />
             ))}
           </div>
         )}
       </main>
 
+    </div>
+  );
+}
+
+// —— Video Thumbnail Kartı ——
+function VideoCard({ video, onShare, onDelete }) {
+  const [thumbnail, setThumbnail] = React.useState(null);
+  const [playerOpen, setPlayerOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    generateThumbnail(video.url).then(setThumbnail);
+  }, [video.url]);
+
+  return (
+    <>
+      <div className="bg-surface-container rounded-2xl overflow-hidden border border-white/5 shadow-md flex flex-col group">
+        {/* Thumbnail alanı */}
+        <button
+          onClick={() => setPlayerOpen(true)}
+          className="relative aspect-[9/16] bg-black w-full overflow-hidden focus:outline-none"
+          aria-label="Videoyu oynat"
+        >
+          {thumbnail ? (
+            <img
+              src={thumbnail}
+              alt="video thumbnail"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-surface-container-low flex items-center justify-center">
+              <span className="material-symbols-outlined text-[40px] text-on-surface-variant opacity-40">movie</span>
+            </div>
+          )}
+          {/* Play overlay butonu */}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 active:bg-black/40 transition-colors">
+            <div className="w-14 h-14 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-lg">
+              <span className="material-symbols-outlined text-[32px] text-white" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
+            </div>
+          </div>
+          {/* Boyut rozeti */}
+          <div className="absolute bottom-2 left-2 bg-black/60 rounded-md px-2 py-0.5">
+            <span className="text-[10px] text-white font-mono">{video.size}</span>
+          </div>
+        </button>
+
+        {/* Alt bilgi */}
+        <div className="p-3 flex flex-col gap-1">
+          <h3 className="font-bold text-[12px] text-on-surface truncate" title={video.name}>
+            {video.name.replace('ScriptFlow_Recording_', 'Kayıt ')}
+          </h3>
+          <div className="flex justify-between items-center mt-1">
+            <p className="text-[10px] text-on-surface-variant">{video.date}</p>
+            <div className="flex gap-1">
+              <button 
+                onClick={() => onShare(video)}
+                className="text-primary hover:bg-primary/10 p-1 rounded-full transition-colors"
+                title="Paylaş"
+              >
+                <span className="material-symbols-outlined text-[16px]">share</span>
+              </button>
+              <button 
+                onClick={() => onDelete(video.name)}
+                className="text-error hover:bg-error/10 p-1 rounded-full transition-colors"
+                title="Sil"
+              >
+                <span className="material-symbols-outlined text-[16px]">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tam ekran oynatıcı modal */}
+      {playerOpen && (
+        <VideoPlayerModal video={video} onClose={() => setPlayerOpen(false)} />
+      )}
+    </>
+  );
+}
+
+// —— Thumbnail üretici (canvas) ——
+function generateThumbnail(src) {
+  return new Promise((resolve) => {
+    const video = document.createElement('video');
+    video.crossOrigin = 'anonymous';
+    video.muted = true;
+    video.preload = 'metadata';
+    video.playsInline = true;
+
+    const cleanup = () => {
+      video.removeAttribute('src');
+      video.load();
+    };
+
+    video.onloadedmetadata = () => {
+      video.currentTime = Math.min(0.5, video.duration / 2);
+    };
+
+    video.onseeked = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || 320;
+        canvas.height = video.videoHeight || 568;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        cleanup();
+        resolve(dataUrl);
+      } catch {
+        cleanup();
+        resolve(null);
+      }
+    };
+
+    video.onerror = () => {
+      cleanup();
+      resolve(null);
+    };
+
+    video.src = src;
+    video.load();
+  });
+}
+
+// —— Tam Ekran Video Oynatıcı Modal ——
+function VideoPlayerModal({ video, onClose }) {
+  return (
+    <div
+      className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center"
+      style={{ touchAction: 'none' }}
+    >
+      {/* Kapat butonu */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center border border-white/20"
+        aria-label="Kapat"
+      >
+        <span className="material-symbols-outlined text-white text-[22px]">close</span>
+      </button>
+
+      {/* Video adı ve tarihi */}
+      <div className="absolute top-4 left-4 right-16 z-10">
+        <p className="text-white text-[12px] font-medium truncate opacity-80">
+          {video.name.replace('ScriptFlow_Recording_', 'Kayıt ')}
+        </p>
+        <p className="text-white/50 text-[10px]">{video.date}</p>
+      </div>
+
+      {/* Video oynatıcı */}
+      <video
+        src={video.url}
+        controls
+        autoPlay
+        playsInline
+        className="w-full h-full object-contain"
+        style={{ maxHeight: '100dvh' }}
+      />
     </div>
   );
 }
