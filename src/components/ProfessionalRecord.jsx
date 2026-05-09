@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import MobileMenu from './MobileMenu';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -27,7 +28,8 @@ export default function ProfessionalRecord() {
   const [showMenu, setShowMenu] = useState(false);
 
   // Layouts: 'full' (camera behind text), 'bottom' (camera bottom, text top)
-  const [layoutMode, setLayoutMode] = useState('full');
+  const [layoutMode, setLayoutMode] = useState('bottom'); // 'bottom' or 'full'
+  const [savedFileName, setSavedFileName] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [countdown, setCountdown] = useState(null); // null | 3 | 2 | 1
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -594,7 +596,7 @@ export default function ProfessionalRecord() {
           </div>
 
           {/* Video Player */}
-          <div className="w-full max-w-sm mt-8 mb-8 relative group">
+          <div className="w-full max-w-sm my-auto relative group flex-shrink-0">
             {/* Arka plan parlama efekti */}
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 to-tertiary/30 blur-2xl opacity-50 rounded-[40px] -z-10 transition-opacity duration-500 group-hover:opacity-70"></div>
             
@@ -650,6 +652,7 @@ export default function ProfessionalRecord() {
                               data: reader.result,
                               directory: Directory.Documents
                             });
+                            setSavedFileName(fileName);
                             resolve();
                           } catch(err) { reject(err); }
                         };
@@ -676,31 +679,83 @@ export default function ProfessionalRecord() {
                   )}
                 </button>
 
+                <div className="flex gap-2">
+                  <button 
+                    disabled={saveStatus === 'saving'}
+                    onClick={() => {
+                      setRecordedVideoUrl(null);
+                      setSaveStatus(null);
+                      setSavedFileName(null);
+                      recordedChunksRef.current = [];
+                    }}
+                    className="flex-1 bg-white/5 text-white/70 font-bold text-[15px] py-4 rounded-2xl hover:bg-white/10 active:scale-[0.98] transition-all border border-white/5 flex items-center justify-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">delete</span>
+                    {t('deleteAndRetake')}
+                  </button>
+                  <button 
+                    disabled={saveStatus === 'saving'}
+                    onClick={async () => {
+                      try {
+                        let currentFileName = savedFileName;
+                        if (!currentFileName) {
+                          setSaveStatus('saving');
+                          const response = await fetch(recordedVideoUrl);
+                          const blob = await response.blob();
+                          const ext = recordedMimeType.includes('mp4') ? 'mp4' : 'webm';
+                          currentFileName = `ScriptFlow_Recording_${Date.now()}.${ext}`;
+                          await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.readAsDataURL(blob);
+                            reader.onloadend = async () => {
+                              try {
+                                await Filesystem.writeFile({ path: currentFileName, data: reader.result, directory: Directory.Documents });
+                                setSavedFileName(currentFileName);
+                                resolve();
+                              } catch(err) { reject(err); }
+                            };
+                            reader.onerror = reject;
+                          });
+                          setSaveStatus('ok');
+                        }
+                        const stat = await Filesystem.stat({ path: currentFileName, directory: Directory.Documents });
+                        await Share.share({ title: currentFileName, text: t('recordedWith'), url: stat.uri, dialogTitle: t('shareVideoTitle') });
+                      } catch(e) { console.error('Share error', e); setSaveStatus('error'); }
+                    }}
+                    className="flex-1 bg-tertiary text-on-tertiary font-bold text-[15px] py-4 rounded-2xl hover:bg-tertiary/90 active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">share</span>
+                    {t('share')}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex gap-2 flex-col">
                 <button 
-                  disabled={saveStatus === 'saving'}
+                  onClick={async () => {
+                    try {
+                      const stat = await Filesystem.stat({ path: savedFileName, directory: Directory.Documents });
+                      await Share.share({ title: savedFileName, text: t('recordedWith'), url: stat.uri, dialogTitle: t('shareVideoTitle') });
+                    } catch(e) { console.error('Share error', e); }
+                  }}
+                  className="w-full bg-tertiary text-on-tertiary font-bold text-[16px] py-4 rounded-2xl hover:bg-tertiary/90 active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2 mb-2"
+                >
+                  <span className="material-symbols-outlined text-[20px]">share</span>
+                  {t('share')}
+                </button>
+                <button 
                   onClick={() => {
                     setRecordedVideoUrl(null);
                     setSaveStatus(null);
+                    setSavedFileName(null);
                     recordedChunksRef.current = [];
                   }}
-                  className="w-full bg-white/5 text-white/70 font-bold text-[15px] py-4 rounded-2xl hover:bg-white/10 active:scale-[0.98] transition-all border border-white/5 flex items-center justify-center gap-2"
+                  className="w-full bg-white/10 text-white font-bold text-[16px] py-4 rounded-2xl hover:bg-white/15 active:scale-[0.98] transition-all border border-white/10 flex items-center justify-center gap-2"
                 >
-                  <span className="material-symbols-outlined text-[20px]">delete</span>
-                  {t('deleteAndRetake')}
+                  <span className="material-symbols-outlined text-[20px]">videocam</span>
+                  {t('newRecording')}
                 </button>
-              </>
-            ) : (
-               <button 
-                onClick={() => {
-                  setRecordedVideoUrl(null);
-                  setSaveStatus(null);
-                  recordedChunksRef.current = [];
-                }}
-                className="w-full bg-white/10 text-white font-bold text-[16px] py-4 rounded-2xl hover:bg-white/15 active:scale-[0.98] transition-all border border-white/10 flex items-center justify-center gap-2"
-              >
-                <span className="material-symbols-outlined text-[20px]">videocam</span>
-                {t('newRecording')}
-              </button>
+              </div>
             )}
           </div>
         </div>
