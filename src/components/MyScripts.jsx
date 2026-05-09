@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function MyScripts() {
   const navigate = useNavigate();
   const { scripts, setActiveScriptId, createNewScript, importScript } = useScript();
+  const { t, lang, toggleLang } = useLanguage();
   const fileInputRef = useRef(null);
 
   const handleOpenScript = (id) => {
@@ -39,9 +41,9 @@ export default function MyScripts() {
         <button className="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/50 transition-colors active:scale-95 duration-100 p-2 rounded-full flex items-center justify-center">
           <span className="material-symbols-outlined">menu</span>
         </button>
-        <h1 className="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim">ScriptFlow</h1>
-        <button className="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/50 transition-colors active:scale-95 duration-100 p-2 rounded-full flex items-center justify-center">
-          <span className="material-symbols-outlined">add_box</span>
+        <h1 className="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim">{t('appName')}</h1>
+        <button onClick={toggleLang} className="text-on-surface-variant hover:bg-surface-variant/50 transition-colors active:scale-95 duration-100 px-3 py-1.5 rounded-full text-[12px] font-bold border border-outline-variant">
+          {lang === 'tr' ? 'EN' : 'TR'}
         </button>
       </header>
 
@@ -86,7 +88,7 @@ export default function MyScripts() {
       {/* Main Content Canvas */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-edge-margin-mobile md:px-edge-margin-tablet py-8 md:pl-[352px]">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="font-prompter-display text-prompter-display text-on-surface">My Scripts</h2>
+          <h2 className="font-prompter-display text-prompter-display text-on-surface">{t('myScripts')}</h2>
           <div className="hidden md:flex gap-4">
             <button className="bg-surface-container-high hover:bg-surface-variant text-on-surface px-4 py-2 rounded-full flex items-center gap-2 transition-colors">
               <span className="material-symbols-outlined">filter_list</span>
@@ -125,7 +127,7 @@ export default function MyScripts() {
             <div className="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-3xl">add</span>
             </div>
-            <span className="font-headline-md text-headline-md text-primary">Create New Script</span>
+            <span className="font-headline-md text-headline-md text-primary">{t('createNew')}</span>
           </div>
 
           {/* Import Script Card */}
@@ -133,7 +135,7 @@ export default function MyScripts() {
             <div className="w-16 h-16 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-3xl">upload_file</span>
             </div>
-            <span className="font-headline-md text-headline-md text-secondary">Import .TXT File</span>
+            <span className="font-headline-md text-headline-md text-secondary">{t('importTxt')}</span>
             <input type="file" accept=".txt" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
           </div>
         </div>
@@ -149,22 +151,22 @@ export default function MyScripts() {
         {/* Active: Scripts */}
         <a className="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 active:scale-90 transition-transform" href="#">
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
-          <span className="font-label-caps text-label-caps mt-1">Scripts</span>
+          <span className="font-label-caps text-label-caps mt-1">{t('scripts')}</span>
         </a>
         {/* Inactive: Editor */}
         <a className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform" href="#">
           <span className="material-symbols-outlined">edit_note</span>
-          <span className="font-label-caps text-label-caps mt-1">Editor</span>
+          <span className="font-label-caps text-label-caps mt-1">{t('editor')}</span>
         </a>
         {/* Inactive: Record */}
         <a className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform" href="#">
           <span className="material-symbols-outlined">videocam</span>
-          <span className="font-label-caps text-label-caps mt-1">Record</span>
+          <span className="font-label-caps text-label-caps mt-1">{t('record')}</span>
         </a>
         {/* Inactive: Settings */}
         <a className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform" href="#">
           <span className="material-symbols-outlined">settings</span>
-          <span className="font-label-caps text-label-caps mt-1">Settings</span>
+          <span className="font-label-caps text-label-caps mt-1">{t('settings')}</span>
         </a>
       </nav>
     </div>
