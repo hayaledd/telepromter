@@ -585,10 +585,10 @@ export default function ProfessionalRecord() {
 
 
       {recordedVideoUrl && (
-        <div className="fixed inset-0 z-[100] bg-surface-container-lowest/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] bg-surface-container-lowest/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 pb-8 overflow-y-auto animate-in fade-in duration-300">
           
           {/* Header */}
-          <div className="absolute top-0 left-0 w-full p-6 flex justify-center">
+          <div className="w-full pt-4 pb-6 flex justify-center shrink-0">
              <div className="bg-surface-container-high/50 backdrop-blur-md px-6 py-2 rounded-full border border-white/5 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary text-[18px]">verified</span>
                 <span className="text-white font-bold tracking-wide text-[14px] uppercase">{t('saved')}</span>
@@ -596,11 +596,11 @@ export default function ProfessionalRecord() {
           </div>
 
           {/* Video Player */}
-          <div className="w-full max-w-sm my-auto relative group flex-shrink-0">
+          <div className="w-full max-w-[280px] sm:max-w-sm relative group shrink-0 mx-auto my-2">
             {/* Arka plan parlama efekti */}
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 to-tertiary/30 blur-2xl opacity-50 rounded-[40px] -z-10 transition-opacity duration-500 group-hover:opacity-70"></div>
             
-            <div className="rounded-[32px] overflow-hidden border-4 border-surface-container-high shadow-2xl relative bg-black aspect-[9/16] max-h-[60vh] flex items-center justify-center">
+            <div className="rounded-[32px] overflow-hidden border-4 border-surface-container-high shadow-2xl relative bg-black aspect-[9/16] max-h-[55vh] flex items-center justify-center">
               <video 
                 src={recordedVideoUrl} 
                 controls 
@@ -612,7 +612,7 @@ export default function ProfessionalRecord() {
           </div>
 
           {/* Durum Mesajı */}
-          <div className="h-10 mb-4 flex items-center justify-center">
+          <div className="h-12 mt-4 mb-2 flex items-center justify-center shrink-0">
             {saveStatus && (
               <div className={`px-5 py-2 rounded-full text-[13px] font-bold flex items-center gap-2 animate-in slide-in-from-bottom-2 ${
                 saveStatus === 'saving' ? 'bg-surface-variant text-on-surface-variant' :
@@ -630,7 +630,7 @@ export default function ProfessionalRecord() {
           </div>
           
           {/* Aksiyon Butonları */}
-          <div className="w-full max-w-sm flex flex-col gap-3">
+          <div className="w-full max-w-[280px] sm:max-w-sm flex flex-col gap-3 shrink-0 pb-safe">
             {!saveStatus || saveStatus === 'error' ? (
               <>
                 <button 
@@ -679,7 +679,7 @@ export default function ProfessionalRecord() {
                   )}
                 </button>
 
-                <div className="flex gap-2">
+                <div className="mt-1">
                   <button 
                     disabled={saveStatus === 'saving'}
                     onClick={() => {
@@ -688,44 +688,10 @@ export default function ProfessionalRecord() {
                       setSavedFileName(null);
                       recordedChunksRef.current = [];
                     }}
-                    className="flex-1 bg-white/5 text-white/70 font-bold text-[15px] py-4 rounded-2xl hover:bg-white/10 active:scale-[0.98] transition-all border border-white/5 flex items-center justify-center gap-2"
+                    className="w-full bg-white/5 text-white/70 font-bold text-[15px] py-4 rounded-2xl hover:bg-white/10 active:scale-[0.98] transition-all border border-white/5 flex items-center justify-center gap-2"
                   >
                     <span className="material-symbols-outlined text-[20px]">delete</span>
                     {t('deleteAndRetake')}
-                  </button>
-                  <button 
-                    disabled={saveStatus === 'saving'}
-                    onClick={async () => {
-                      try {
-                        let currentFileName = savedFileName;
-                        if (!currentFileName) {
-                          setSaveStatus('saving');
-                          const response = await fetch(recordedVideoUrl);
-                          const blob = await response.blob();
-                          const ext = recordedMimeType.includes('mp4') ? 'mp4' : 'webm';
-                          currentFileName = `ScriptFlow_Recording_${Date.now()}.${ext}`;
-                          await new Promise((resolve, reject) => {
-                            const reader = new FileReader();
-                            reader.readAsDataURL(blob);
-                            reader.onloadend = async () => {
-                              try {
-                                await Filesystem.writeFile({ path: currentFileName, data: reader.result, directory: Directory.Documents });
-                                setSavedFileName(currentFileName);
-                                resolve();
-                              } catch(err) { reject(err); }
-                            };
-                            reader.onerror = reject;
-                          });
-                          setSaveStatus('ok');
-                        }
-                        const stat = await Filesystem.stat({ path: currentFileName, directory: Directory.Documents });
-                        await Share.share({ title: currentFileName, text: t('recordedWith'), url: stat.uri, dialogTitle: t('shareVideoTitle') });
-                      } catch(e) { console.error('Share error', e); setSaveStatus('error'); }
-                    }}
-                    className="flex-1 bg-tertiary text-on-tertiary font-bold text-[15px] py-4 rounded-2xl hover:bg-tertiary/90 active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-[20px]">share</span>
-                    {t('share')}
                   </button>
                 </div>
               </>
