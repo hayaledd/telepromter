@@ -31,7 +31,7 @@ export default function MyScripts() {
   };
 
   const handleCreateNew = () => {
-    createNewScript();
+    createNewScript(t('untitledScript'), t('contentPlaceholder'));
     navigate('/editor');
   };
 

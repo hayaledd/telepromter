@@ -63,12 +63,12 @@ export const ScriptProvider = ({ children }) => {
     setScripts(prev => prev.map(s => s.id === activeScriptId ? { ...s, ...updates } : s));
   };
 
-  const createNewScript = () => {
+  const createNewScript = (title, content) => {
     const newId = Date.now().toString();
     const newScript = {
       id: newId,
-      title: 'Untitled Script',
-      content: 'Start typing your new script here...',
+      title: title || 'Untitled Script',
+      content: content || 'Start typing your new script here...',
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       duration: '1 MIN'
     };

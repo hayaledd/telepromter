@@ -31,6 +31,7 @@ const translations = {
     saveVideo: 'Save Video',
     cameraFilters: 'Camera Filters',
     language: 'Language',
+    untitledScript: 'Untitled Script',
   },
   tr: {
     appName: 'ScriptFlow',
@@ -62,6 +63,7 @@ const translations = {
     saveVideo: 'Videoyu Kaydet',
     cameraFilters: 'Kamera Filtreleri',
     language: 'Dil',
+    untitledScript: 'İsimsiz Metin',
   }
 };
 
