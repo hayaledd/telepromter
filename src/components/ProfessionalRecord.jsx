@@ -93,30 +93,6 @@ export default function ProfessionalRecord() {
     if (!isPlaying) {
       startWithCountdown();
     } else {
-        try {
-          recordedChunksRef.current = [];
-          const mediaRecorder = new MediaRecorder(mediaStreamRef.current, { mimeType: 'video/webm' });
-          mediaRecorderRef.current = mediaRecorder;
-          
-          mediaRecorder.ondataavailable = (event) => {
-            if (event.data && event.data.size > 0) {
-              recordedChunksRef.current.push(event.data);
-            }
-          };
-
-          mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
-            const url = URL.createObjectURL(blob);
-            setRecordedVideoUrl(url);
-          };
-
-          mediaRecorder.start();
-        } catch (e) {
-          console.error("MediaRecorder start failed:", e);
-        }
-      }
-      setIsPlaying(true);
-    } else {
       // STOP RECORDING
       if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
         mediaRecorderRef.current.stop();
