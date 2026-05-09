@@ -94,6 +94,32 @@ export default function MyScripts() {
           </p>
         </div>
 
+        {/* Aksiyon Butonları (Üste alındı) */}
+        <div className="grid grid-cols-2 gap-3 mb-8">
+          {/* Yeni Metin */}
+          <button
+            onClick={handleCreateNew}
+            className="relative group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-primary/30 bg-primary/10 hover:bg-primary/20 active:scale-95 transition-all duration-150"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-primary text-[26px]" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
+            </div>
+            <span className="text-primary font-bold text-[13px]">{t('newScript')}</span>
+          </button>
+
+          {/* .txt İçe Aktar */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="relative group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 active:scale-95 transition-all duration-150"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-on-surface-variant text-[26px]">upload_file</span>
+            </div>
+            <span className="text-on-surface-variant font-bold text-[13px]">{t('importText')}</span>
+            <input type="file" accept=".txt" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+          </button>
+        </div>
+
         {/* Scripts Listesi */}
         <div className="flex flex-col gap-3 mb-6">
           {scripts.map((script, idx) => {
@@ -176,31 +202,7 @@ export default function MyScripts() {
           </div>
         )}
 
-        {/* Aksiyon Butonları */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Yeni Metin */}
-          <button
-            onClick={handleCreateNew}
-            className="relative group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-primary/30 bg-primary/10 hover:bg-primary/20 active:scale-95 transition-all duration-150"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-primary text-[26px]" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
-            </div>
-            <span className="text-primary font-bold text-[13px]">{t('newScript')}</span>
-          </button>
-
-          {/* .txt İçe Aktar */}
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="relative group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 active:scale-95 transition-all duration-150"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-on-surface-variant text-[26px]">upload_file</span>
-            </div>
-            <span className="text-on-surface-variant font-bold text-[13px]">{t('importText')}</span>
-            <input type="file" accept=".txt" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
-          </button>
-        </div>
+        {/* Aksiyon butonları buradaydı, üste taşındı. */}
 
       </main>
 
