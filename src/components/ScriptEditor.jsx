@@ -93,24 +93,24 @@ export default function ScriptEditor() {
       </main>
 
       {/* Floating Editor Toolbar */}
-      <div className="fixed bottom-[calc(72px+16px)] md:bottom-gutter left-1/2 transform -translate-x-1/2 w-[calc(100%-32px)] md:w-auto md:min-w-[400px] z-40">
-        <div className="bg-surface-container-high rounded-full border border-outline-variant/30 shadow-lg p-2 flex items-center justify-center gap-6 px-6">
+      <div className="fixed bottom-[calc(72px+16px)] md:bottom-gutter left-1/2 transform -translate-x-1/2 w-[calc(100%-32px)] md:w-auto md:min-w-[300px] z-40">
+        <div className="bg-surface-container-high rounded-full border border-outline-variant/30 shadow-lg py-1 px-4 flex items-center justify-center gap-4">
           {/* Font Size Controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button 
               onClick={() => setGlobalFontSize(prev => Math.max(16, prev - 4))}
               aria-label="Decrease Font Size" 
-              className="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full p-2 transition-colors active:scale-95"
+              className="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full p-1.5 transition-colors active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px]">text_decrease</span>
             </button>
-            <span className="font-body-md text-on-surface-variant select-none w-10 text-center">{globalFontSize}</span>
+            <span className="font-body-sm text-on-surface-variant select-none w-8 text-center">{globalFontSize}</span>
             <button 
               onClick={() => setGlobalFontSize(prev => Math.min(96, prev + 4))}
               aria-label="Increase Font Size" 
-              className="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full p-2 transition-colors active:scale-95"
+              className="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full p-1.5 transition-colors active:scale-95"
             >
-              <span className="material-symbols-outlined text-[24px]">text_increase</span>
+              <span className="material-symbols-outlined text-[20px]">text_increase</span>
             </button>
           </div>
         </div>
