@@ -1,51 +1,74 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function SplashScreen() {
   const navigate = useNavigate();
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // Animate progress bar
+    const interval = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return p + 2;
+      });
+    }, 40); // 100 * 40 = 4000ms but it will navigate before
+
     const timer = setTimeout(() => {
       navigate('/scripts');
     }, 2500);
-    return () => clearTimeout(timer);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, [navigate]);
 
   return (
-    <div className="bg-background text-on-background min-h-screen relative overflow-hidden flex flex-col items-center justify-center font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container dark">
-      {/* Ambient Glassmorphism Orbs (Background) */}
-      <div className="absolute top-[15%] left-[20%] w-[40vw] h-[40vw] max-w-lg max-h-lg bg-primary-container rounded-full mix-blend-screen filter blur-[120px] opacity-20 pointer-events-none"></div>
-      <div className="absolute bottom-[10%] right-[15%] w-[50vw] h-[50vw] max-w-xl max-h-xl bg-secondary-container rounded-full mix-blend-screen filter blur-[150px] opacity-15 pointer-events-none"></div>
+    <div className="bg-black text-on-background min-h-screen relative overflow-hidden flex flex-col items-center justify-center font-body-md dark">
+      {/* Deep Ambient Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[600px] max-h-[600px] bg-primary rounded-full mix-blend-screen filter blur-[150px] opacity-[0.15] animate-pulse pointer-events-none"></div>
 
-      {/* Central Content Canvas (Highest Z-Index) */}
-      <div className="z-10 flex flex-col items-center justify-center space-y-md w-full max-w-md px-gutter">
-        {/* Glowing Brand Logo Element */}
-        <div className="relative group">
-          {/* Outer Neon Glow Simulation */}
-          <div className="absolute inset-0 bg-primary rounded-full blur-[40px] opacity-30 transition-opacity duration-1000"></div>
-          {/* Glass Housing */}
-          <div className="relative w-32 h-32 rounded-full flex items-center justify-center bg-white/[0.03] backdrop-blur-[16px] border border-white/[0.12] shadow-2xl">
-            {/* Inner Light Refraction */}
-            <div className="absolute inset-0 rounded-full border-t border-white/[0.2] pointer-events-none"></div>
-            {/* Iconography */}
-            <span className="material-symbols-outlined text-[64px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>graphic_eq</span>
+      <div className="z-10 flex flex-col items-center justify-center space-y-8 w-full max-w-md px-8 relative">
+        
+        {/* Animated Rings Icon */}
+        <div className="relative group flex items-center justify-center">
+          {/* Pulsing Outer Ring */}
+          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-ping" style={{ animationDuration: '3s' }}></div>
+          {/* Solid Glass Center */}
+          <div className="relative w-28 h-28 rounded-full flex items-center justify-center bg-surface-container-lowest/40 backdrop-blur-2xl border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.8)] z-10">
+            <div className="absolute inset-0 rounded-full border-t border-white/30"></div>
+            <span className="material-symbols-outlined text-[56px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+              video_camera_front
+            </span>
           </div>
         </div>
         
-        {/* Typography Anchor */}
-        <h1 className="font-display-xl text-display-xl text-on-surface tracking-tight mt-sm text-center">ScriptFlow</h1>
-        <p className="font-body-lg text-body-lg text-on-surface-variant text-center max-w-xs">The intelligent prompter for modern speakers.</p>
+        {/* Typography */}
+        <div className="text-center space-y-2">
+          <h1 className="font-display-xl text-[40px] font-black text-white tracking-tighter drop-shadow-2xl">
+            Script<span className="text-primary">Flow</span>
+          </h1>
+          <p className="font-body-lg text-on-surface-variant text-[14px] font-medium tracking-wide max-w-[250px] mx-auto opacity-80">
+            Profesyonel çekimler için akıllı prompter
+          </p>
+        </div>
       </div>
 
-      {/* Bottom Interface Anchors */}
-      <div className="absolute bottom-margin left-0 w-full flex flex-col items-center px-gutter space-y-md z-10">
-        {/* Progress / Loading Indication */}
-        <div className="w-full max-w-xs h-1 bg-surface-container-highest rounded-full overflow-hidden shadow-inner relative">
-          {/* Simulated Loading Progress (60%) with glowing head */}
-          <div className="absolute top-0 left-0 h-full w-[60%] bg-gradient-to-r from-primary-container to-primary rounded-full relative">
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full blur-[8px] opacity-50"></div>
-          </div>
+      {/* Loading Bar */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-[60%] max-w-[200px] z-10">
+        <div className="w-full h-[3px] bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
+          <div 
+            className="h-full bg-gradient-to-r from-primary to-primary-fixed rounded-full shadow-[0_0_10px_rgba(173,198,255,0.8)] transition-all ease-out"
+            style={{ width: `${progress}%`, transitionDuration: '40ms' }}
+          ></div>
         </div>
+        <p className="text-center text-[10px] text-on-surface-variant font-bold tracking-widest uppercase mt-3 opacity-50">
+          Hazırlanıyor...
+        </p>
       </div>
     </div>
   );
