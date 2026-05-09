@@ -299,15 +299,8 @@ export default function ProfessionalRecord() {
   return (
     <div className="bg-background text-on-background fixed inset-0 h-[100dvh] w-screen overflow-hidden overscroll-none flex flex-col font-body-md dark">
       {/* HUD Overlay */}
-      <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start">
-        <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10 pointer-events-auto">
-          <span className="flex h-3 w-3 relative">
-            {isPlaying && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
-            <span className={`relative inline-flex rounded-full h-3 w-3 ${isPlaying ? 'bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]' : 'bg-surface-variant'}`}></span>
-          </span>
-          <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? t('recording') : t('ready')}</span>
-          <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
-        </div>
+      <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start pointer-events-none">
+        {/* Left Side: Menu + Status */}
         <div className="flex items-center gap-2 pointer-events-auto">
           <button 
             onClick={() => setShowMenu(true)}
@@ -316,6 +309,18 @@ export default function ProfessionalRecord() {
           >
             <span className="material-symbols-outlined text-[18px]">menu</span>
           </button>
+          <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10">
+            <span className="flex h-3 w-3 relative">
+              {isPlaying && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
+              <span className={`relative inline-flex rounded-full h-3 w-3 ${isPlaying ? 'bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]' : 'bg-surface-variant'}`}></span>
+            </span>
+            <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? t('recording') : t('ready')}</span>
+            <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
+          </div>
+        </div>
+
+        {/* Right Side: Flip + Settings */}
+        <div className="flex items-center gap-2 pointer-events-auto shrink-0 pl-2">
           <button 
             onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')}
             className="flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors bg-surface-container/30 text-on-surface hover:bg-surface-variant/50"
@@ -328,7 +333,7 @@ export default function ProfessionalRecord() {
             className={`flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors ${showSettings ? 'bg-primary text-on-primary' : 'bg-surface-container/30 text-on-surface-variant'}`}
           >
             <span className="material-symbols-outlined text-[16px]">settings</span>
-            <span className="font-bold text-[11px] tracking-widest uppercase">{videoQuality}</span>
+            <span className="font-bold text-[11px] tracking-widest uppercase hidden md:inline">{videoQuality}</span>
           </button>
         </div>
       </div>
