@@ -33,13 +33,7 @@ export default function ScriptEditor() {
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-control-bar-height bg-surface-container-lowest border-b border-surface-container-low">
         <div className="flex items-center gap-2 md:gap-4">
-          <button 
-            onClick={() => setShowMenu(true)}
-            aria-label="Menu" 
-            className="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2 active:scale-95 duration-100 block"
-          >
-            <span className="material-symbols-outlined">menu</span>
-          </button>
+          {/* Menu button removed as requested */}
           <button 
             onClick={() => navigate('/scripts')}
             aria-label="Back" 

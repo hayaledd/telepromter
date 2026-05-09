@@ -92,7 +92,12 @@ export default function ProfessionalRecord() {
   const recordedChunksRef = useRef([]);
 
   const toggleLayout = () => {
-    setLayoutMode(prev => prev === 'full' ? 'bottom' : 'full');
+    setLayoutMode(prev => {
+      if (prev === 'bottom') return 'full';
+      if (prev === 'full') return 'prompter-only';
+      if (prev === 'prompter-only') return 'avatar';
+      return 'bottom';
+    });
   };
 
   // Real elapsed time counter
@@ -302,13 +307,7 @@ export default function ProfessionalRecord() {
       <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start pointer-events-none">
         {/* Left Side: Menu + Status */}
         <div className="flex items-center gap-2 pointer-events-auto">
-          <button 
-            onClick={() => setShowMenu(true)}
-            className="flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors bg-surface-container/30 text-on-surface hover:bg-surface-variant/50"
-            title={t('menu')}
-          >
-            <span className="material-symbols-outlined text-[18px]">menu</span>
-          </button>
+          {/* Menu button removed as requested */}
           <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10">
             <span className="flex h-3 w-3 relative">
               {isPlaying && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
@@ -339,16 +338,17 @@ export default function ProfessionalRecord() {
       </div>
 
       <div className={`flex-1 w-full relative flex flex-col group ${layoutMode} mb-[72px] landscape:mb-0 landscape:mr-[72px]`} id="layout-container">
-        {/* Camera Feed Area (Always Fullscreen in Background) */}
+        {/* Camera Feed Area */}
         <div className="absolute inset-0 w-full h-full z-0 bg-black">
           <video ref={videoRef} autoPlay playsInline muted controls={false} disablePictureInPicture disableRemotePlayback
-            className="w-full h-full object-cover opacity-90 pointer-events-none"
+            className={`w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${(layoutMode === 'prompter-only' || layoutMode === 'avatar') ? 'opacity-0' : 'opacity-90'}`}
             style={{ filter: currentFilter, transform: isMirrored ? 'scaleX(-1)' : 'none' }}
           />
+          {layoutMode === 'avatar' && <AvatarView videoRef={videoRef} />}
         </div>
 
         {/* Teleprompter Area */}
-        <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 bg-transparent ${
+        <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 ${layoutMode === 'prompter-only' ? 'bg-black' : 'bg-transparent'} ${
           layoutMode === 'bottom' 
             ? 'bottom-0 h-[50vh]' 
             : 'inset-0 h-full'
@@ -403,10 +403,12 @@ export default function ProfessionalRecord() {
                 title={t('viewMode')}
               >
                 <span className="material-symbols-outlined text-[24px]">
-                  {layoutMode === 'full' ? 'fullscreen' : 'splitscreen'}
+                  {layoutMode === 'full' ? 'fullscreen' : layoutMode === 'prompter-only' ? 'tv' : layoutMode === 'avatar' ? 'face' : 'splitscreen'}
                 </span>
               </button>
-              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">{t('viewMode')}</span>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">
+                {layoutMode === 'prompter-only' ? t('prompterOnly') || 'SADECE METİN' : layoutMode === 'avatar' ? 'AVATAR' : t('viewMode')}
+              </span>
             </div>
           </div>
           {/* Primary Record/Stop Action */}
