@@ -172,33 +172,86 @@ export default function ProfessionalRecord() {
 
   // Camera Setup
   useEffect(() => {
-    let stream = null;
+    let cancelled = false;
+
     async function setupCamera() {
       try {
+        // 1) Önce video elementini temizle
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+          videoRef.current.load();
+        }
+
+        // 2) Eski stream'i durdur
         if (mediaStreamRef.current) {
           mediaStreamRef.current.getTracks().forEach(track => track.stop());
+          mediaStreamRef.current = null;
         }
-        stream = await navigator.mediaDevices.getUserMedia({ 
-          video: { facingMode: facingMode }, 
-          audio: true 
+
+        // 3) Android'in kamera donanımını serbest bırakması için kısa bekleme
+        await new Promise(resolve => setTimeout(resolve, 300));
+        if (cancelled) return;
+
+        // 4) Yeni stream al — exact constraint ile doğru kamera seçilir
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { exact: facingMode },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+          audio: true,
         });
+
+        if (cancelled) {
+          stream.getTracks().forEach(t => t.stop());
+          return;
+        }
+
         mediaStreamRef.current = stream;
+
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          videoRef.current.play().catch(e => console.error("Video play error:", e));
+          videoRef.current.load();
+          // Kısa gecikme sonra play — bazı Android sürümlerinde gerekli
+          await new Promise(resolve => setTimeout(resolve, 100));
+          videoRef.current.play().catch(e => console.error('Video play error:', e));
         }
       } catch (err) {
-        console.error("Camera access denied or unavailable", err);
+        if (cancelled) return;
+        // exact constraint başarısız olursa ideal ile tekrar dene
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: facingMode },
+            audio: true,
+          });
+          if (cancelled) { stream.getTracks().forEach(t => t.stop()); return; }
+          mediaStreamRef.current = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            videoRef.current.load();
+            await new Promise(resolve => setTimeout(resolve, 100));
+            videoRef.current.play().catch(e => console.error('Video play error:', e));
+          }
+        } catch (fallbackErr) {
+          console.error('Camera access failed:', fallbackErr);
+        }
       }
     }
+
     setupCamera();
 
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      cancelled = true;
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => track.stop());
+        mediaStreamRef.current = null;
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
       }
     };
   }, [facingMode]);
+
 
   // Scrolling Engine
   useEffect(() => {
