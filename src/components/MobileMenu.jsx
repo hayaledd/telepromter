@@ -25,8 +25,8 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
             <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>video_camera_front</span>
           </div>
           <div>
-            <p className="font-bold text-white text-[16px]">ScriptFlow</p>
-            <p className="text-white/40 text-[12px]">v2.4.0</p>
+            <p className="font-bold text-white text-[16px]">TelePromt</p>
+            <p className="text-white/40 text-[12px]">v2.5.0</p>
           </div>
         </div>
         <div className="flex flex-col gap-1 flex-1">

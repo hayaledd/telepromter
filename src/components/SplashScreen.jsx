@@ -50,7 +50,7 @@ export default function SplashScreen() {
         {/* Typography */}
         <div className="text-center space-y-2">
           <h1 className="font-display-xl text-[40px] font-black text-white tracking-tighter drop-shadow-2xl">
-            Script<span className="text-primary">Flow</span>
+            Tele<span className="text-primary">Promt</span>
           </h1>
           <p className="font-body-lg text-on-surface-variant text-[14px] font-medium tracking-wide max-w-[250px] mx-auto opacity-80">
             Profesyonel çekimler için akıllı prompter
