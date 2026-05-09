@@ -28,16 +28,11 @@ export default function ProfessionalRecord() {
   const [countdown, setCountdown] = useState(null); // null | 3 | 2 | 1
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [videoQuality, setVideoQuality] = useState('1080p');
-  const [videoFormat, setVideoFormat] = useState('webm');
 
   const QUALITY_OPTIONS = [
     { id: '480p',  label: '480p',  width: 854,  height: 480,  bps: 1_000_000 },
     { id: '720p',  label: '720p',  width: 1280, height: 720,  bps: 2_500_000 },
     { id: '1080p', label: '1080p', width: 1920, height: 1080, bps: 5_000_000 },
-  ];
-  const FORMAT_OPTIONS = [
-    { id: 'webm', label: 'WebM', mime: 'video/webm' },
-    { id: 'mp4',  label: 'MP4',  mime: 'video/mp4' },
   ];
 
   const FILTERS = [
@@ -110,12 +105,11 @@ export default function ProfessionalRecord() {
       if (mediaStreamRef.current) {
         try {
           recordedChunksRef.current = [];
-          const selectedFormat = FORMAT_OPTIONS.find(f => f.id === videoFormat);
-          const mimeType = MediaRecorder.isTypeSupported(selectedFormat.mime) ? selectedFormat.mime : 'video/webm';
+          const mimeType = 'video/webm';
           const selectedQuality = QUALITY_OPTIONS.find(q => q.id === videoQuality);
           const mediaRecorder = new MediaRecorder(mediaStreamRef.current, {
             mimeType,
-            videoBitsPerSecond: selectedQuality.bps,
+            videoBitsPerSecond: selectedQuality ? selectedQuality.bps : 5000000,
           });
           mediaRecorderRef.current = mediaRecorder;
           mediaRecorder.ondataavailable = (event) => {
@@ -147,10 +141,15 @@ export default function ProfessionalRecord() {
     async function setupCamera() {
       try {
         // Request both video and audio for recording
+        // Check if stream is already active to avoid deadlocks
+        if (mediaStreamRef.current && mediaStreamRef.current.active) {
+          return;
+        }
         stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         mediaStreamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+          videoRef.current.play().catch(e => console.error("Video play error:", e));
         }
       } catch (err) {
         console.error("Camera access denied or unavailable", err);
@@ -220,7 +219,7 @@ export default function ProfessionalRecord() {
             className={`flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 pointer-events-auto transition-colors ${showSettings ? 'bg-primary text-on-primary' : 'bg-surface-container/30 text-on-surface-variant'}`}
           >
             <span className="material-symbols-outlined text-[16px]">settings</span>
-            <span className="font-bold text-[11px] tracking-widest uppercase">{videoQuality} · {videoFormat.toUpperCase()}</span>
+            <span className="font-bold text-[11px] tracking-widest uppercase">{videoQuality}</span>
           </button>
         </div>
       </div>
@@ -232,18 +231,6 @@ export default function ProfessionalRecord() {
             className="w-full h-full object-contain bg-black opacity-90"
             style={{ filter: currentFilter, transform: isMirrored ? 'scaleX(-1)' : 'none' }}
           />
-          {/* Grid overlay */}
-          <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none opacity-20">
-            <div className="border-b border-r border-outline-variant"></div>
-            <div className="border-b border-r border-outline-variant"></div>
-            <div className="border-b border-outline-variant"></div>
-            <div className="border-b border-r border-outline-variant"></div>
-            <div className="border-b border-r border-outline-variant"></div>
-            <div className="border-b border-outline-variant"></div>
-            <div className="border-r border-outline-variant"></div>
-            <div className="border-r border-outline-variant"></div>
-            <div></div>
-          </div>
         </div>
 
         {/* Teleprompter Area */}
@@ -292,17 +279,19 @@ export default function ProfessionalRecord() {
               >
                 <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Filters</span>
+              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Filtreler</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <button 
-                className="w-12 h-12 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors" 
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${layoutMode === 'overlay-mode' ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
                 onClick={toggleLayout} 
-                title="Toggle Layout"
+                title="Tam/Yarım Ekran"
               >
-                <span className="material-symbols-outlined text-[24px]">layers</span>
+                <span className="material-symbols-outlined text-[24px]">
+                  {layoutMode === 'split-mode' ? 'splitscreen' : 'fullscreen'}
+                </span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Layouts</span>
+              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Görünüm</span>
             </div>
           </div>
           {/* Primary Record/Stop Action */}
@@ -310,7 +299,7 @@ export default function ProfessionalRecord() {
             <button onClick={togglePlayback} className="w-20 h-20 bg-surface-container-lowest rounded-full flex items-center justify-center border-[4px] border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] active:scale-95 transition-transform backdrop-blur-xl">
               <div className={`w-8 h-8 rounded-sm transition-all duration-300 ${isPlaying ? 'bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' : 'bg-primary rounded-full'}`}></div>
             </button>
-            <span className={`text-[10px] uppercase font-bold tracking-widest mt-2 drop-shadow-sm ${isPlaying ? 'text-error' : 'text-primary'}`}>{isPlaying ? 'Stop' : 'Start'}</span>
+            <span className={`text-[10px] uppercase font-bold tracking-widest mt-2 drop-shadow-sm ${isPlaying ? 'text-error' : 'text-primary'}`}>{isPlaying ? 'Durdur' : 'Başlat'}</span>
           </div>
           {/* Right Actions */}
           <div className="flex landscape:flex-col gap-4">
@@ -321,13 +310,13 @@ export default function ProfessionalRecord() {
               >
                 <span className="material-symbols-outlined text-[24px]">text_increase</span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Text Size</span>
+              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Boyut</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <button onClick={() => navigate('/editor')} className="w-12 h-12 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
                 <span className="material-symbols-outlined text-[24px]">close</span>
               </button>
-              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Close</span>
+              <span className="text-[10px] text-outline uppercase font-bold tracking-tighter">Kapat</span>
             </div>
           </div>
         </div>
@@ -372,27 +361,8 @@ export default function ProfessionalRecord() {
                 </button>
               ))}
             </div>
-          </div>
-
-          <div>
-            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Format</p>
-            <div className="flex gap-2">
-              {FORMAT_OPTIONS.map(f => (
-                <button
-                  key={f.id}
-                  onClick={() => setVideoFormat(f.id)}
-                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
-                    videoFormat === f.id
-                      ? 'bg-primary text-on-primary border-primary'
-                      : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
             <p className="text-[10px] text-on-surface-variant mt-2 opacity-60">
-              {videoFormat === 'mp4' ? '⚠️ MP4 cihaza göre desteklenmeyebilir' : '✓ WebM tüm cihazlarda çalışır'}
+              ✓ Tüm videolar cihaz uyumluluğu için WebM formatında kaydedilir.
             </p>
           </div>
         </div>

@@ -150,25 +150,25 @@ export default function MyScripts() {
       {/* BottomNavBar (Mobile) */}
       <nav className="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-edge-margin-mobile py-2 bg-surface-container dark:bg-surface-container-high border-t border-outline-variant pb-safe" style={{ paddingBottom: 'env(safe-area-inset-bottom, 8px)' }}>
         {/* Active: Scripts */}
-        <a className="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 active:scale-90 transition-transform" href="#">
+        <button className="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 active:scale-90 transition-transform">
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
           <span className="font-label-caps text-label-caps mt-1">{t('scripts')}</span>
-        </a>
+        </button>
         {/* Inactive: Editor */}
-        <a className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform" href="#">
+        <button onClick={() => navigate('/editor')} className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform">
           <span className="material-symbols-outlined">edit_note</span>
           <span className="font-label-caps text-label-caps mt-1">{t('editor')}</span>
-        </a>
+        </button>
         {/* Inactive: Record */}
-        <a className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform" href="#">
+        <button onClick={() => navigate('/record')} className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform">
           <span className="material-symbols-outlined">videocam</span>
           <span className="font-label-caps text-label-caps mt-1">{t('record')}</span>
-        </a>
+        </button>
         {/* Inactive: Settings */}
-        <a className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform" href="#">
+        <button onClick={() => setShowMenu(true)} className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant dark:hover:bg-surface-bright rounded-full active:scale-90 transition-transform">
           <span className="material-symbols-outlined">settings</span>
           <span className="font-label-caps text-label-caps mt-1">{t('settings')}</span>
-        </a>
+        </button>
       </nav>
 
       {/* Mobile Menu Drawer */}
