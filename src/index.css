@@ -47,5 +47,18 @@ input[type=range]::-webkit-slider-runnable-track {
     height: 4px;
     cursor: pointer;
     background: #414755; /* outline-variant */
-    border-radius: 2px;
+}
+
+/* Hide video media controls completely to avoid black play button flashing */
+video::-webkit-media-controls {
+    display: none !important;
+}
+video::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+video::-webkit-media-controls-panel {
+    display: none !important;
+}
+video::-webkit-media-controls-start-playback-button {
+    display: none !important;
 }

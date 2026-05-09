@@ -341,8 +341,8 @@ export default function ProfessionalRecord() {
       <div className={`flex-1 w-full relative flex flex-col group ${layoutMode} mb-[72px] landscape:mb-0 landscape:mr-[72px]`} id="layout-container">
         {/* Camera Feed Area (Always Fullscreen in Background) */}
         <div className="absolute inset-0 w-full h-full z-0 bg-black">
-          <video ref={videoRef} autoPlay playsInline muted
-            className="w-full h-full object-cover opacity-90"
+          <video ref={videoRef} autoPlay playsInline muted controls={false} disablePictureInPicture disableRemotePlayback
+            className="w-full h-full object-cover opacity-90 pointer-events-none"
             style={{ filter: currentFilter, transform: isMirrored ? 'scaleX(-1)' : 'none' }}
           />
         </div>
