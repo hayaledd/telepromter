@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { useLanguage } from '../context/LanguageContext';
+import MobileMenu from './MobileMenu';
 
 export default function ScriptEditor() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function ScriptEditor() {
 
   const script = getActiveScript();
   const [saved, setSaved] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     if (!script) {
@@ -30,11 +32,18 @@ export default function ScriptEditor() {
     <div className="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col overflow-hidden dark">
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-control-bar-height bg-surface-container-lowest border-b border-surface-container-low">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
+          <button 
+            onClick={() => setShowMenu(true)}
+            aria-label="Menu" 
+            className="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2 active:scale-95 duration-100 block"
+          >
+            <span className="material-symbols-outlined">menu</span>
+          </button>
           <button 
             onClick={() => navigate('/scripts')}
             aria-label="Back" 
-            className="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2 active:scale-95 duration-100"
+            className="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2 active:scale-95 duration-100 hidden md:block"
           >
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_back</span>
           </button>
@@ -126,6 +135,8 @@ export default function ScriptEditor() {
           <span className="font-label-caps text-label-caps mt-1">{t('settings')}</span>
         </button>
       </nav>
+      {/* Mobile Menu */}
+      <MobileMenu show={showMenu} onClose={() => setShowMenu(false)} />
     </div>
   );
 }

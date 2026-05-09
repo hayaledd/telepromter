@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useScript } from '../context/ScriptContext';
 import { useNavigate } from 'react-router-dom';
+import { useScript } from '../context/ScriptContext';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import MobileMenu from './MobileMenu';
 
 export default function ProfessionalRecord() {
   const navigate = useNavigate();
@@ -15,26 +16,27 @@ export default function ProfessionalRecord() {
     }
   }, [script, navigate]);
 
-  const [layoutMode, setLayoutMode] = useState('full');
-  
   // Teleprompter State
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(5);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
-  const [recordedMimeType, setRecordedMimeType] = useState('video/webm');
-  const [isMirrored, setIsMirrored] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [activeFilter, setActiveFilter] = useState('clean');
+  const [recordedMimeType, setRecordedMimeType] = useState(null);
+  const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'ok' | 'error'
+  const [showMenu, setShowMenu] = useState(false);
+
+  // Layouts: 'full' (camera behind text), 'bottom' (camera bottom, text top)
+  const [layoutMode, setLayoutMode] = useState('full');
   const [showSettings, setShowSettings] = useState(false);
   const [countdown, setCountdown] = useState(null); // null | 3 | 2 | 1
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [videoQuality, setVideoQuality] = useState('1080p');
   const [textColor, setTextColor] = useState('#ffffff');
+  const [isMirrored, setIsMirrored] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('clean');
   const [countdownDuration, setCountdownDuration] = useState(3);
   const [facingMode, setFacingMode] = useState('user');
   const [textWidth, setTextWidth] = useState('100%');
-  const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'ok' | 'error'
-
   // Detect best supported MIME type for this device
   const getSupportedMimeType = () => {
     const types = [
@@ -303,6 +305,13 @@ export default function ProfessionalRecord() {
           <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
         </div>
         <div className="flex items-center gap-2 pointer-events-auto">
+          <button 
+            onClick={() => setShowMenu(true)}
+            className="flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors bg-surface-container/30 text-on-surface hover:bg-surface-variant/50"
+            title="Menü"
+          >
+            <span className="material-symbols-outlined text-[18px]">menu</span>
+          </button>
           <button 
             onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')}
             className="flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors bg-surface-container/30 text-on-surface hover:bg-surface-variant/50"
@@ -694,6 +703,8 @@ export default function ProfessionalRecord() {
           </div>
         </div>
       )}
+      {/* Mobile Menu */}
+      <MobileMenu show={showMenu} onClose={() => setShowMenu(false)} />
     </div>
   );
 }
