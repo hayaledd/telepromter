@@ -24,6 +24,21 @@ export default function ProfessionalRecord() {
   const [isMirrored, setIsMirrored] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilter, setActiveFilter] = useState('normal');
+  const [showSettings, setShowSettings] = useState(false);
+  const [countdown, setCountdown] = useState(null); // null | 3 | 2 | 1
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [videoQuality, setVideoQuality] = useState('1080p');
+  const [videoFormat, setVideoFormat] = useState('webm');
+
+  const QUALITY_OPTIONS = [
+    { id: '480p',  label: '480p',  width: 854,  height: 480,  bps: 1_000_000 },
+    { id: '720p',  label: '720p',  width: 1280, height: 720,  bps: 2_500_000 },
+    { id: '1080p', label: '1080p', width: 1920, height: 1080, bps: 5_000_000 },
+  ];
+  const FORMAT_OPTIONS = [
+    { id: 'webm', label: 'WebM', mime: 'video/webm' },
+    { id: 'mp4',  label: 'MP4',  mime: 'video/mp4' },
+  ];
 
   const FILTERS = [
     { id: 'normal',   label: 'Normal',   icon: 'videocam',        style: 'none' },
@@ -52,10 +67,32 @@ export default function ProfessionalRecord() {
     setLayoutMode(prev => prev === 'split-mode' ? 'overlay-mode' : 'split-mode');
   };
 
+  // Real elapsed time counter
+  useEffect(() => {
+    let interval = null;
+    if (isPlaying) {
+      interval = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
+    } else {
+      setElapsedSeconds(0);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  const formatTime = (secs) => {
+    const h = String(Math.floor(secs / 3600)).padStart(2, '0');
+    const m = String(Math.floor((secs % 3600) / 60)).padStart(2, '0');
+    const s = String(secs % 60).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  };
+
+  const startWithCountdown = () => {
+    setCountdown(3);
+  };
+
   const togglePlayback = () => {
     if (!isPlaying) {
-      // START RECORDING
-      if (mediaStreamRef.current) {
+      startWithCountdown();
+    } else {
         try {
           recordedChunksRef.current = [];
           const mediaRecorder = new MediaRecorder(mediaStreamRef.current, { mimeType: 'video/webm' });
@@ -87,6 +124,42 @@ export default function ProfessionalRecord() {
       setIsPlaying(false);
     }
   };
+
+  // Countdown logic
+  useEffect(() => {
+    if (countdown === null) return;
+    if (countdown === 0) {
+      setCountdown(null);
+      // Actually start recording
+      if (mediaStreamRef.current) {
+        try {
+          recordedChunksRef.current = [];
+          const selectedFormat = FORMAT_OPTIONS.find(f => f.id === videoFormat);
+          const mimeType = MediaRecorder.isTypeSupported(selectedFormat.mime) ? selectedFormat.mime : 'video/webm';
+          const selectedQuality = QUALITY_OPTIONS.find(q => q.id === videoQuality);
+          const mediaRecorder = new MediaRecorder(mediaStreamRef.current, {
+            mimeType,
+            videoBitsPerSecond: selectedQuality.bps,
+          });
+          mediaRecorderRef.current = mediaRecorder;
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) recordedChunksRef.current.push(event.data);
+          };
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunksRef.current, { type: mimeType });
+            setRecordedVideoUrl(URL.createObjectURL(blob));
+          };
+          mediaRecorder.start();
+        } catch (e) {
+          console.error('MediaRecorder start failed:', e);
+        }
+      }
+      setIsPlaying(true);
+      return;
+    }
+    const t = setTimeout(() => setCountdown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [countdown]);
 
   const adjustSpeed = (delta) => {
     setSpeed(prev => Math.max(1, Math.min(10, prev + delta)));
@@ -157,20 +230,22 @@ export default function ProfessionalRecord() {
     <div className="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col font-body-md dark">
       {/* HUD Overlay */}
       <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start pointer-events-none">
-        <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10 pointer-events-auto bg-gradient-to-r from-surface-container/40 to-surface-container-high/40">
+        <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10 pointer-events-auto">
           <span className="flex h-3 w-3 relative">
             {isPlaying && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
             <span className={`relative inline-flex rounded-full h-3 w-3 ${isPlaying ? 'bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]' : 'bg-surface-variant'}`}></span>
           </span>
           <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? 'REC' : 'READY'}</span>
-          <span className="font-body-md text-on-surface ml-1">{isPlaying ? '00:00:12' : '00:00:00'}</span>
+          <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
         </div>
-        <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10 pointer-events-auto bg-gradient-to-r from-surface-container/40 to-surface-container-high/40">
-          <span className="flex h-3 w-3 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-primary shadow-[0_0_8px_rgba(173,198,255,0.8)]"></span>
-          </span>
-          <span className="font-bold text-primary text-[12px] tracking-widest uppercase">SYNC</span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => { setShowSettings(!showSettings); setShowFilters(false); }}
+            className={`flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 pointer-events-auto transition-colors ${showSettings ? 'bg-primary text-on-primary' : 'bg-surface-container/30 text-on-surface-variant'}`}
+          >
+            <span className="material-symbols-outlined text-[16px]">settings</span>
+            <span className="font-bold text-[11px] tracking-widest uppercase">{videoQuality} · {videoFormat.toUpperCase()}</span>
+          </button>
         </div>
       </div>
 
@@ -281,6 +356,71 @@ export default function ProfessionalRecord() {
           </div>
         </div>
       </div>
+
+      {/* Countdown Overlay */}
+      {countdown !== null && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-[120px] font-black text-white leading-none drop-shadow-[0_0_40px_rgba(173,198,255,0.8)] animate-pulse">
+              {countdown}
+            </span>
+            <span className="font-label-caps text-label-caps text-primary tracking-widest uppercase">Hazırlan...</span>
+          </div>
+        </div>
+      )}
+
+      {/* Video Settings Panel */}
+      {showSettings && (
+        <div className="fixed top-[72px] right-4 z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-2xl min-w-[220px]">
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">Video Ayarları</span>
+            <button onClick={() => setShowSettings(false)} className="text-on-surface-variant">
+              <span className="material-symbols-outlined text-[18px]">close</span>
+            </button>
+          </div>
+          
+          <div className="mb-4">
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Kalite</p>
+            <div className="flex gap-2">
+              {QUALITY_OPTIONS.map(q => (
+                <button
+                  key={q.id}
+                  onClick={() => setVideoQuality(q.id)}
+                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
+                    videoQuality === q.id
+                      ? 'bg-primary text-on-primary border-primary'
+                      : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
+                  }`}
+                >
+                  {q.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Format</p>
+            <div className="flex gap-2">
+              {FORMAT_OPTIONS.map(f => (
+                <button
+                  key={f.id}
+                  onClick={() => setVideoFormat(f.id)}
+                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
+                    videoFormat === f.id
+                      ? 'bg-primary text-on-primary border-primary'
+                      : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-on-surface-variant mt-2 opacity-60">
+              {videoFormat === 'mp4' ? '⚠️ MP4 cihaza göre desteklenmeyebilir' : '✓ WebM tüm cihazlarda çalışır'}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Filters Panel */}
       {showFilters && (
