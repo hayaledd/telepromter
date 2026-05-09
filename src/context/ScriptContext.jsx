@@ -89,6 +89,10 @@ export const ScriptProvider = ({ children }) => {
     setActiveScriptId(newId);
   };
 
+  const deleteScript = (id) => {
+    setScripts(prev => prev.filter(s => s.id !== id));
+  };
+
   return (
     <ScriptContext.Provider value={{
       scripts,
@@ -98,6 +102,7 @@ export const ScriptProvider = ({ children }) => {
       updateActiveScript,
       createNewScript,
       importScript,
+      deleteScript,
       globalFontSize,
       setGlobalFontSize
     }}>
