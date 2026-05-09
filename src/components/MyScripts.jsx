@@ -1,13 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function MyScripts() {
   const navigate = useNavigate();
-  const { scripts, setActiveScriptId, createNewScript, importScript } = useScript();
+  const { scripts, setActiveScriptId, createNewScript, importScript, deleteScript } = useScript();
   const { t, lang, toggleLang } = useLanguage();
   const fileInputRef = useRef(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   const handleOpenScript = (id) => {
     setActiveScriptId(id);
@@ -38,7 +39,7 @@ export default function MyScripts() {
     <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col pt-control-bar-height pb-control-bar-height md:pb-0 dark">
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 flex items-center px-4 h-control-bar-height bg-surface-container-lowest dark:bg-surface-container-lowest justify-between md:hidden">
-        <button className="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/50 transition-colors active:scale-95 duration-100 p-2 rounded-full flex items-center justify-center">
+        <button onClick={() => setShowMenu(true)} className="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/50 transition-colors active:scale-95 duration-100 p-2 rounded-full flex items-center justify-center">
           <span className="material-symbols-outlined">menu</span>
         </button>
         <h1 className="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim">{t('appName')}</h1>
@@ -169,6 +170,42 @@ export default function MyScripts() {
           <span className="font-label-caps text-label-caps mt-1">{t('settings')}</span>
         </a>
       </nav>
+
+      {/* Mobile Menu Drawer */}
+      {showMenu && (
+        <div className="fixed inset-0 z-[100] flex">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowMenu(false)} />
+          <div className="relative z-10 w-72 h-full bg-surface-container-lowest border-r border-outline-variant flex flex-col py-8 px-4 shadow-2xl">
+            <div className="flex items-center gap-3 mb-8 px-2">
+              <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+                <span className="material-symbols-outlined text-on-primary-container">movie</span>
+              </div>
+              <div>
+                <p className="font-bold text-on-surface text-[16px]">ScriptFlow</p>
+                <p className="text-on-surface-variant text-[12px]">v2.4.0</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-1 flex-1">
+              <button onClick={() => setShowMenu(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary-container text-on-primary-container font-bold">
+                <span className="material-symbols-outlined">description</span>
+                <span>{t('myScripts')}</span>
+              </button>
+              <button onClick={() => { handleCreateNew(); setShowMenu(false); }} className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">
+                <span className="material-symbols-outlined">add_circle</span>
+                <span>{t('createNew')}</span>
+              </button>
+              <button onClick={() => { fileInputRef.current?.click(); setShowMenu(false); }} className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">
+                <span className="material-symbols-outlined">upload_file</span>
+                <span>{t('importTxt')}</span>
+              </button>
+            </div>
+            <button onClick={toggleLang} className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors border border-outline-variant">
+              <span className="material-symbols-outlined">language</span>
+              <span>{lang === 'tr' ? 'Switch to English' : "Türkçe'ye Geç"}</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

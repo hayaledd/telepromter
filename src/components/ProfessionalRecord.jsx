@@ -41,17 +41,17 @@ export default function ProfessionalRecord() {
   ];
 
   const FILTERS = [
-    { id: 'normal',   label: 'Normal',   icon: 'videocam',        style: 'none' },
-    { id: 'neon',     label: 'Neon',     icon: 'lens_blur',       style: 'saturate(2) hue-rotate(200deg) brightness(1.2) contrast(1.3)' },
-    { id: 'cinema',   label: 'Cinema',   icon: 'movie',           style: 'sepia(0.5) contrast(1.2) brightness(0.9) saturate(0.8)' },
-    { id: 'golden',   label: 'Golden',   icon: 'wb_sunny',        style: 'sepia(0.3) saturate(1.5) brightness(1.1) hue-rotate(-10deg)' },
-    { id: 'noir',     label: 'Noir',     icon: 'exposure',        style: 'grayscale(1) contrast(1.4) brightness(0.85)' },
-    { id: 'cool',     label: 'Cool',     icon: 'ac_unit',         style: 'hue-rotate(180deg) saturate(1.3) brightness(1.05)' },
-    { id: 'vivid',    label: 'Vivid',    icon: 'palette',         style: 'saturate(2.5) contrast(1.2) brightness(1.05)' },
-    { id: 'matrix',   label: 'Matrix',   icon: 'terminal',        style: 'hue-rotate(90deg) saturate(3) brightness(0.8) contrast(1.5)' },
+    { id: 'clean',    label: 'Temiz',      icon: 'wb_auto',       style: 'brightness(1.05) contrast(1.0) saturate(1.0)' },
+    { id: 'warm',     label: 'Sıcak',      icon: 'wb_sunny',      style: 'brightness(1.05) contrast(1.05) saturate(1.2) sepia(0.15)' },
+    { id: 'cool',     label: 'Soğuk',      icon: 'ac_unit',       style: 'brightness(1.02) contrast(1.05) saturate(0.9) hue-rotate(10deg)' },
+    { id: 'cinema',   label: 'Sinema',     icon: 'movie',         style: 'brightness(0.92) contrast(1.25) saturate(0.85)' },
+    { id: 'portrait', label: 'Portre',     icon: 'face',          style: 'brightness(1.08) contrast(0.95) saturate(1.1)' },
+    { id: 'studio',   label: 'Stüdyo',     icon: 'videocam',      style: 'brightness(1.0) contrast(1.15) saturate(1.05) hue-rotate(-5deg)' },
+    { id: 'bw',       label: 'S/B',        icon: 'exposure',      style: 'grayscale(1) brightness(1.05) contrast(1.2)' },
+    { id: 'vivid',    label: 'Canlı',      icon: 'palette',       style: 'brightness(1.04) contrast(1.1) saturate(1.6)' },
   ];
 
-  const currentFilter = FILTERS.find(f => f.id === activeFilter)?.style || 'none';
+  const currentFilter = FILTERS.find(f => f.id === activeFilter)?.style || 'brightness(1) contrast(1)';
   
   // Refs
   const videoRef = useRef(null);
@@ -229,7 +229,7 @@ export default function ProfessionalRecord() {
   return (
     <div className="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col font-body-md dark">
       {/* HUD Overlay */}
-      <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start pointer-events-none">
+      <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start">
         <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10 pointer-events-auto">
           <span className="flex h-3 w-3 relative">
             {isPlaying && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
