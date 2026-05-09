@@ -295,7 +295,7 @@ export default function ProfessionalRecord() {
   const scriptLines = script.content.split('\n').filter(line => line.trim() !== '');
 
   return (
-    <div className="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col font-body-md dark">
+    <div className="bg-background text-on-background fixed inset-0 h-[100dvh] w-screen overflow-hidden overscroll-none flex flex-col font-body-md dark">
       {/* HUD Overlay */}
       <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start">
         <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10 pointer-events-auto">
@@ -354,7 +354,7 @@ export default function ProfessionalRecord() {
           )}
 
           {/* Scrolling Text Container */}
-          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full mx-auto px-edge-margin-tablet overflow-y-auto space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ maxWidth: textWidth, scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
+          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full mx-auto px-edge-margin-tablet overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ maxWidth: textWidth, scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
             {scriptLines.map((line, idx) => (
               <p key={idx} className="font-prompter-display font-bold drop-shadow-xl" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor }}>
                 {line}
