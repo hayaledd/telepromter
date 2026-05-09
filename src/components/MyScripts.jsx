@@ -99,7 +99,7 @@ export default function MyScripts() {
           {/* Yeni Metin */}
           <button
             onClick={handleCreateNew}
-            className="relative group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-primary/30 bg-primary/10 hover:bg-primary/20 active:scale-95 transition-all duration-150"
+            className="btn-shimmer group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl active:scale-95 duration-150"
           >
             <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-primary text-[26px]" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
@@ -110,7 +110,7 @@ export default function MyScripts() {
           {/* .txt İçe Aktar */}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="relative group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 active:scale-95 transition-all duration-150"
+            className="btn-shimmer group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl active:scale-95 duration-150"
           >
             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-on-surface-variant text-[26px]">upload_file</span>

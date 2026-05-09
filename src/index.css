@@ -79,3 +79,57 @@ video *::-webkit-media-controls-overlay-play-button {
     display: none !important;
     -webkit-appearance: none !important;
 }
+
+/* Premium Button Styles */
+.btn-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #b8c3ff 50%, #06b6d4 100%);
+  background-size: 200% 200%;
+  box-shadow: 0 0 24px rgba(99,102,241,0.5), 0 4px 16px rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+  animation: gradientShift 3s ease infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.btn-gradient:hover { box-shadow: 0 0 40px rgba(99,102,241,0.7), 0 4px 20px rgba(0,0,0,0.5); transform: translateY(-1px); }
+.btn-gradient:active { transform: scale(0.97); }
+
+.btn-icon {
+  background: rgba(184,195,255,0.08);
+  border: 1px solid rgba(184,195,255,0.2);
+  transition: all 0.25s ease;
+}
+.btn-icon:hover { background: rgba(184,195,255,0.14); border-color: rgba(184,195,255,0.4); }
+.btn-icon:hover .icon-wrap { background: rgba(184,195,255,0.2); transform: scale(1.1); }
+.btn-icon:hover .arrow { opacity: 0.7; transform: translateX(3px); }
+.btn-icon:active { transform: scale(0.98); }
+
+.btn-icon-wrap {
+  transition: all 0.2s ease;
+}
+
+.btn-shimmer {
+  background: linear-gradient(135deg, #1e1f2e 0%, #2a2d4a 100%);
+  border: 1px solid rgba(184,195,255,0.25);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: skewX(-20deg);
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+.btn-shimmer:hover { border-color: rgba(184,195,255,0.5); box-shadow: 0 0 20px rgba(184,195,255,0.15); }
+.btn-shimmer:active { transform: scale(0.97); }

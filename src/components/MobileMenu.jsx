@@ -30,22 +30,40 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
           </div>
         </div>
         <div className="flex flex-col gap-1 flex-1">
-          <button onClick={() => { navigate('/scripts'); onClose(); }} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/15 text-primary font-bold transition-colors">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
-            <span>{t('myScripts')}</span>
+          <button onClick={() => { navigate('/scripts'); onClose(); }} className="btn-icon">
+            <div className="icon-wrap text-primary">
+              <span className="material-symbols-outlined">description</span>
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="text-[15px] font-bold text-white">{t('scripts')}</span>
+              <span className="text-[11px] text-white/40">Tüm metinleriniz</span>
+            </div>
+            <span className="material-symbols-outlined arrow text-white ml-auto">chevron_right</span>
           </button>
           <button onClick={handleCreateNew} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:bg-white/5 transition-colors">
             <span className="material-symbols-outlined">add_circle</span>
             <span>{t('createNew')}</span>
           </button>
-          <button onClick={() => { navigate('/recordings'); onClose(); }} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:bg-white/5 transition-colors">
-            <span className="material-symbols-outlined">video_library</span>
-            <span>{t('myVideos')}</span>
+          <button onClick={() => { navigate('/recordings'); onClose(); }} className="btn-icon">
+            <div className="icon-wrap" style={{ background: 'rgba(0,220,229,0.12)', color: '#00dce5' }}>
+              <span className="material-symbols-outlined">video_library</span>
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="text-[15px] font-bold text-white">{t('myVideos')}</span>
+              <span className="text-[11px] text-white/40">Kayıtlı videolar</span>
+            </div>
+            <span className="material-symbols-outlined arrow text-white ml-auto">chevron_right</span>
           </button>
           <div className="h-[1px] bg-white/10 my-2 mx-4"></div>
-          <button onClick={() => { navigate('/tutorial'); onClose(); }} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:bg-white/5 transition-colors">
-            <span className="material-symbols-outlined">help</span>
-            <span>{t('tutorial') || 'Nasıl Kullanılır?'}</span>
+          <button onClick={() => { navigate('/tutorial'); onClose(); }} className="btn-icon">
+            <div className="icon-wrap text-amber-400" style={{ background: 'rgba(251, 191, 36, 0.12)' }}>
+              <span className="material-symbols-outlined">school</span>
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="text-[15px] font-bold text-white">{t('tutorial')}</span>
+              <span className="text-[11px] text-white/40">Adım adım öğren</span>
+            </div>
+            <span className="material-symbols-outlined arrow text-white ml-auto">chevron_right</span>
           </button>
         </div>
         <button onClick={toggleLang} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-white/5 transition-colors border border-white/10">

@@ -64,7 +64,7 @@ export default function ScriptEditor() {
           </button>
           <button 
             onClick={() => navigate('/record')}
-            className="bg-primary text-on-primary font-headline-md text-body-md px-4 py-2 md:px-6 rounded-full hover:bg-primary-fixed transition-colors active:scale-95 duration-100 flex items-center gap-2"
+            className="btn-gradient !px-4 !py-2 md:!px-6 rounded-full"
           >
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>videocam</span>
             <span className="hidden md:inline">{t('startRec')}</span>

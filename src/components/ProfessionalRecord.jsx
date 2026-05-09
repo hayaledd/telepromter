@@ -411,8 +411,19 @@ export default function ProfessionalRecord() {
           </div>
           {/* Primary Record/Stop Action */}
           <div className="flex flex-col items-center relative -top-3 landscape:top-0 landscape:-left-3 shrink-0">
-            <button onClick={togglePlayback} className="w-16 h-16 md:w-20 md:h-20 bg-surface-container-lowest rounded-full flex items-center justify-center border-[4px] border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] active:scale-95 transition-transform backdrop-blur-xl">
-              <div className={`w-6 h-6 md:w-8 md:h-8 rounded-sm transition-all duration-300 ${isPlaying ? 'bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' : 'bg-primary rounded-full'}`}></div>
+            <button 
+              onClick={togglePlayback} 
+              className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-[4px] active:scale-95 transition-all duration-300 ${
+                isPlaying 
+                  ? 'bg-surface-container-lowest border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-xl' 
+                  : 'btn-gradient border-transparent !rounded-full !p-0 shadow-[0_0_30px_rgba(99,102,241,0.6)] hover:shadow-[0_0_40px_rgba(99,102,241,0.8)]'
+              }`}
+            >
+              <div className={`transition-all duration-300 ${
+                isPlaying 
+                  ? 'w-6 h-6 md:w-8 md:h-8 rounded-sm bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' 
+                  : 'w-8 h-8 md:w-10 md:h-10 bg-white rounded-full'
+              }`}></div>
             </button>
             <span className={`text-[10px] uppercase font-bold tracking-widest mt-1 md:mt-2 drop-shadow-sm ${isPlaying ? 'text-error' : 'text-primary'}`}>{isPlaying ? t('stop') : t('start')}</span>
           </div>
@@ -664,7 +675,7 @@ export default function ProfessionalRecord() {
                       setSaveStatus('error');
                     }
                   }}
-                  className="w-full bg-primary text-on-primary font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] transition-all shadow-[0_8px_32px_rgba(173,198,255,0.25)] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="btn-shimmer w-full text-white font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {saveStatus === 'saving' ? (
                     <>
