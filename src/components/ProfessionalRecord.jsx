@@ -350,15 +350,10 @@ export default function ProfessionalRecord() {
         {/* Teleprompter Area */}
         <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 bg-transparent ${
           layoutMode === 'bottom' 
-            ? 'bottom-0 h-[50vh] border-t border-white/20 backdrop-blur-sm' 
+            ? 'bottom-0 h-[50vh]' 
             : 'inset-0 h-full'
         }`}>
-          {layoutMode === 'bottom' && (
-            <div className="absolute top-[20%] w-full border-t border-primary/50 shadow-[0_0_10px_rgba(173,198,255,0.3)] z-20 pointer-events-none flex items-center justify-between px-2">
-              <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-primary/70 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
-              <div className="w-0 h-0 border-t-[6px] border-t-transparent border-r-[10px] border-r-primary/70 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
-            </div>
-          )}
+
 
           {/* Scrolling Text Container */}
           <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full mx-auto px-edge-margin-tablet overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ maxWidth: textWidth, scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
