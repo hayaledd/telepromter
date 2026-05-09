@@ -6,6 +6,7 @@ import SplashScreen from './components/SplashScreen'
 import MyScripts from './components/MyScripts'
 import ScriptEditor from './components/ScriptEditor'
 import ProfessionalRecord from './components/ProfessionalRecord'
+import Recordings from './components/Recordings'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/scripts" element={<MyScripts />} />
             <Route path="/editor" element={<ScriptEditor />} />
             <Route path="/record" element={<ProfessionalRecord />} />
+            <Route path="/recordings" element={<Recordings />} />
           </Routes>
         </Router>
       </ScriptProvider>

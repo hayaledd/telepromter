@@ -68,10 +68,10 @@ export default function MyScripts() {
             <span className="material-symbols-outlined">star</span>
             <span className="font-body-md text-body-md">Favorites</span>
           </a>
-          <a className="flex items-center gap-4 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all rounded-full px-4 py-3 mx-2 active:translate-x-1 duration-200" href="#">
+          <button onClick={() => navigate('/recordings')} className="flex items-center gap-4 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all rounded-full px-4 py-3 mx-2 active:translate-x-1 duration-200">
             <span className="material-symbols-outlined">history</span>
             <span className="font-body-md text-body-md">Recent Recordings</span>
-          </a>
+          </button>
           <a className="flex items-center gap-4 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all rounded-full px-4 py-3 mx-2 active:translate-x-1 duration-200" href="#">
             <span className="material-symbols-outlined">cloud_upload</span>
             <span className="font-body-md text-body-md">Cloud Sync</span>
@@ -193,6 +193,10 @@ export default function MyScripts() {
               <button onClick={() => { handleCreateNew(); setShowMenu(false); }} className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">
                 <span className="material-symbols-outlined">add_circle</span>
                 <span>{t('createNew')}</span>
+              </button>
+              <button onClick={() => navigate('/recordings')} className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">
+                <span className="material-symbols-outlined">video_library</span>
+                <span>Videolarım</span>
               </button>
               <button onClick={() => { fileInputRef.current?.click(); setShowMenu(false); }} className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">
                 <span className="material-symbols-outlined">upload_file</span>
