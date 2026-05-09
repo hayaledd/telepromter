@@ -218,7 +218,7 @@ export default function ProfessionalRecord() {
             {isPlaying && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
             <span className={`relative inline-flex rounded-full h-3 w-3 ${isPlaying ? 'bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]' : 'bg-surface-variant'}`}></span>
           </span>
-          <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? 'REC' : 'READY'}</span>
+          <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? 'KAYIT' : 'HAZIR'}</span>
           <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
         </div>
         <div className="flex items-center gap-2">
@@ -242,16 +242,12 @@ export default function ProfessionalRecord() {
         </div>
 
         {/* Teleprompter Area */}
-        <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 bg-black/50 backdrop-blur-sm ${
+        <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 bg-black/40 ${
           layoutMode === 'bottom' 
             ? 'bottom-0 h-[50vh] border-t border-white/10' 
             : 'inset-0 h-full'
         }`}>
-          {/* Reading Line Indicator */}
-          <div className={`absolute w-full border-t border-primary/80 shadow-[0_0_10px_rgba(173,198,255,0.5)] z-20 pointer-events-none flex items-center justify-between px-2 ${layoutMode === 'bottom' ? 'top-1/4' : 'top-1/3'}`}>
-            <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-primary/90 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
-            <div className="w-0 h-0 border-t-[6px] border-t-transparent border-r-[10px] border-r-primary/90 border-b-[6px] border-b-transparent drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]"></div>
-          </div>
+
           {/* Scrolling Text Container */}
           <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full max-w-4xl mx-auto px-edge-margin-tablet overflow-y-auto space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
             {scriptLines.map((line, idx) => (
@@ -394,6 +390,13 @@ export default function ProfessionalRecord() {
               ✓ Tüm videolar cihaz uyumluluğu için WebM formatında kaydedilir.
             </p>
           </div>
+
+          <button
+            onClick={() => setShowSettings(false)}
+            className="w-full mt-4 bg-primary text-on-primary font-bold py-3 rounded-xl active:scale-95 transition-transform"
+          >
+            Kaydet
+          </button>
         </div>
       )}
 
@@ -430,7 +433,7 @@ export default function ProfessionalRecord() {
 
       {recordedVideoUrl && (
         <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center p-4">
-          <h2 className="font-headline-md text-headline-md text-on-surface mb-6">Review Recording</h2>
+          <h2 className="font-headline-md text-headline-md text-on-surface mb-6">Kaydı İncele</h2>
           
           <div className="w-full max-w-lg bg-surface-container rounded-2xl overflow-hidden shadow-2xl border border-white/10 mb-8 relative">
             <video src={recordedVideoUrl} controls className="w-full h-auto max-h-[60vh] object-contain bg-black"></video>
@@ -442,9 +445,9 @@ export default function ProfessionalRecord() {
                 setRecordedVideoUrl(null);
                 recordedChunksRef.current = [];
               }}
-              className="px-6 py-3 rounded-full font-body-md text-on-surface-variant hover:bg-surface-variant transition-colors"
+              className="px-6 py-3 rounded-full font-body-md text-on-surface-variant hover:bg-surface-variant transition-colors border border-outline-variant"
             >
-              Discard & Retake
+              Sil ve Yeniden Çek
             </button>
             <button 
               onClick={async () => {
@@ -469,7 +472,7 @@ export default function ProfessionalRecord() {
               className="bg-primary text-on-primary font-headline-md px-8 py-3 rounded-full hover:bg-primary-fixed transition-colors shadow-lg shadow-primary/20 flex items-center gap-2"
             >
               <span className="material-symbols-outlined">download</span>
-              Save Video
+              Videoyu Kaydet
             </button>
           </div>
         </div>
