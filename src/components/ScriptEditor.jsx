@@ -94,7 +94,7 @@ export default function ScriptEditor() {
 
       {/* Floating Editor Toolbar */}
       <div className="fixed bottom-[calc(72px+16px)] md:bottom-gutter left-1/2 transform -translate-x-1/2 w-[calc(100%-32px)] md:w-auto md:min-w-[400px] z-40">
-        <div className="bg-surface-container-high rounded-full border border-outline-variant/30 shadow-lg p-2 flex items-center justify-between gap-6 px-6">
+        <div className="bg-surface-container-high rounded-full border border-outline-variant/30 shadow-lg p-2 flex items-center justify-center gap-6 px-6">
           {/* Font Size Controls */}
           <div className="flex items-center gap-3">
             <button 
