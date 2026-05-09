@@ -29,6 +29,7 @@ export default function ProfessionalRecord() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [videoQuality, setVideoQuality] = useState('1080p');
   const [textColor, setTextColor] = useState('#ffffff');
+  const [countdownDuration, setCountdownDuration] = useState(3);
 
   const TEXT_COLORS = [
     { id: 'white',  value: '#ffffff', bg: 'bg-white' },
@@ -89,7 +90,7 @@ export default function ProfessionalRecord() {
   };
 
   const startWithCountdown = () => {
-    setCountdown(3);
+    setCountdown(countdownDuration);
   };
 
   const togglePlayback = () => {
@@ -403,6 +404,25 @@ export default function ProfessionalRecord() {
             <p className="text-[10px] text-on-surface-variant mt-2 opacity-60">
               ✓ Tüm videolar cihaz uyumluluğu için WebM formatında kaydedilir.
             </p>
+          </div>
+          
+          <div className="mb-4 mt-4">
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Geri Sayım</p>
+            <div className="flex gap-2">
+              {[3, 5, 10].map(sec => (
+                <button
+                  key={sec}
+                  onClick={() => setCountdownDuration(sec)}
+                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
+                    countdownDuration === sec
+                      ? 'bg-primary text-on-primary border-primary'
+                      : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
+                  }`}
+                >
+                  {sec}s
+                </button>
+              ))}
+            </div>
           </div>
 
           <button
