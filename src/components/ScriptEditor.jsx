@@ -47,27 +47,27 @@ export default function ScriptEditor() {
           >
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_back</span>
           </button>
-          <h1 className="font-headline-md text-headline-md text-on-surface hidden md:block">Metni Düzenle</h1>
+          <h1 className="font-headline-md text-headline-md text-on-surface hidden md:block">{t('editScript')}</h1>
         </div>
         <div className="flex items-center gap-2">
           {saved && (
             <span className="text-green-400 text-[13px] font-bold flex items-center gap-1 animate-pulse">
               <span className="material-symbols-outlined text-[16px]">check_circle</span>
-              Kaydedildi!
+              {t('saved')}
             </span>
           )}
           <button 
             onClick={handleSave}
             className="text-primary font-bold px-4 py-2 rounded-full hover:bg-primary-container/50 transition-colors active:scale-95 text-[14px]"
           >
-            Kaydet
+            {t('save')}
           </button>
           <button 
             onClick={() => navigate('/record')}
             className="bg-primary text-on-primary font-headline-md text-body-md px-4 py-2 md:px-6 rounded-full hover:bg-primary-fixed transition-colors active:scale-95 duration-100 flex items-center gap-2"
           >
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>videocam</span>
-            <span className="hidden md:inline">Kayda Başla</span>
+            <span className="hidden md:inline">{t('startRec')}</span>
           </button>
         </div>
       </header>
@@ -77,7 +77,7 @@ export default function ScriptEditor() {
         {/* Script Title Input */}
         <input 
           className="w-full bg-transparent border-none text-headline-md font-headline-md text-on-surface focus:ring-0 focus:outline-none py-6 placeholder-on-surface-variant/50" 
-          placeholder="Metin Başlığı" 
+          placeholder={t('titlePlaceholder')} 
           type="text" 
           value={script.title}
           onChange={(e) => updateActiveScript({ title: e.target.value })}
@@ -85,7 +85,7 @@ export default function ScriptEditor() {
         {/* Script Text Area */}
         <textarea 
           className="flex-grow w-full bg-transparent border-none resize-none focus:ring-0 focus:outline-none font-prompter-standard text-on-surface placeholder-on-surface-variant/30 py-4" 
-          placeholder="Metninizi buraya yazmaya başlayın..."
+          placeholder={t('contentPlaceholder')}
           value={script.content}
           onChange={(e) => updateActiveScript({ content: e.target.value })}
           style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4 }}

@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import MobileMenu from './MobileMenu';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ProfessionalRecord() {
   const navigate = useNavigate();
   const { getActiveScript, globalFontSize, setGlobalFontSize } = useScript();
+  const { t } = useLanguage();
   const script = getActiveScript();
 
   // If no script is active, redirect back to scripts list
@@ -301,21 +303,21 @@ export default function ProfessionalRecord() {
             {isPlaying && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
             <span className={`relative inline-flex rounded-full h-3 w-3 ${isPlaying ? 'bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]' : 'bg-surface-variant'}`}></span>
           </span>
-          <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? 'KAYIT' : 'HAZIR'}</span>
+          <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? t('recording') : t('ready')}</span>
           <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
         </div>
         <div className="flex items-center gap-2 pointer-events-auto">
           <button 
             onClick={() => setShowMenu(true)}
             className="flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors bg-surface-container/30 text-on-surface hover:bg-surface-variant/50"
-            title="Menü"
+            title={t('menu')}
           >
             <span className="material-symbols-outlined text-[18px]">menu</span>
           </button>
           <button 
             onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')}
             className="flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors bg-surface-container/30 text-on-surface hover:bg-surface-variant/50"
-            title="Kamerayı Çevir"
+            title={t('flipCamera')}
           >
             <span className="material-symbols-outlined text-[18px]">flip_camera_ios</span>
           </button>
@@ -390,19 +392,19 @@ export default function ProfessionalRecord() {
               >
                 <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
               </button>
-              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">Filtreler</span>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">{t('filters')}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <button 
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${layoutMode === 'full' ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
                 onClick={toggleLayout} 
-                title="Tam/Yarım Ekran"
+                title={t('viewMode')}
               >
                 <span className="material-symbols-outlined text-[24px]">
                   {layoutMode === 'full' ? 'fullscreen' : 'splitscreen'}
                 </span>
               </button>
-              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">Görünüm</span>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">{t('viewMode')}</span>
             </div>
           </div>
           {/* Primary Record/Stop Action */}
@@ -410,7 +412,7 @@ export default function ProfessionalRecord() {
             <button onClick={togglePlayback} className="w-16 h-16 md:w-20 md:h-20 bg-surface-container-lowest rounded-full flex items-center justify-center border-[4px] border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] active:scale-95 transition-transform backdrop-blur-xl">
               <div className={`w-6 h-6 md:w-8 md:h-8 rounded-sm transition-all duration-300 ${isPlaying ? 'bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' : 'bg-primary rounded-full'}`}></div>
             </button>
-            <span className={`text-[10px] uppercase font-bold tracking-widest mt-1 md:mt-2 drop-shadow-sm ${isPlaying ? 'text-error' : 'text-primary'}`}>{isPlaying ? 'Durdur' : 'Başlat'}</span>
+            <span className={`text-[10px] uppercase font-bold tracking-widest mt-1 md:mt-2 drop-shadow-sm ${isPlaying ? 'text-error' : 'text-primary'}`}>{isPlaying ? t('stop') : t('start')}</span>
           </div>
           {/* Right Actions */}
           <div className="flex landscape:flex-col gap-1">
@@ -429,13 +431,13 @@ export default function ProfessionalRecord() {
                   <span className="material-symbols-outlined text-[20px]">text_increase</span>
                 </button>
               </div>
-              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">Boyut</span>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">{t('size')}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
               <button onClick={() => navigate('/editor')} className="w-12 h-12 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
                 <span className="material-symbols-outlined text-[24px]">close</span>
               </button>
-              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">Kapat</span>
+              <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">{t('close')}</span>
             </div>
           </div>
         </div>
@@ -448,7 +450,7 @@ export default function ProfessionalRecord() {
             <span className="text-[120px] font-black text-white leading-none drop-shadow-[0_0_40px_rgba(173,198,255,0.8)] animate-pulse">
               {countdown}
             </span>
-            <span className="font-label-caps text-label-caps text-primary tracking-widest uppercase">Hazırlan...</span>
+            <span className="font-label-caps text-label-caps text-primary tracking-widest uppercase">{t('getReady')}</span>
           </div>
         </div>
       )}
@@ -457,14 +459,14 @@ export default function ProfessionalRecord() {
       {showSettings && (
         <div className="fixed top-[72px] right-4 landscape:right-[88px] z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-2xl min-w-[220px]">
           <div className="flex items-center justify-between mb-4">
-            <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">Video Ayarları</span>
+            <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">{t('videoSettings')}</span>
             <button onClick={() => setShowSettings(false)} className="text-on-surface-variant">
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           </div>
           
           <div className="mb-4">
-            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Yazı Rengi</p>
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('textColor')}</p>
             <div className="flex gap-2">
               {TEXT_COLORS.map(c => (
                 <button
@@ -481,7 +483,7 @@ export default function ProfessionalRecord() {
           </div>
 
           <div className="mb-4">
-            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Kalite</p>
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('quality')}</p>
             <div className="flex gap-2">
               {QUALITY_OPTIONS.map(q => (
                 <button
@@ -498,12 +500,12 @@ export default function ProfessionalRecord() {
               ))}
             </div>
             <p className="text-[10px] text-on-surface-variant mt-2 opacity-60">
-              ✓ Tüm videolar cihaz uyumluluğu için WebM formatında kaydedilir.
+              {t('webmNote')}
             </p>
           </div>
           
           <div className="mb-4 mt-4">
-            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Göz Teması Modu (Genişlik)</p>
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('eyeContact')}</p>
             <div className="flex gap-2">
               {[{label: 'Geniş', val: '100%'}, {label: 'Orta', val: '75%'}, {label: 'Dar', val: '50%'}].map(opt => (
                 <button
@@ -522,7 +524,7 @@ export default function ProfessionalRecord() {
           </div>
           
           <div className="mb-4 mt-4">
-            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Geri Sayım</p>
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('countdown')}</p>
             <div className="flex gap-2">
               {[3, 5, 10].map(sec => (
                 <button
@@ -544,7 +546,7 @@ export default function ProfessionalRecord() {
             onClick={() => setShowSettings(false)}
             className="w-full mt-4 bg-primary text-on-primary font-bold py-3 rounded-xl active:scale-95 transition-transform"
           >
-            Kaydet
+            {t('save')}
           </button>
         </div>
       )}
@@ -553,7 +555,7 @@ export default function ProfessionalRecord() {
       {showFilters && (
         <div className="fixed bottom-[72px] left-0 w-full z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border-t border-white/10 px-4 py-4 shadow-[0_-8px_32px_rgba(0,0,0,0.6)]">
           <div className="flex items-center justify-between mb-3">
-            <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">Camera Filters</span>
+            <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">{t('cameraFilters')}</span>
             <button onClick={() => setShowFilters(false)} className="text-on-surface-variant">
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -587,7 +589,7 @@ export default function ProfessionalRecord() {
           <div className="absolute top-0 left-0 w-full p-6 flex justify-center">
              <div className="bg-surface-container-high/50 backdrop-blur-md px-6 py-2 rounded-full border border-white/5 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary text-[18px]">verified</span>
-                <span className="text-white font-bold tracking-wide text-[14px] uppercase">Kayıt Tamamlandı</span>
+                <span className="text-white font-bold tracking-wide text-[14px] uppercase">{t('saved')}</span>
              </div>
           </div>
 
@@ -618,9 +620,9 @@ export default function ProfessionalRecord() {
                 {saveStatus === 'saving' && <span className="animate-spin material-symbols-outlined text-[16px]">progress_activity</span>}
                 {saveStatus === 'ok'     && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
                 {saveStatus === 'error'  && <span className="material-symbols-outlined text-[16px]">error</span>}
-                {saveStatus === 'saving' ? 'Kaydediliyor...' :
-                 saveStatus === 'ok'    ? 'Videolarım klasörüne eklendi!' :
-                                         'Kayıt hatası oluştu!'}
+                {saveStatus === 'saving' ? t('saving') :
+                 saveStatus === 'ok'    ? t('saveSuccess') :
+                                         t('saveError')}
               </div>
             )}
           </div>
@@ -664,12 +666,12 @@ export default function ProfessionalRecord() {
                   {saveStatus === 'saving' ? (
                     <>
                        <span className="animate-spin material-symbols-outlined text-[20px]">sync</span>
-                       Kaydediliyor...
+                       {t('saving')}
                     </>
                   ) : (
                     <>
                       <span className="material-symbols-outlined text-[22px]">download</span>
-                      Cihaza Kaydet
+                      {t('saveToDevice')}
                     </>
                   )}
                 </button>
@@ -684,7 +686,7 @@ export default function ProfessionalRecord() {
                   className="w-full bg-white/5 text-white/70 font-bold text-[15px] py-4 rounded-2xl hover:bg-white/10 active:scale-[0.98] transition-all border border-white/5 flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[20px]">delete</span>
-                  Sil ve Yeniden Çek
+                  {t('deleteAndRetake')}
                 </button>
               </>
             ) : (
@@ -697,7 +699,7 @@ export default function ProfessionalRecord() {
                 className="w-full bg-white/10 text-white font-bold text-[16px] py-4 rounded-2xl hover:bg-white/15 active:scale-[0.98] transition-all border border-white/10 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-[20px]">videocam</span>
-                Yeni Kayda Geç
+                {t('newRecording')}
               </button>
             )}
           </div>

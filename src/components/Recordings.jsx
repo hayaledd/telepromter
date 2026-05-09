@@ -62,7 +62,7 @@ export default function Recordings() {
   };
 
   const deleteVideo = async (name) => {
-    if (window.confirm("Bu videoyu silmek istediğinize emin misiniz?")) {
+    if (window.confirm(t('deleteVideoMsg'))) {
       try {
         await Filesystem.deleteFile({
           path: name,
@@ -70,7 +70,7 @@ export default function Recordings() {
         });
         loadVideos();
       } catch (e) {
-        alert("Silinirken hata oluştu: " + e);
+        alert(t('deleteError') + e);
       }
     }
   };
@@ -79,12 +79,12 @@ export default function Recordings() {
     try {
       await Share.share({
         title: video.name,
-        text: 'ScriptFlow ile çekildi',
+        text: t('recordedWith'),
         url: video.rawUri,
-        dialogTitle: 'Videoyu Paylaş'
+        dialogTitle: t('shareVideoTitle')
       });
     } catch (e) {
-      console.error("Paylaşım hatası:", e);
+      console.error(t('shareError'), e);
     }
   };
 
@@ -100,7 +100,7 @@ export default function Recordings() {
           >
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_back</span>
           </button>
-          <h1 className="font-headline-md text-headline-md text-on-surface">Videolarım</h1>
+          <h1 className="font-headline-md text-headline-md text-on-surface">{t('myVideos')}</h1>
         </div>
       </header>
 
@@ -113,7 +113,7 @@ export default function Recordings() {
         ) : videos.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-60 text-on-surface-variant opacity-60">
             <span className="material-symbols-outlined text-[64px] mb-4">videocam_off</span>
-            <p>Henüz kayıtlı video bulunmuyor.</p>
+            <p>{t('noVideosDesc')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
@@ -135,6 +135,7 @@ export default function Recordings() {
 
 // —— Video Thumbnail Kartı ——
 function VideoCard({ video, onShare, onDelete }) {
+  const { t } = useLanguage();
   const [thumbnail, setThumbnail] = React.useState(null);
   const [playerOpen, setPlayerOpen] = React.useState(false);
 
@@ -149,7 +150,7 @@ function VideoCard({ video, onShare, onDelete }) {
         <button
           onClick={() => setPlayerOpen(true)}
           className="relative aspect-[9/16] bg-black w-full overflow-hidden focus:outline-none"
-          aria-label="Videoyu oynat"
+          aria-label={t('playVideo')}
         >
           {thumbnail ? (
             <img
@@ -177,7 +178,7 @@ function VideoCard({ video, onShare, onDelete }) {
         {/* Alt bilgi */}
         <div className="p-3 flex flex-col gap-1">
           <h3 className="font-bold text-[12px] text-on-surface truncate" title={video.name}>
-            {video.name.replace('ScriptFlow_Recording_', 'Kayıt ')}
+            {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix'))}
           </h3>
           <div className="flex justify-between items-center mt-1">
             <p className="text-[10px] text-on-surface-variant">{video.date}</p>
@@ -185,14 +186,14 @@ function VideoCard({ video, onShare, onDelete }) {
               <button 
                 onClick={() => onShare(video)}
                 className="text-primary hover:bg-primary/10 p-1 rounded-full transition-colors"
-                title="Paylaş"
+                title={t('share')}
               >
                 <span className="material-symbols-outlined text-[16px]">share</span>
               </button>
               <button 
                 onClick={() => onDelete(video.name)}
                 className="text-error hover:bg-error/10 p-1 rounded-full transition-colors"
-                title="Sil"
+                title={t('delete')}
               >
                 <span className="material-symbols-outlined text-[16px]">delete</span>
               </button>
@@ -255,6 +256,7 @@ function generateThumbnail(src) {
 
 // —— Tam Ekran Video Oynatıcı Modal ——
 function VideoPlayerModal({ video, onClose }) {
+  const { t } = useLanguage();
   return (
     <div
       className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center"
@@ -264,7 +266,7 @@ function VideoPlayerModal({ video, onClose }) {
       <button
         onClick={onClose}
         className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center border border-white/20"
-        aria-label="Kapat"
+        aria-label={t('close')}
       >
         <span className="material-symbols-outlined text-white text-[22px]">close</span>
       </button>
@@ -272,7 +274,7 @@ function VideoPlayerModal({ video, onClose }) {
       {/* Video adı ve tarihi */}
       <div className="absolute top-4 left-4 right-16 z-10">
         <p className="text-white text-[12px] font-medium truncate opacity-80">
-          {video.name.replace('ScriptFlow_Recording_', 'Kayıt ')}
+          {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix'))}
         </p>
         <p className="text-white/50 text-[10px]">{video.date}</p>
       </div>

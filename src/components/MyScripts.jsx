@@ -61,7 +61,7 @@ export default function MyScripts() {
   };
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Günaydın' : hour < 18 ? 'İyi günler' : 'İyi akşamlar';
+  const greeting = hour < 12 ? t('goodMorning') : hour < 18 ? t('goodAfternoon') : t('goodEvening');
 
   return (
     <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col pt-control-bar-height pb-control-bar-height md:pb-0 dark">
@@ -87,10 +87,10 @@ export default function MyScripts() {
         <div className="mb-8">
           <p className="text-on-surface-variant text-[13px] font-medium mb-1">{greeting} 👋</p>
           <h2 className="text-[26px] font-black text-white tracking-tight leading-tight">
-            Metinlerim
+            {t('myScripts')}
           </h2>
           <p className="text-on-surface-variant text-[13px] mt-1">
-            {scripts.length} metin · hepsine hazırsın
+            {scripts.length} {t('scriptsCount')}
           </p>
         </div>
 
@@ -157,7 +157,7 @@ export default function MyScripts() {
                       {script.duration}
                     </span>
                     <span className="text-white/30 text-[10px]">·</span>
-                    <span className="text-white/40 text-[10px]">{words} kelime</span>
+                    <span className="text-white/40 text-[10px]">{words} {t('wordCount')}</span>
                     <span className="text-white/30 text-[10px]">·</span>
                     <span className="text-white/40 text-[10px]">{script.date}</span>
                   </div>
@@ -171,8 +171,8 @@ export default function MyScripts() {
         {scripts.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <span className="material-symbols-outlined text-[64px] text-white/10 mb-4">description</span>
-            <p className="text-white/40 text-[15px] font-medium">Henüz metin yok</p>
-            <p className="text-white/25 text-[13px] mt-1">Aşağıdan yeni bir metin oluştur</p>
+            <p className="text-white/40 text-[15px] font-medium">{t('noScripts')}</p>
+            <p className="text-white/25 text-[13px] mt-1">{t('createBelow')}</p>
           </div>
         )}
 
@@ -186,7 +186,7 @@ export default function MyScripts() {
             <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-primary text-[26px]" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
             </div>
-            <span className="text-primary font-bold text-[13px]">Yeni Metin</span>
+            <span className="text-primary font-bold text-[13px]">{t('newScript')}</span>
           </button>
 
           {/* .txt İçe Aktar */}
@@ -197,7 +197,7 @@ export default function MyScripts() {
             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-on-surface-variant text-[26px]">upload_file</span>
             </div>
-            <span className="text-on-surface-variant font-bold text-[13px]">İçe Aktar</span>
+            <span className="text-on-surface-variant font-bold text-[13px]">{t('importText')}</span>
             <input type="file" accept=".txt" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
           </button>
         </div>
@@ -228,7 +228,7 @@ export default function MyScripts() {
         </button>
         <button onClick={() => setShowMenu(true)} className="flex flex-col items-center justify-center gap-0.5 px-4 py-1 rounded-xl text-white/40 hover:text-white/70 transition-colors">
           <span className="material-symbols-outlined text-[22px]">menu</span>
-          <span className="text-[10px] font-medium">Menü</span>
+          <span className="text-[10px] font-medium">{t('menu')}</span>
         </button>
       </nav>
 
@@ -242,20 +242,20 @@ export default function MyScripts() {
             <div className="w-12 h-12 rounded-2xl bg-rose-500/20 flex items-center justify-center mb-4">
               <span className="material-symbols-outlined text-rose-400 text-[24px]">delete</span>
             </div>
-            <h3 className="text-white font-bold text-[17px] mb-1">Metni sil?</h3>
-            <p className="text-white/50 text-[13px] mb-6">Bu işlem geri alınamaz.</p>
+            <h3 className="text-white font-bold text-[17px] mb-1">{t('deleteScriptMsg')}</h3>
+            <p className="text-white/50 text-[13px] mb-6">{t('cannotUndo')}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeletingId(null)}
                 className="flex-1 py-3 rounded-2xl bg-white/10 text-white font-bold text-[14px] active:scale-95 transition-transform"
               >
-                İptal
+                {t('cancel')}
               </button>
               <button
                 onClick={confirmDelete}
                 className="flex-1 py-3 rounded-2xl bg-rose-500 text-white font-bold text-[14px] active:scale-95 transition-transform"
               >
-                Sil
+                {t('delete')}
               </button>
             </div>
           </div>
