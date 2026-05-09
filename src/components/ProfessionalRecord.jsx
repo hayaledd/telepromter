@@ -30,6 +30,8 @@ export default function ProfessionalRecord() {
   const [videoQuality, setVideoQuality] = useState('1080p');
   const [textColor, setTextColor] = useState('#ffffff');
   const [countdownDuration, setCountdownDuration] = useState(3);
+  const [facingMode, setFacingMode] = useState('user');
+  const [textWidth, setTextWidth] = useState('100%');
 
   const TEXT_COLORS = [
     { id: 'white',  value: '#ffffff', bg: 'bg-white' },
@@ -149,12 +151,13 @@ export default function ProfessionalRecord() {
     let stream = null;
     async function setupCamera() {
       try {
-        // Request both video and audio for recording
-        // Check if stream is already active to avoid deadlocks
-        if (mediaStreamRef.current && mediaStreamRef.current.active) {
-          return;
+        if (mediaStreamRef.current) {
+          mediaStreamRef.current.getTracks().forEach(track => track.stop());
         }
-        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: facingMode }, 
+          audio: true 
+        });
         mediaStreamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -171,7 +174,7 @@ export default function ProfessionalRecord() {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, []);
+  }, [facingMode]);
 
   // Scrolling Engine
   useEffect(() => {
@@ -222,10 +225,17 @@ export default function ProfessionalRecord() {
           <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? 'KAYIT' : 'HAZIR'}</span>
           <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pointer-events-auto">
+          <button 
+            onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')}
+            className="flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors bg-surface-container/30 text-on-surface hover:bg-surface-variant/50"
+            title="Kamerayı Çevir"
+          >
+            <span className="material-symbols-outlined text-[18px]">flip_camera_ios</span>
+          </button>
           <button
             onClick={() => { setShowSettings(!showSettings); setShowFilters(false); }}
-            className={`flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 pointer-events-auto transition-colors ${showSettings ? 'bg-primary text-on-primary' : 'bg-surface-container/30 text-on-surface-variant'}`}
+            className={`flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors ${showSettings ? 'bg-primary text-on-primary' : 'bg-surface-container/30 text-on-surface-variant'}`}
           >
             <span className="material-symbols-outlined text-[16px]">settings</span>
             <span className="font-bold text-[11px] tracking-widest uppercase">{videoQuality}</span>
@@ -256,7 +266,7 @@ export default function ProfessionalRecord() {
           )}
 
           {/* Scrolling Text Container */}
-          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full max-w-4xl mx-auto px-edge-margin-tablet overflow-y-auto space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
+          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full mx-auto px-edge-margin-tablet overflow-y-auto space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ maxWidth: textWidth, scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
             {scriptLines.map((line, idx) => (
               <p key={idx} className="font-prompter-display font-bold drop-shadow-xl" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor }}>
                 {line}
@@ -404,6 +414,25 @@ export default function ProfessionalRecord() {
             <p className="text-[10px] text-on-surface-variant mt-2 opacity-60">
               ✓ Tüm videolar cihaz uyumluluğu için WebM formatında kaydedilir.
             </p>
+          </div>
+          
+          <div className="mb-4 mt-4">
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Göz Teması Modu (Genişlik)</p>
+            <div className="flex gap-2">
+              {[{label: 'Geniş', val: '100%'}, {label: 'Orta', val: '75%'}, {label: 'Dar', val: '50%'}].map(opt => (
+                <button
+                  key={opt.val}
+                  onClick={() => setTextWidth(opt.val)}
+                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
+                    textWidth === opt.val
+                      ? 'bg-primary text-on-primary border-primary'
+                      : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
           
           <div className="mb-4 mt-4">

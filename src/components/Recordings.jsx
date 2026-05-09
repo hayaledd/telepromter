@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
+import { Share } from '@capacitor/share';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Recordings() {
@@ -43,6 +44,7 @@ export default function Recordings() {
         return {
           name: file.name,
           url: videoUrl,
+          rawUri: stat.uri,
           date: formattedDate,
           size: (stat.size / (1024 * 1024)).toFixed(2) + ' MB'
         };
@@ -70,6 +72,19 @@ export default function Recordings() {
       } catch (e) {
         alert("Silinirken hata oluştu: " + e);
       }
+    }
+  };
+
+  const shareVideo = async (video) => {
+    try {
+      await Share.share({
+        title: video.name,
+        text: 'ScriptFlow ile çekildi',
+        url: video.rawUri,
+        dialogTitle: 'Videoyu Paylaş'
+      });
+    } catch (e) {
+      console.error("Paylaşım hatası:", e);
     }
   };
 
@@ -118,12 +133,22 @@ export default function Recordings() {
                   </h3>
                   <div className="flex justify-between items-center mt-1">
                     <p className="text-[10px] text-on-surface-variant">{video.date}</p>
-                    <button 
-                      onClick={() => deleteVideo(video.name)}
-                      className="text-error hover:bg-error/10 p-1 rounded-full transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
+                    <div className="flex gap-1">
+                      <button 
+                        onClick={() => shareVideo(video)}
+                        className="text-primary hover:bg-primary/10 p-1 rounded-full transition-colors"
+                        title="Paylaş"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">share</span>
+                      </button>
+                      <button 
+                        onClick={() => deleteVideo(video.name)}
+                        className="text-error hover:bg-error/10 p-1 rounded-full transition-colors"
+                        title="Sil"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">delete</span>
+                      </button>
+                    </div>
                   </div>
                   <p className="text-[10px] text-on-surface-variant font-mono">{video.size}</p>
                 </div>
