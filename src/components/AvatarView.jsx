@@ -213,6 +213,7 @@ const AvatarView = ({ videoRef, isMirrored }) => {
 
   return (
     <canvas 
+      id="avatar-canvas"
       ref={canvasRef} 
       className="absolute inset-0 w-full h-full object-cover z-0" 
       style={{ pointerEvents: 'none' }}

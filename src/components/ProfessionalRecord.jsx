@@ -169,7 +169,47 @@ export default function ProfessionalRecord() {
           }
           setRecordedMimeType(mimeType);
           const selectedQuality = QUALITY_OPTIONS.find(q => q.id === videoQuality);
-          const mediaRecorder = new MediaRecorder(mediaStreamRef.current, {
+          const width = selectedQuality ? selectedQuality.width : 1920;
+          const height = selectedQuality ? selectedQuality.height : 1080;
+          
+          // Create a composite canvas to mix video, avatar, filters, and mirroring
+          const compositeCanvas = document.createElement('canvas');
+          compositeCanvas.width = width;
+          compositeCanvas.height = height;
+          const ctx = compositeCanvas.getContext('2d');
+          const avatarCanvas = document.getElementById('avatar-canvas');
+          
+          let isRecording = true;
+          const renderComposite = () => {
+             if (!isRecording) return;
+             requestAnimationFrame(renderComposite);
+             
+             ctx.save();
+             if (isMirrored) {
+               ctx.translate(width, 0);
+               ctx.scale(-1, 1);
+             }
+             if (currentFilter && currentFilter !== 'none') {
+               ctx.filter = currentFilter;
+             }
+             if (videoRef.current) {
+               ctx.drawImage(videoRef.current, 0, 0, width, height);
+             }
+             ctx.restore();
+             
+             if (layoutMode === 'avatar' && avatarCanvas) {
+               ctx.drawImage(avatarCanvas, 0, 0, width, height);
+             }
+          };
+          renderComposite();
+          
+          const videoStream = compositeCanvas.captureStream(30);
+          const audioTracks = mediaStreamRef.current.getAudioTracks();
+          if (audioTracks.length > 0) {
+            videoStream.addTrack(audioTracks[0]);
+          }
+
+          const mediaRecorder = new MediaRecorder(videoStream, {
             mimeType,
             videoBitsPerSecond: selectedQuality ? selectedQuality.bps : 5000000,
           });
@@ -178,6 +218,7 @@ export default function ProfessionalRecord() {
             if (event.data && event.data.size > 0) recordedChunksRef.current.push(event.data);
           };
           mediaRecorder.onstop = () => {
+            isRecording = false;
             const blob = new Blob(recordedChunksRef.current, { type: mimeType });
             setRecordedVideoUrl(URL.createObjectURL(blob));
           };
