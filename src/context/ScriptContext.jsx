@@ -41,7 +41,16 @@ export const ScriptProvider = ({ children }) => {
     return DEFAULT_SCRIPTS;
   });
   
-  const [activeScriptId, setActiveScriptId] = useState(null);
+  const [activeScriptId, setActiveScriptId] = useState(() => {
+    const saved = localStorage.getItem('scriptflow_scripts');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.length > 0) return parsed[0].id;
+      } catch(e) {}
+    }
+    return DEFAULT_SCRIPTS.length > 0 ? DEFAULT_SCRIPTS[0].id : null;
+  });
 
   const [globalFontSize, setGlobalFontSize] = useState(() => {
     return parseInt(localStorage.getItem('scriptflow_fontsize') || '32');
