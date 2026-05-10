@@ -4,6 +4,7 @@ import { useScript } from '../context/ScriptContext';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import MobileMenu from './MobileMenu';
+import AvatarView from './AvatarView';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function ProfessionalRecord() {

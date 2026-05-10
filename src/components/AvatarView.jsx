@@ -47,7 +47,9 @@ const AvatarView = ({ videoRef }) => {
       
       // Face towards camera
       vrm.scene.rotation.y = Math.PI; 
-    });
+    }, 
+    (progress) => console.log('Loading VRM...', (progress.loaded / progress.total * 100) + '%'),
+    (error) => console.error('VRM Load Error:', error));
 
     // Render Loop
     const clock = new THREE.Clock();
