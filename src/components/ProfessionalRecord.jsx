@@ -31,6 +31,7 @@ export default function ProfessionalRecord() {
   const [layoutMode, setLayoutMode] = useState('bottom'); // 'bottom' or 'full'
   const [savedFileName, setSavedFileName] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showLayoutMenu, setShowLayoutMenu] = useState(false);
   const [countdown, setCountdown] = useState(null); // null | 3 | 2 | 1
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [videoQuality, setVideoQuality] = useState('auto');
@@ -91,14 +92,6 @@ export default function ProfessionalRecord() {
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
-
-  const toggleLayout = () => {
-    setLayoutMode(prev => {
-      if (prev === 'bottom') return 'full';
-      if (prev === 'full') return 'prompter-only';
-      return 'bottom';
-    });
-  };
 
   // Real elapsed time counter
   useEffect(() => {
@@ -451,10 +444,26 @@ export default function ProfessionalRecord() {
               </button>
               <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">{t('filters')}</span>
             </div>
-            <div className="flex flex-col items-center gap-1">
+            <div className="relative flex flex-col items-center gap-1">
+              {showLayoutMenu && (
+                 <div className="absolute bottom-[100%] left-1/2 -translate-x-1/2 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 shadow-2xl z-[70] min-w-[150px]">
+                    <button onClick={() => {setLayoutMode('bottom'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'bottom' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
+                      <span className="material-symbols-outlined text-[18px]">splitscreen</span>
+                      Kamera Altta
+                    </button>
+                    <button onClick={() => {setLayoutMode('full'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'full' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
+                      <span className="material-symbols-outlined text-[18px]">fullscreen</span>
+                      Tam Ekran
+                    </button>
+                    <button onClick={() => {setLayoutMode('prompter-only'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'prompter-only' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
+                      <span className="material-symbols-outlined text-[18px]">tv</span>
+                      Sadece Metin
+                    </button>
+                 </div>
+              )}
               <button 
-                className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${layoutMode === 'full' ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
-                onClick={toggleLayout} 
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${showLayoutMenu || layoutMode !== 'bottom' ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
+                onClick={() => { setShowLayoutMenu(!showLayoutMenu); setShowFilters(false); }} 
                 title={t('viewMode')}
               >
                 <span className="material-symbols-outlined text-[24px]">
