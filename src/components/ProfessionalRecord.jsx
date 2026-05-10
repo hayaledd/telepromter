@@ -20,7 +20,7 @@ export default function ProfessionalRecord() {
 
   // Teleprompter State
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(5);
+  const [speed, setSpeed] = useState(1);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
   const [recordedMimeType, setRecordedMimeType] = useState(null);
   const [saveStatus, setSaveStatus] = useState(null); // null | 'saving' | 'ok' | 'error'
@@ -400,16 +400,16 @@ export default function ProfessionalRecord() {
           <div className="absolute top-0 w-full h-16 bg-gradient-to-b from-black/20 to-transparent z-10 pointer-events-none"></div>
           <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-black/20 to-transparent z-10 pointer-events-none"></div>
           {/* Floating Speed Control */}
-          <div className="absolute right-edge-margin-tablet top-1/2 -translate-y-1/2 z-30 bg-surface-container-high/40 backdrop-blur-xl rounded-full p-2 flex flex-col items-center gap-4 border border-white/10 shadow-2xl">
-            <button onClick={() => adjustSpeed(1)} className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
-              <span className="material-symbols-outlined text-[20px]">add</span>
+          <div className="absolute right-edge-margin-tablet bottom-[120px] landscape:bottom-[20px] z-30 bg-surface-container-high/40 backdrop-blur-xl rounded-full p-1.5 flex flex-col items-center gap-2 border border-white/10 shadow-2xl">
+            <button onClick={() => adjustSpeed(1)} className="w-8 h-8 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
+              <span className="material-symbols-outlined text-[16px]">add</span>
             </button>
-            <div className="h-32 w-1.5 bg-black/40 rounded-full relative shadow-inner">
+            <div className="h-24 w-1 bg-black/40 rounded-full relative shadow-inner mx-auto">
               <div className="absolute bottom-0 w-full bg-gradient-to-t from-primary/50 to-primary rounded-full shadow-[0_0_8px_rgba(173,198,255,0.4)]" style={{ height: `${speed * 10}%` }}></div>
             </div>
-            <span className="font-label-caps text-label-caps text-primary drop-shadow-sm">{speed / 5}x</span>
-            <button onClick={() => adjustSpeed(-1)} className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
-              <span className="material-symbols-outlined text-[20px]">remove</span>
+            <span className="font-label-caps text-[10px] text-primary drop-shadow-sm">{speed / 5}x</span>
+            <button onClick={() => adjustSpeed(-1)} className="w-8 h-8 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
+              <span className="material-symbols-outlined text-[16px]">remove</span>
             </button>
           </div>
         </div>
