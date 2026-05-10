@@ -13,7 +13,6 @@ export default function MyScripts() {
   const { t, lang, toggleLang } = useLanguage();
   const fileInputRef = useRef(null);
   const [deletingId, setDeletingId] = useState(null);
-  const [activeTab, setActiveTab] = useState('scripts'); // 'scripts' | 'add'
 
   const handleOpenScript = (id) => {
     setActiveScriptId(id);
@@ -45,52 +44,52 @@ export default function MyScripts() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Günaydın' : hour < 18 ? 'İyi Günler' : 'İyi Akşamlar';
 
+  const dotColors = ['bg-teal-400', 'bg-violet-400', 'bg-amber-400', 'bg-rose-400', 'bg-cyan-400', 'bg-emerald-400'];
+
   return (
-    <div className="bg-[#0f0f14] text-white min-h-screen flex flex-col font-sans">
+    <div className="bg-[#0f0f14] text-white min-h-screen flex flex-col font-sans pb-28">
 
-      {/* Hero Header */}
-      <div className="relative overflow-hidden px-5 pt-14 pb-6">
-        {/* Background glow */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Background glows */}
+      <div className="fixed top-0 right-0 w-72 h-72 bg-teal-500/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed bottom-40 -left-10 w-56 h-56 bg-indigo-500/8 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Top bar */}
-        <div className="flex items-center justify-between mb-6 relative z-10">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-teal-500/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-teal-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_camera_front</span>
-            </div>
-            <span className="font-black text-[17px] tracking-tight text-white">Tele<span className="text-teal-400">Promt</span></span>
+      {/* ── TOP BAR ── */}
+      <div className="relative z-10 flex items-center justify-between px-5 pt-12 pb-4">
+        {/* Lang button (left) */}
+        <button
+          onClick={toggleLang}
+          className="text-white/40 hover:text-white/70 px-3 py-1.5 rounded-full text-[11px] font-bold border border-white/10 transition-colors"
+        >
+          {lang === 'tr' ? 'EN' : 'TR'}
+        </button>
+
+        {/* Centered Logo */}
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-teal-500/20 flex items-center justify-center">
+            <span className="material-symbols-outlined text-teal-400 text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_camera_front</span>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={toggleLang} className="text-white/40 hover:text-white/70 px-3 py-1.5 rounded-full text-[11px] font-bold border border-white/10 transition-colors">
-              {lang === 'tr' ? 'EN' : 'TR'}
-            </button>
-            <button onClick={() => navigate('/recordings')} className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors border border-white/10">
-              <span className="material-symbols-outlined text-[18px]">video_library</span>
-            </button>
-          </div>
+          <span className="font-black text-[18px] tracking-tight text-white">Tele<span className="text-teal-400">Promt</span></span>
         </div>
 
-        {/* Greeting + Title */}
-        <div className="relative z-10 flex items-start justify-between">
-          <div className="flex-1">
-            <p className="text-white/40 text-[13px] mb-1">{greeting} 👋</p>
-            <h1 className="text-[28px] font-black leading-tight tracking-tight text-white">
-              {t('myScripts') || 'Metinlerim'}
-            </h1>
-            <p className="text-white/40 text-[13px] mt-1">{scripts.length} metin hazır</p>
-          </div>
-          {/* Decorative circle */}
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-500/30 to-indigo-500/20 border border-teal-400/20 flex items-center justify-center ml-4 shrink-0">
-            <span className="material-symbols-outlined text-teal-400 text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>mic</span>
-          </div>
-        </div>
+        {/* Recordings button (right) */}
+        <button
+          onClick={() => navigate('/recordings')}
+          className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors border border-white/10"
+        >
+          <span className="material-symbols-outlined text-[18px]">video_library</span>
+        </button>
+      </div>
 
-        {/* Record Now Banner */}
+      {/* ── GREETING ── */}
+      <div className="relative z-10 px-5 mb-5">
+        <p className="text-white/40 text-[13px]">{greeting} 👋</p>
+      </div>
+
+      {/* ── RECORD BANNER ── */}
+      <div className="relative z-10 px-5 mb-5">
         <button
           onClick={() => navigate('/record')}
-          className="relative z-10 mt-5 w-full flex items-center justify-between px-5 py-4 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform"
+          className="w-full flex items-center justify-between px-5 py-4 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform"
           style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}
         >
           <div>
@@ -103,131 +102,126 @@ export default function MyScripts() {
             </div>
             <span className="material-symbols-outlined text-white/80 text-[20px]">arrow_forward_ios</span>
           </div>
-          {/* Decorative blobs */}
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/5 rounded-full" />
-          <div className="absolute -right-2 -bottom-6 w-16 h-16 bg-white/5 rounded-full" />
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/5 rounded-full pointer-events-none" />
+          <div className="absolute -right-2 -bottom-6 w-16 h-16 bg-white/5 rounded-full pointer-events-none" />
         </button>
       </div>
 
-      {/* Quick Action Cards */}
-      <div className="px-5 mb-5">
-        <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest mb-3">Hızlı İşlemler</p>
-        <div className="grid grid-cols-3 gap-3">
-          {/* Write Script */}
+      {/* ── SCRIPTS BOX (2-column grid inside container) ── */}
+      <div className="relative z-10 px-5 mb-5">
+        <div className="rounded-3xl border border-white/8 bg-white/4 p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          {/* Header inside box */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-teal-400 text-[18px]">description</span>
+              <span className="text-white font-bold text-[14px]">Metinler</span>
+            </div>
+            <div className="px-3 py-1 rounded-full bg-teal-500/15 border border-teal-500/20">
+              <span className="text-teal-400 text-[12px] font-bold">{scripts.length} metin hazır</span>
+            </div>
+          </div>
+
+          {scripts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center">
+              <span className="material-symbols-outlined text-[40px] text-white/15 mb-3">description</span>
+              <p className="text-white/30 text-[13px]">{t('noScripts') || 'Henüz metin yok'}</p>
+              <p className="text-white/20 text-[11px] mt-1">Aşağıdan yeni bir metin oluşturun</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2">
+              {scripts.map((script, idx) => {
+                const dot = dotColors[idx % dotColors.length];
+                const words = wordCount(script.content);
+                const preview = script.content.slice(0, 55).trim();
+
+                return (
+                  <div
+                    key={script.id}
+                    onClick={() => handleOpenScript(script.id)}
+                    className="relative flex flex-col gap-2 p-3 rounded-2xl bg-white/5 border border-white/8 active:scale-[0.97] transition-all duration-150 cursor-pointer overflow-hidden"
+                  >
+                    {/* Colored top line */}
+                    <div className={`absolute top-0 left-0 right-0 h-0.5 ${dot} opacity-70 rounded-t-2xl`} />
+
+                    <h3 className="font-bold text-[13px] text-white leading-tight line-clamp-1 mt-1">{script.title}</h3>
+                    <p className="text-white/35 text-[10px] leading-relaxed line-clamp-2">{preview}{script.content.length > 55 ? '…' : ''}</p>
+
+                    <div className="flex items-center justify-between mt-auto pt-1">
+                      <span className="text-white/25 text-[10px]">{words} kelime</span>
+                      <div className="flex gap-1">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleRecord(script.id); }}
+                          className="w-7 h-7 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 active:scale-90"
+                        >
+                          <span className="material-symbols-outlined text-[13px]" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setDeletingId(script.id); }}
+                          className="w-7 h-7 rounded-lg flex items-center justify-center text-white/20 hover:text-rose-400 active:scale-90"
+                        >
+                          <span className="material-symbols-outlined text-[13px]">delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── BOTTOM QUICK ACTIONS (fixed) ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 px-5 pb-6 pt-4 bg-gradient-to-t from-[#0f0f14] via-[#0f0f14]/95 to-transparent">
+        <div className="grid grid-cols-4 gap-2">
+          {/* Metin Yaz */}
           <button
             onClick={handleCreateNew}
-            className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-teal-500/30 active:scale-95 transition-all duration-150"
-            style={{ background: 'linear-gradient(135deg, rgba(13,148,136,0.25) 0%, rgba(8,145,178,0.10) 100%)' }}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-teal-500/30 active:scale-95 transition-all"
+            style={{ background: 'linear-gradient(135deg, rgba(13,148,136,0.25), rgba(8,145,178,0.10))' }}
           >
-            <div className="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-teal-400 text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
+            <div className="w-9 h-9 rounded-xl bg-teal-500/20 flex items-center justify-center">
+              <span className="material-symbols-outlined text-teal-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
             </div>
-            <span className="text-teal-400 font-bold text-[11px] text-center leading-tight">Metin Yaz</span>
+            <span className="text-teal-400 font-bold text-[10px] text-center leading-tight">Metin<br/>Yaz</span>
           </button>
 
-          {/* Import */}
+          {/* İçe Aktar */}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white/10 bg-white/5 active:scale-95 transition-all duration-150"
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/10 bg-white/5 active:scale-95 transition-all"
           >
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-white/60 text-[20px]">upload_file</span>
+            <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+              <span className="material-symbols-outlined text-white/60 text-[18px]">upload_file</span>
             </div>
-            <span className="text-white/50 font-bold text-[11px] text-center leading-tight">İçe Aktar</span>
+            <span className="text-white/50 font-bold text-[10px] text-center leading-tight">İçe<br/>Aktar</span>
           </button>
           <input type="file" accept=".txt" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
 
-          {/* Recordings */}
+          {/* Kayıtlarım */}
           <button
             onClick={() => navigate('/recordings')}
-            className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-indigo-500/30 active:scale-95 transition-all duration-150"
-            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.20) 0%, rgba(139,92,246,0.10) 100%)' }}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-indigo-500/30 active:scale-95 transition-all"
+            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.20), rgba(139,92,246,0.10))' }}
           >
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-indigo-400 text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_library</span>
+            <div className="w-9 h-9 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+              <span className="material-symbols-outlined text-indigo-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_library</span>
             </div>
-            <span className="text-indigo-400 font-bold text-[11px] text-center leading-tight">Kayıtlarım</span>
+            <span className="text-indigo-400 font-bold text-[10px] text-center leading-tight">Kayıt-<br/>larım</span>
+          </button>
+
+          {/* Metinler */}
+          <button
+            onClick={() => {}}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-violet-500/30 bg-violet-500/15 active:scale-95 transition-all"
+          >
+            <div className="w-9 h-9 rounded-xl bg-violet-500/20 flex items-center justify-center">
+              <span className="material-symbols-outlined text-violet-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
+            </div>
+            <span className="text-violet-400 font-bold text-[10px] text-center leading-tight">Metin-<br/>ler</span>
           </button>
         </div>
       </div>
-
-      {/* Script List */}
-      <div className="flex-1 px-5 pb-8">
-        <div className="flex items-center justify-between mb-3">
-          <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest">Metinler</p>
-          <span className="text-white/20 text-[11px]">{scripts.length} adet</span>
-        </div>
-
-        {scripts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
-              <span className="material-symbols-outlined text-[36px] text-white/20">description</span>
-            </div>
-            <p className="text-white/30 text-[15px] font-medium">{t('noScripts') || 'Henüz metin yok'}</p>
-            <p className="text-white/20 text-[13px] mt-1">Yukarıdan yeni bir metin oluşturun</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-2">
-            {scripts.map((script, idx) => {
-              const words = wordCount(script.content);
-              const preview = script.content.slice(0, 80).trim();
-              const dotColors = ['bg-teal-400', 'bg-violet-400', 'bg-amber-400', 'bg-rose-400', 'bg-cyan-400', 'bg-emerald-400'];
-              const dot = dotColors[idx % dotColors.length];
-
-              return (
-                <div
-                  key={script.id}
-                  className="relative group flex items-center gap-3 px-4 py-4 rounded-2xl bg-white/5 border border-white/8 active:scale-[0.99] transition-all duration-150 cursor-pointer"
-                  onClick={() => handleOpenScript(script.id)}
-                >
-                  {/* Colored dot */}
-                  <div className={`w-2 h-2 rounded-full ${dot} shrink-0`} />
-
-                  {/* Text */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-[14px] text-white leading-tight truncate">{script.title}</h3>
-                    <p className="text-white/35 text-[11px] mt-0.5 truncate">{preview}{script.content.length > 80 ? '…' : ''}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-white/25 text-[10px]">{words} kelime</span>
-                      <span className="text-white/15">·</span>
-                      <span className="text-white/25 text-[10px]">{script.duration}</span>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-1 shrink-0">
-                    {/* Record */}
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleRecord(script.id); }}
-                      className="w-9 h-9 rounded-xl bg-teal-500/20 flex items-center justify-center text-teal-400 hover:bg-teal-500/30 transition-colors active:scale-90"
-                      title="Kayda Başla"
-                    >
-                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
-                    </button>
-                    {/* Delete */}
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setDeletingId(script.id); }}
-                      className="w-9 h-9 rounded-xl flex items-center justify-center text-white/20 hover:text-rose-400 hover:bg-rose-500/10 transition-colors active:scale-90"
-                      title="Sil"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* FAB */}
-      <button
-        onClick={handleCreateNew}
-        className="fixed bottom-6 right-5 w-14 h-14 rounded-2xl flex items-center justify-center shadow-2xl active:scale-95 transition-all z-40"
-        style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}
-      >
-        <span className="material-symbols-outlined text-white text-[26px]" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
-      </button>
 
       {/* Delete Confirm Dialog */}
       {deletingId && (
@@ -242,7 +236,10 @@ export default function MyScripts() {
               <button onClick={() => setDeletingId(null)} className="flex-1 py-3 rounded-2xl bg-white/10 text-white font-bold text-[14px] active:scale-95 transition-transform">
                 {t('cancel') || 'Vazgeç'}
               </button>
-              <button onClick={(e) => { e.stopPropagation(); if (deleteScript) deleteScript(deletingId); setDeletingId(null); }} className="flex-1 py-3 rounded-2xl bg-rose-500 text-white font-bold text-[14px] active:scale-95 transition-transform">
+              <button
+                onClick={(e) => { e.stopPropagation(); if (deleteScript) deleteScript(deletingId); setDeletingId(null); }}
+                className="flex-1 py-3 rounded-2xl bg-rose-500 text-white font-bold text-[14px] active:scale-95 transition-transform"
+              >
                 {t('delete') || 'Sil'}
               </button>
             </div>
