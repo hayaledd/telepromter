@@ -32,7 +32,7 @@ export default function ProfessionalRecord() {
   const [showSettings, setShowSettings] = useState(false);
   const [countdown, setCountdown] = useState(null); // null | 3 | 2 | 1
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [videoQuality, setVideoQuality] = useState('1080p');
+  const [videoQuality, setVideoQuality] = useState('auto');
   const [textColor, setTextColor] = useState('#ffffff');
   const [isMirrored, setIsMirrored] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -62,6 +62,7 @@ export default function ProfessionalRecord() {
   ];
 
   const QUALITY_OPTIONS = [
+    { id: 'auto',  label: 'Cihaz', bps: 8_000_000 }, // Cihazın kendi kalitesi
     { id: '480p',  label: '480p',  width: 854,  height: 480,  bps: 1_000_000 },
     { id: '720p',  label: '720p',  width: 1280, height: 720,  bps: 2_500_000 },
     { id: '1080p', label: '1080p', width: 1920, height: 1080, bps: 5_000_000 },
@@ -149,8 +150,19 @@ export default function ProfessionalRecord() {
           }
           setRecordedMimeType(mimeType);
           const selectedQuality = QUALITY_OPTIONS.find(q => q.id === videoQuality);
-          const width = selectedQuality ? selectedQuality.width : 1920;
-          const height = selectedQuality ? selectedQuality.height : 1080;
+          const isPortrait = window.innerHeight > window.innerWidth;
+          let width = 1920;
+          let height = 1080;
+          
+          if (videoQuality === 'auto' && videoRef.current) {
+            // Telefonun kamerasından gelen Orijinal Çözünürlüğü kullan
+            width = videoRef.current.videoWidth || (isPortrait ? 1080 : 1920);
+            height = videoRef.current.videoHeight || (isPortrait ? 1920 : 1080);
+          } else if (selectedQuality && selectedQuality.width) {
+            // Dikey tutuşta en/boy oranını bozmamak için yer değiştir
+            width = isPortrait ? selectedQuality.height : selectedQuality.width;
+            height = isPortrait ? selectedQuality.width : selectedQuality.height;
+          }
           
           // Create a composite canvas to mix video, avatar, filters, and mirroring
           const compositeCanvas = document.createElement('canvas');
