@@ -9,7 +9,9 @@ import * as Kalidokit from 'kalidokit';
 const FaceMesh = faceMeshPkg.FaceMesh || window.FaceMesh;
 const Camera = cameraUtilsPkg.Camera || window.Camera;
 
-const AvatarView = ({ videoRef }) => {
+const AvatarView = ({ videoRef, isMirrored }) => {
+  const isMirroredRef = useRef(isMirrored);
+  useEffect(() => { isMirroredRef.current = isMirrored; }, [isMirrored]);
   const canvasRef = useRef(null);
   const currentVrm = useRef(null);
   const rendererRef = useRef(null);
@@ -23,8 +25,12 @@ const AvatarView = ({ videoRef }) => {
     const canvas = canvasRef.current;
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.localClippingEnabled = true;
     rendererRef.current = renderer;
+
+    const clipPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
     const camera = new THREE.PerspectiveCamera(35, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(0.0, 1.4, 1.5); // Focus on face
@@ -45,6 +51,19 @@ const AvatarView = ({ videoRef }) => {
     loader.register((parser) => new VRMLoaderPlugin(parser));
     loader.load('/models/AliciaSolid.vrm', (gltf) => {
       const vrm = gltf.userData.vrm;
+
+      // Kafa hariç gövdeyi gizlemek için kesme düzlemi (clipping) uyguluyoruz
+      vrm.scene.traverse((obj) => {
+        if (obj.isMesh) {
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach(m => { m.clippingPlanes = [clipPlane]; m.side = THREE.DoubleSide; });
+          } else {
+            obj.material.clippingPlanes = [clipPlane];
+            obj.material.side = THREE.DoubleSide;
+          }
+        }
+      });
+
       scene.add(vrm.scene);
       currentVrm.current = vrm;
       
@@ -94,9 +113,51 @@ const AvatarView = ({ videoRef }) => {
 
       if (riggedFace) {
         const vrm = currentVrm.current;
-        
-        // Apply Head Rotation
         const headNode = vrm.humanoid.getNormalizedBoneNode('head');
+        const neckNode = vrm.humanoid.getNormalizedBoneNode('neck');
+
+        // --- AR MASKE (YÜZ TAKİBİ VE BOYUTLANDIRMA) ---
+        const nose = faceLandmarks[1];
+        
+        // Kamera aynalanmışsa X eksenini ters çeviriyoruz
+        const isMirror = isMirroredRef.current;
+        const ndcX = isMirror ? (0.5 - nose.x) * 2 : (nose.x - 0.5) * 2;
+        const ndcY = -(nose.y - 0.5) * 2;
+        
+        // Yüzün ekrandaki pozisyonunu 3D dünyaya çeviriyoruz
+        const targetPos = new THREE.Vector3(ndcX, ndcY, 0.5);
+        targetPos.unproject(cameraRef.current);
+        const dir = targetPos.sub(cameraRef.current.position).normalize();
+        const dist = -cameraRef.current.position.z / dir.z;
+        const worldTarget = cameraRef.current.position.clone().add(dir.multiplyScalar(dist));
+        
+        // Avatarı gerçek kafanın üzerine pürüzsüzce taşıyoruz
+        const currentHeadPos = new THREE.Vector3();
+        if (headNode) headNode.getWorldPosition(currentHeadPos);
+        vrm.scene.position.x += (worldTarget.x - currentHeadPos.x) * 0.4;
+        vrm.scene.position.y += (worldTarget.y - currentHeadPos.y) * 0.4;
+
+        // Yüzün ekrandaki büyüklüğüne göre Avatarın kafasını ölçeklendiriyoruz
+        const topHead = faceLandmarks[10];
+        const chin = faceLandmarks[152];
+        const faceHeightNDC = Math.abs(chin.y - topHead.y) * 2;
+        const vFov = cameraRef.current.fov * Math.PI / 180;
+        const visibleHeight = 2 * Math.tan(vFov / 2) * cameraRef.current.position.z;
+        const targetFaceWorldHeight = faceHeightNDC * visibleHeight;
+        
+        const targetScale = (targetFaceWorldHeight / 0.25); // 0.25 model kafa payı
+        const smoothedScale = vrm.scene.scale.x + (targetScale - vrm.scene.scale.x) * 0.3;
+        const finalScale = Math.max(0.3, Math.min(4.0, smoothedScale)); // Çok büyüme/küçülmeyi sınırla
+        vrm.scene.scale.set(finalScale, finalScale, finalScale);
+
+        // Gövdeyi gizlemek için kesme düzlemini boyun hizasına ayarlıyoruz
+        if (neckNode) {
+          const neckWorld = new THREE.Vector3();
+          neckNode.getWorldPosition(neckWorld);
+          clipPlane.constant = -neckWorld.y + (0.02 * finalScale); // Boynun hemen altından kes
+        }
+
+        // --- KAFA VE MİMİK HAREKETLERİ ---
         if (headNode) {
           // Adjust rotation for mirror/camera
           const yaw = Math.sin(riggedFace.head.degrees.y * Math.PI / 180);

@@ -359,12 +359,12 @@ export default function ProfessionalRecord() {
         {/* Camera Feed Area */}
         <div className="absolute inset-0 w-full h-full z-0 bg-black">
           <video ref={videoRef} autoPlay playsInline muted controls={false} disablePictureInPicture disableRemotePlayback
-            className={`w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${(layoutMode === 'prompter-only' || layoutMode === 'avatar') ? 'opacity-0' : 'opacity-90'}`}
+            className={`w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${(layoutMode === 'prompter-only') ? 'opacity-0' : 'opacity-90'}`}
             style={{ filter: currentFilter, transform: isMirrored ? 'scaleX(-1)' : 'none' }}
           />
           {layoutMode === 'avatar' && (
             <ErrorBoundary>
-              <AvatarView videoRef={videoRef} />
+              <AvatarView videoRef={videoRef} isMirrored={isMirrored} />
             </ErrorBoundary>
           )}
         </div>
