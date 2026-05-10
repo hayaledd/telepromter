@@ -20,6 +20,7 @@ export default function ProfessionalRecord() {
 
   // Teleprompter State
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isRecordingActive, setIsRecordingActive] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
   const [recordedMimeType, setRecordedMimeType] = useState(null);
@@ -121,14 +122,21 @@ export default function ProfessionalRecord() {
     setCountdown(countdownDuration);
   };
 
-  const togglePlayback = () => {
-    if (!isPlaying) {
+  const toggleReading = () => {
+    if (isRecordingActive) return;
+    setIsPlaying(!isPlaying);
+  };
+
+  const toggleRecording = () => {
+    if (!isRecordingActive) {
+      if (isPlaying) setIsPlaying(false);
       startWithCountdown();
     } else {
       // STOP RECORDING
       if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
         mediaRecorderRef.current.stop();
       }
+      setIsRecordingActive(false);
       setIsPlaying(false);
     }
   };
@@ -216,6 +224,7 @@ export default function ProfessionalRecord() {
           setSaveStatus('error');
         }
       }
+      setIsRecordingActive(true);
       setIsPlaying(true);
       return;
     }
@@ -356,10 +365,11 @@ export default function ProfessionalRecord() {
           {/* Menu button removed as requested */}
           <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10">
             <span className="flex h-3 w-3 relative">
-              {isPlaying && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
-              <span className={`relative inline-flex rounded-full h-3 w-3 ${isPlaying ? 'bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]' : 'bg-surface-variant'}`}></span>
+              {isRecordingActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
+              {isPlaying && !isRecordingActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>}
+              <span className={`relative inline-flex rounded-full h-3 w-3 ${isRecordingActive ? 'bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]' : isPlaying ? 'bg-primary shadow-[0_0_8px_rgba(99,102,241,0.8)]' : 'bg-surface-variant'}`}></span>
             </span>
-            <span className={`font-bold text-[12px] tracking-widest uppercase ${isPlaying ? 'text-error' : 'text-on-surface-variant'}`}>{isPlaying ? t('recording') : t('ready')}</span>
+            <span className={`font-bold text-[12px] tracking-widest uppercase ${isRecordingActive ? 'text-error' : isPlaying ? 'text-primary' : 'text-on-surface-variant'}`}>{isRecordingActive ? t('recording') : isPlaying ? (t('reading') || 'OKUNUYOR') : t('ready')}</span>
             <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
           </div>
         </div>
@@ -456,23 +466,45 @@ export default function ProfessionalRecord() {
               </span>
             </div>
           </div>
-          {/* Primary Record/Stop Action */}
-          <div className="flex flex-col items-center relative -top-3 landscape:top-0 landscape:-left-3 shrink-0">
-            <button 
-              onClick={togglePlayback} 
-              className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-[4px] active:scale-95 transition-all duration-300 ${
-                isPlaying 
-                  ? 'bg-surface-container-lowest border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-xl' 
-                  : 'btn-gradient border-transparent !rounded-full !p-0 shadow-[0_0_30px_rgba(99,102,241,0.6)] hover:shadow-[0_0_40px_rgba(99,102,241,0.8)]'
-              }`}
-            >
-              <div className={`transition-all duration-300 ${
-                isPlaying 
-                  ? 'w-6 h-6 md:w-8 md:h-8 rounded-sm bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' 
-                  : 'w-8 h-8 md:w-10 md:h-10 bg-white rounded-full'
-              }`}></div>
-            </button>
-            <span className={`text-[10px] uppercase font-bold tracking-widest mt-1 md:mt-2 drop-shadow-sm ${isPlaying ? 'text-error' : 'text-primary'}`}>{isPlaying ? t('stop') : t('start')}</span>
+          {/* Action Buttons Container */}
+          <div className="flex items-center gap-4 relative -top-3 landscape:top-0 landscape:-left-3 shrink-0">
+            {/* Play/Read Only Button */}
+            <div className="flex flex-col items-center">
+              <button 
+                onClick={toggleReading} 
+                disabled={isRecordingActive}
+                className={`w-14 h-14 rounded-full flex items-center justify-center border-2 active:scale-95 transition-all duration-300 ${
+                  isPlaying && !isRecordingActive
+                    ? 'bg-primary text-on-primary border-primary shadow-[0_0_20px_rgba(99,102,241,0.6)]' 
+                    : 'bg-surface-container-high text-primary border-primary/50 hover:bg-surface-variant'
+                } ${isRecordingActive ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                <span className="material-symbols-outlined text-[28px]">{(isPlaying && !isRecordingActive) ? 'pause' : 'play_arrow'}</span>
+              </button>
+              <span className={`text-[9px] uppercase font-bold tracking-widest mt-2 drop-shadow-sm ${(isPlaying && !isRecordingActive) ? 'text-primary' : 'text-on-surface-variant'}`}>
+                {(isPlaying && !isRecordingActive) ? (t('stop') || 'DURDUR') : (t('read') || 'OKU')}
+              </span>
+            </div>
+
+            {/* Primary Record/Stop Action */}
+            <div className="flex flex-col items-center">
+              <button 
+                onClick={toggleRecording} 
+                disabled={isPlaying && !isRecordingActive}
+                className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-[4px] active:scale-95 transition-all duration-300 ${
+                  isRecordingActive 
+                    ? 'bg-surface-container-lowest border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-xl' 
+                    : 'btn-gradient border-transparent !rounded-full !p-0 shadow-[0_0_30px_rgba(99,102,241,0.6)] hover:shadow-[0_0_40px_rgba(99,102,241,0.8)]'
+                } ${(isPlaying && !isRecordingActive) ? 'opacity-50 cursor-not-allowed scale-90' : ''}`}
+              >
+                <div className={`transition-all duration-300 ${
+                  isRecordingActive 
+                    ? 'w-6 h-6 md:w-8 md:h-8 rounded-sm bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' 
+                    : 'w-8 h-8 md:w-10 md:h-10 bg-white rounded-full'
+                }`}></div>
+              </button>
+              <span className={`text-[10px] uppercase font-bold tracking-widest mt-1 md:mt-2 drop-shadow-sm ${isRecordingActive ? 'text-error' : 'text-primary'}`}>{isRecordingActive ? t('stop') : (t('record') || 'KAYIT')}</span>
+            </div>
           </div>
           {/* Right Actions */}
           <div className="flex landscape:flex-col gap-1">
