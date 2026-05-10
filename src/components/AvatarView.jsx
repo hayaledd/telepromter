@@ -2,9 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
-import { FaceMesh } from '@mediapipe/face_mesh';
-import { Camera } from '@mediapipe/camera_utils';
+import * as faceMeshPkg from '@mediapipe/face_mesh';
+import * as cameraUtilsPkg from '@mediapipe/camera_utils';
 import * as Kalidokit from 'kalidokit';
+
+const FaceMesh = faceMeshPkg.FaceMesh || window.FaceMesh;
+const Camera = cameraUtilsPkg.Camera || window.Camera;
 
 const AvatarView = ({ videoRef }) => {
   const canvasRef = useRef(null);
@@ -53,12 +56,15 @@ const AvatarView = ({ videoRef }) => {
 
     // Render Loop
     const clock = new THREE.Clock();
+    let animationFrameId;
     const animate = () => {
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
       if (currentVrm.current) {
         currentVrm.current.update(clock.getDelta());
       }
-      renderer.render(scene, camera);
+      if (rendererRef.current) {
+        rendererRef.current.render(scene, camera);
+      }
     };
     animate();
 
@@ -137,6 +143,7 @@ const AvatarView = ({ videoRef }) => {
     setTimeout(startCamera, 1000);
 
     return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       if (cameraUtils) cameraUtils.stop();
       if (faceMesh) faceMesh.close();
       if (rendererRef.current) rendererRef.current.dispose();

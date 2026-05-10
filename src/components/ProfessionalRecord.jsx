@@ -7,6 +7,23 @@ import MobileMenu from './MobileMenu';
 import AvatarView from './AvatarView';
 import { useLanguage } from '../context/LanguageContext';
 
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false, error: null }; }
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  componentDidCatch(error, errorInfo) { console.error("Component error:", error, errorInfo); }
+  render() {
+    if (this.state.hasError) {
+      return <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/80 text-red-400 p-8 text-xs overflow-auto">
+        <h2 className="text-xl font-bold mb-4">Avatar Yüklenirken Hata Oluştu</h2>
+        <pre className="whitespace-pre-wrap text-left bg-red-900/20 p-4 rounded">{this.state.error?.toString()}</pre>
+        <button onClick={() => this.setState({hasError: false})} className="mt-4 px-4 py-2 bg-red-500/20 rounded">Tekrar Dene</button>
+      </div>;
+    }
+    return this.props.children;
+  }
+}
+
+
 export default function ProfessionalRecord() {
   const navigate = useNavigate();
   const { getActiveScript, globalFontSize, setGlobalFontSize } = useScript();
@@ -345,7 +362,11 @@ export default function ProfessionalRecord() {
             className={`w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${(layoutMode === 'prompter-only' || layoutMode === 'avatar') ? 'opacity-0' : 'opacity-90'}`}
             style={{ filter: currentFilter, transform: isMirrored ? 'scaleX(-1)' : 'none' }}
           />
-          {layoutMode === 'avatar' && <AvatarView videoRef={videoRef} />}
+          {layoutMode === 'avatar' && (
+            <ErrorBoundary>
+              <AvatarView videoRef={videoRef} />
+            </ErrorBoundary>
+          )}
         </div>
 
         {/* Teleprompter Area */}
