@@ -20,7 +20,12 @@ export default function SplashScreen() {
     }, 40);
 
     const timer = setTimeout(() => {
-      navigate('/scripts');
+      const hasSeen = localStorage.getItem('has_seen_onboarding');
+      if (hasSeen) {
+        navigate('/scripts');
+      } else {
+        navigate('/tutorial');
+      }
     }, 2000);
 
     return () => {
@@ -40,11 +45,12 @@ export default function SplashScreen() {
         {/* Logo Icon */}
         <div className="relative group">
           <div className="absolute inset-0 bg-teal-400/20 rounded-[32px] blur-2xl animate-pulse" />
-          <div className="relative w-24 h-24 rounded-[32px] bg-white/5 backdrop-blur-2xl border border-white/10 flex items-center justify-center shadow-2xl overflow-hidden">
-             <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-transparent" />
-             <span className="material-symbols-outlined text-[48px] text-teal-400 drop-shadow-[0_0_15px_rgba(45,212,191,0.5)]" style={{ fontVariationSettings: "'FILL' 1" }}>
-              video_camera_front
-            </span>
+          <div className="relative w-24 h-24 rounded-[32px] shadow-2xl overflow-hidden">
+            <img
+              src="/favicon.png"
+              alt="TelePromt"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
         

@@ -46,6 +46,9 @@ export default function ProfessionalRecord() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [showCameraSettings, setShowCameraSettings] = useState(false);
   const [prompterBg, setPrompterBg] = useState('none');
+  const [voiceTracking, setVoiceTracking] = useState(false);
+  const recognitionRef = useRef(null);
+  const lastSpeechTime = useRef(Date.now());
   // Detect best supported MIME type for this device
   const getSupportedMimeType = () => {
     const types = [
@@ -68,14 +71,14 @@ export default function ProfessionalRecord() {
   ];
 
   const BG_COLORS = [
-    { id: 'none',    label: 'Saydam',   value: 'transparent',         border: 'border-white/20',  preview: 'bg-transparent border-2 border-white/30' },
-    { id: 'black',   label: 'Siyah',    value: 'rgba(0,0,0,0.85)',    border: 'border-white/10',  preview: 'bg-black' },
-    { id: 'navy',    label: 'Lacivert', value: 'rgba(10,15,50,0.90)', border: 'border-blue-500/20', preview: 'bg-[#0a0f32]' },
-    { id: 'dark',    label: 'Koyu Gri', value: 'rgba(20,20,25,0.90)', border: 'border-white/10',  preview: 'bg-[#141419]' },
-    { id: 'green',   label: 'Yeşil',    value: 'rgba(0,40,20,0.90)', border: 'border-green-500/20', preview: 'bg-[#002814]' },
-    { id: 'red',     label: 'Kırmızı',  value: 'rgba(50,0,0,0.90)',   border: 'border-red-500/20',  preview: 'bg-[#320000]' },
-    { id: 'purple',  label: 'Mor',      value: 'rgba(30,0,50,0.90)', border: 'border-purple-500/20', preview: 'bg-[#1e0032]' },
-    { id: 'white',   label: 'Beyaz',    value: 'rgba(255,255,255,0.90)', border: 'border-gray-300',  preview: 'bg-white' },
+    { id: 'none',    label: t('color_none'),   value: 'transparent',         border: 'border-white/20',  preview: 'bg-transparent border-2 border-white/30' },
+    { id: 'black',   label: t('color_black'),    value: 'rgba(0,0,0,0.85)',    border: 'border-white/10',  preview: 'bg-black' },
+    { id: 'navy',    label: t('color_navy'), value: 'rgba(10,15,50,0.90)', border: 'border-blue-500/20', preview: 'bg-[#0a0f32]' },
+    { id: 'dark',    label: t('color_dark'), value: 'rgba(20,20,25,0.90)', border: 'border-white/10',  preview: 'bg-[#141419]' },
+    { id: 'green',   label: t('color_green'),    value: 'rgba(0,40,20,0.90)', border: 'border-green-500/20', preview: 'bg-[#002814]' },
+    { id: 'red',     label: t('color_red'),  value: 'rgba(50,0,0,0.90)',   border: 'border-red-500/20',  preview: 'bg-[#320000]' },
+    { id: 'purple',  label: t('color_purple'),      value: 'rgba(30,0,50,0.90)', border: 'border-purple-500/20', preview: 'bg-[#1e0032]' },
+    { id: 'white',   label: t('color_white'),    value: 'rgba(255,255,255,0.90)', border: 'border-gray-300',  preview: 'bg-white' },
   ];
 
   const QUALITY_OPTIONS = [
@@ -86,14 +89,14 @@ export default function ProfessionalRecord() {
   ];
 
   const FILTERS = [
-    { id: 'clean',    label: 'Temiz',      icon: 'wb_auto',       style: 'brightness(1.05) contrast(1.0) saturate(1.0)' },
-    { id: 'warm',     label: 'Sıcak',      icon: 'wb_sunny',      style: 'brightness(1.05) contrast(1.05) saturate(1.2) sepia(0.15)' },
-    { id: 'cool',     label: 'Soğuk',      icon: 'ac_unit',       style: 'brightness(1.02) contrast(1.05) saturate(0.9) hue-rotate(10deg)' },
-    { id: 'cinema',   label: 'Sinema',     icon: 'movie',         style: 'brightness(0.92) contrast(1.25) saturate(0.85)' },
-    { id: 'portrait', label: 'Portre',     icon: 'face',          style: 'brightness(1.08) contrast(0.95) saturate(1.1)' },
-    { id: 'studio',   label: 'Stüdyo',     icon: 'videocam',      style: 'brightness(1.0) contrast(1.15) saturate(1.05) hue-rotate(-5deg)' },
-    { id: 'bw',       label: 'S/B',        icon: 'exposure',      style: 'grayscale(1) brightness(1.05) contrast(1.2)' },
-    { id: 'vivid',    label: 'Canlı',      icon: 'palette',       style: 'brightness(1.04) contrast(1.1) saturate(1.6)' },
+    { id: 'clean',    label: t('filter_clean'),      icon: 'wb_auto',       style: 'brightness(1.05) contrast(1.0) saturate(1.0)' },
+    { id: 'warm',     label: t('filter_warm'),      icon: 'wb_sunny',      style: 'brightness(1.05) contrast(1.05) saturate(1.2) sepia(0.15)' },
+    { id: 'cool',     label: t('filter_cool'),      icon: 'ac_unit',       style: 'brightness(1.02) contrast(1.05) saturate(0.9) hue-rotate(10deg)' },
+    { id: 'cinema',   label: t('filter_cinema'),     icon: 'movie',         style: 'brightness(0.92) contrast(1.25) saturate(0.85)' },
+    { id: 'portrait', label: t('filter_portrait'),     icon: 'face',          style: 'brightness(1.08) contrast(0.95) saturate(1.1)' },
+    { id: 'studio',   label: t('filter_studio'),     icon: 'videocam',      style: 'brightness(1.0) contrast(1.15) saturate(1.05) hue-rotate(-5deg)' },
+    { id: 'bw',       label: t('filter_bw'),        icon: 'exposure',      style: 'grayscale(1) brightness(1.05) contrast(1.2)' },
+    { id: 'vivid',    label: t('filter_vivid'),      icon: 'palette',       style: 'brightness(1.04) contrast(1.1) saturate(1.6)' },
   ];
 
   const currentFilter = FILTERS.find(f => f.id === activeFilter)?.style || 'brightness(1) contrast(1)';
@@ -342,10 +345,10 @@ export default function ProfessionalRecord() {
         }
       } catch (err) {
         if (cancelled) return;
-        // exact constraint başarısız olursa ideal ile tekrar dene
+        // exact constraint başarısız olursa her şeyi esnek bırakarak tekrar dene (Özellikle PC'lerde siyah ekranı çözer)
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: facingMode, frameRate: { ideal: frameRate } },
+            video: true,
             audio: true,
           });
           if (cancelled) { stream.getTracks().forEach(t => t.stop()); return; }
@@ -358,6 +361,7 @@ export default function ProfessionalRecord() {
           }
         } catch (fallbackErr) {
           console.error('Camera access failed:', fallbackErr);
+          alert('Kamera veya mikrofonunuza erişilemiyor. Lütfen tarayıcı izinlerini kontrol edin veya kameranızın başka bir uygulama tarafından kullanılmadığından emin olun.');
         }
       }
     }
@@ -376,6 +380,51 @@ export default function ProfessionalRecord() {
     };
   }, [facingMode, frameRate]);
 
+  // Voice Tracking Setup
+  useEffect(() => {
+    if (!voiceTracking) {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch(e){}
+      }
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Cihazınız Sesle Takip (Voice Tracking) özelliğini desteklemiyor. (Chrome/Safari önerilir)");
+      setVoiceTracking(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = lang === 'tr' ? 'tr-TR' : 'en-US';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+       lastSpeechTime.current = Date.now();
+    };
+
+    recognition.onresult = (event) => {
+      lastSpeechTime.current = Date.now();
+    };
+
+    recognition.onend = () => {
+      if (voiceTracking) {
+        setTimeout(() => {
+           try { recognition.start(); } catch(e){}
+        }, 100);
+      }
+    };
+
+    recognitionRef.current = recognition;
+    try { recognition.start(); } catch(e){}
+
+    return () => {
+      try { recognition.stop(); } catch(e){}
+    };
+  }, [voiceTracking, lang]);
+
 
   // Scrolling Engine
   useEffect(() => {
@@ -386,9 +435,18 @@ export default function ProfessionalRecord() {
         const deltaTime = time - lastTime;
         lastTime = time;
 
-        if (scrollContainerRef.current) {
-          // Calculate pixels to move per frame based on speed
-          const pixelsPerFrame = (speed * 0.05) * deltaTime;
+        let effectiveSpeed = speed;
+
+        if (voiceTracking) {
+           const timeSinceLastSpeech = Date.now() - lastSpeechTime.current;
+           if (timeSinceLastSpeech > 1200) {
+              // Pause if no speech for 1.2s
+              effectiveSpeed = 0;
+           }
+        }
+
+        if (scrollContainerRef.current && effectiveSpeed > 0) {
+          const pixelsPerFrame = (effectiveSpeed * 0.05) * deltaTime;
           scrollContainerRef.current.scrollTop += pixelsPerFrame;
         }
         animationRef.current = requestAnimationFrame(scrollLoop);
@@ -496,7 +554,18 @@ export default function ProfessionalRecord() {
                   <span className="material-symbols-outlined text-[18px] font-bold">add</span>
                 </button>
               </div>
-              <span className="text-[10px] text-white/30 font-bold tracking-wide">{getReadTime()}</span>
+              <div className="flex items-center gap-2 mt-1">
+                <button 
+                  onClick={() => setVoiceTracking(!voiceTracking)} 
+                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold border transition-all ${voiceTracking ? 'bg-primary/20 text-primary border-primary/30 animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.5)]' : 'bg-white/5 text-white/50 border-transparent hover:text-white hover:bg-white/10'}`}
+                  title="Sesle Takip: Konuştuğunuzda akar, sustuğunuzda durur."
+                >
+                  <span className="material-symbols-outlined text-[14px]">{voiceTracking ? 'mic' : 'mic_off'}</span>
+                  {t('smartVoice')}
+                </button>
+                <span className="text-[10px] text-white/20 font-bold">|</span>
+                <span className="text-[10px] text-white/40 font-bold tracking-wide">{getReadTime()}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -539,15 +608,15 @@ export default function ProfessionalRecord() {
                  <div className="absolute bottom-[100%] left-1/2 -translate-x-1/2 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 shadow-2xl z-[70] min-w-[150px]">
                     <button onClick={() => {setLayoutMode('bottom'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'bottom' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
                       <span className="material-symbols-outlined text-[18px]">splitscreen</span>
-                      Kamera Altta
+                      {t('camBottom')}
                     </button>
                     <button onClick={() => {setLayoutMode('full'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'full' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
                       <span className="material-symbols-outlined text-[18px]">fullscreen</span>
-                      Tam Ekran
+                      {t('fullScreen')}
                     </button>
                     <button onClick={() => {setLayoutMode('prompter-only'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'prompter-only' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
                       <span className="material-symbols-outlined text-[18px]">tv</span>
-                      Sadece Metin
+                      {t('prompterOnly')}
                     </button>
                  </div>
               )}
@@ -681,7 +750,7 @@ export default function ProfessionalRecord() {
 
           {/* BG Color Picker */}
           <div className="mb-4">
-            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Arka Plan Rengi</p>
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('bgColor')}</p>
             <div className="grid grid-cols-4 gap-2">
               {BG_COLORS.map(b => (
                 <button
@@ -723,7 +792,7 @@ export default function ProfessionalRecord() {
           <div className="mb-4 mt-4">
             <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('eyeContact')}</p>
             <div className="flex gap-2">
-              {[{label: 'Geniş', val: '100%'}, {label: 'Orta', val: '75%'}, {label: 'Dar', val: '50%'}].map(opt => (
+              {[{label: t('width_wide'), val: '100%'}, {label: t('width_medium'), val: '75%'}, {label: t('width_narrow'), val: '50%'}].map(opt => (
                 <button
                   key={opt.val}
                   onClick={() => setTextWidth(opt.val)}
@@ -766,7 +835,7 @@ export default function ProfessionalRecord() {
             >
               <p className="text-[11px] text-primary uppercase tracking-widest font-bold flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[14px]">photo_camera</span>
-                Kamera Ayarları (Pro)
+                {t('camSettings')}
               </p>
               <span className="material-symbols-outlined text-[16px] text-white/40 transition-transform" style={{ transform: showCameraSettings ? 'rotate(180deg)' : 'rotate(0deg)' }}>expand_more</span>
             </button>
@@ -775,7 +844,7 @@ export default function ProfessionalRecord() {
               <div className="flex flex-col gap-4">
                 {/* Frame Rate */}
                 <div>
-                  <p className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Kare Hızı (FPS)</p>
+                  <p className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('fps')}</p>
                   <div className="flex gap-2">
                     {[24, 30, 60].map(fps => (
                       <button
@@ -795,7 +864,7 @@ export default function ProfessionalRecord() {
 
                 {/* Zoom */}
                 <div>
-                  <p className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Yakınlaştırma &mdash; {zoomLevel.toFixed(1)}x</p>
+                  <p className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('zoom')} &mdash; {zoomLevel.toFixed(1)}x</p>
                   <input
                     type="range"
                     min="1"

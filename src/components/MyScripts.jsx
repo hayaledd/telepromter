@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { useLanguage } from '../context/LanguageContext';
+import { LANGUAGES } from '../context/LanguageContext';
 import MobileMenu from './MobileMenu';
 import mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -27,10 +28,18 @@ function estimatedReadTime(text, speed = 5) {
 export default function MyScripts() {
   const navigate = useNavigate();
   const { scripts, setActiveScriptId, createNewScript, importScript, deleteScript } = useScript();
-  const { t, lang, toggleLang, theme, toggleTheme } = useLanguage();
+  const { t, lang, setLanguage } = useLanguage();
   const fileInputRef = useRef(null);
   const [deletingId, setDeletingId] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [showLangPicker, setShowLangPicker] = useState(false);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('has_seen_onboarding');
+    if (!hasSeen) {
+      navigate('/tutorial', { replace: true });
+    }
+  }, [navigate]);
 
   const handleOpenScript = (id) => {
     setActiveScriptId(id);
@@ -43,7 +52,7 @@ export default function MyScripts() {
   };
 
   const handleCreateNew = () => {
-    createNewScript(t('untitledScript'), t('contentPlaceholder'));
+    createNewScript('', '');
     navigate('/editor');
   };
 
@@ -86,12 +95,12 @@ export default function MyScripts() {
   };
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Günaydın' : hour < 18 ? 'İyi Günler' : 'İyi Akşamlar';
+  const greeting = hour < 12 ? t('goodMorning') : hour < 18 ? t('goodAfternoon') : t('goodEvening');
 
   const dotColors = ['bg-teal-400', 'bg-violet-400', 'bg-amber-400', 'bg-rose-400', 'bg-cyan-400', 'bg-emerald-400'];
 
   return (
-    <div className={`sf-page min-h-screen flex flex-col font-sans pb-28 transition-colors duration-300 ${theme === 'light' ? 'bg-[#f4f4f8] text-gray-900' : 'bg-[#0f0f14] text-white'}`}>
+    <div className="sf-page min-h-screen flex flex-col font-sans pb-28 bg-[#0f0f14] text-white">
 
       {/* Background glows */}
       <div className="fixed top-0 right-0 w-72 h-72 bg-teal-500/8 rounded-full blur-3xl pointer-events-none" />
@@ -117,14 +126,66 @@ export default function MyScripts() {
           <span className="font-black text-[18px] tracking-tight text-white">Tele<span className="text-teal-400">Promt</span></span>
         </div>
 
-        {/* Recordings button (right) */}
+        {/* Language Picker (right) */}
         <button
-          onClick={() => navigate('/recordings')}
-          className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors border border-white/10"
+          onClick={() => setShowLangPicker(p => !p)}
+          className="flex items-center gap-1.5 px-3 h-9 rounded-full bg-white/5 text-white/70 hover:text-white hover:bg-white/10 transition-colors border border-white/10 active:scale-95"
+          title="Change Language"
         >
-          <span className="material-symbols-outlined text-[18px]">video_library</span>
+          <span className="font-bold text-[11px] tracking-widest">{t('language')}</span>
+          <span className="material-symbols-outlined text-[14px] text-white/40">expand_more</span>
         </button>
       </div>
+
+      {/* Language Picker Overlay — fixed, her zaman görünür */}
+      {showLangPicker && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-[300] bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowLangPicker(false)}
+          />
+          {/* Panel */}
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[301] w-[340px]"
+            style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #12121a 100%)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}
+          >
+            {/* Panel Header */}
+            <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-white/8">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-teal-400 text-[18px]">language</span>
+                <span className="font-black text-[15px] text-white tracking-tight">{t('language')}</span>
+                <span className="text-[11px] text-white/30 font-bold ml-1">({LANGUAGES.length})</span>
+              </div>
+              <button onClick={() => setShowLangPicker(false)} className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/15 transition-colors">
+                <span className="material-symbols-outlined text-[16px] text-white/50">close</span>
+              </button>
+            </div>
+            {/* Language Grid — 2 columns */}
+            <div className="p-3 grid grid-cols-2 gap-2">
+              {LANGUAGES.map(lng => (
+                <button
+                  key={lng.code}
+                  onClick={() => { setLanguage(lng.code); setShowLangPicker(false); }}
+                  className={`flex items-center gap-2.5 px-3 py-3 rounded-2xl text-left transition-all active:scale-95 ${
+                    lang === lng.code
+                      ? 'bg-teal-500/20 border border-teal-500/30'
+                      : 'hover:bg-white/8 border border-white/5'
+                  }`}
+                >
+                  <span className="text-[22px] leading-none shrink-0">{lng.flag}</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className={`font-bold text-[12px] truncate ${lang === lng.code ? 'text-teal-400' : 'text-white'}`}>{lng.label}</span>
+                    <span className="text-[10px] text-white/30 font-bold tracking-widest">{lng.code.toUpperCase()}</span>
+                  </div>
+                  {lang === lng.code && (
+                    <span className="material-symbols-outlined text-[14px] text-teal-400 ml-auto shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ── GREETING ── */}
       <div className="relative z-10 px-5 mb-5">
@@ -133,7 +194,7 @@ export default function MyScripts() {
 
       {/* ── QUICK ACTIONS ── */}
       <div className="relative z-10 px-5 mb-5">
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {/* Metin Yaz */}
           <button
             onClick={handleCreateNew}
@@ -143,7 +204,7 @@ export default function MyScripts() {
             <div className="w-9 h-9 rounded-xl bg-teal-500/20 flex items-center justify-center">
               <span className="material-symbols-outlined text-teal-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
             </div>
-            <span className="text-teal-400 font-bold text-[10px] text-center leading-tight">Metin<br />Yaz</span>
+            <span className="text-teal-400 font-bold text-[10px] text-center leading-tight">{t('newScript').split(' ').map((w,i)=><React.Fragment key={i}>{w}<br/></React.Fragment>)}</span>
           </button>
 
           <button
@@ -154,7 +215,7 @@ export default function MyScripts() {
             <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
               <span className="material-symbols-outlined text-white/60 text-[18px]">{importing ? 'hourglass_empty' : 'upload_file'}</span>
             </div>
-            <span className="text-white/50 font-bold text-[10px] text-center leading-tight">{importing ? 'Yükleniyor...' : 'İçe\nAktar'}</span>
+            <span className="text-white/50 font-bold text-[10px] text-center leading-tight">{importing ? t('loading') : t('importText').split(' ').map((w,i)=><React.Fragment key={i}>{w}<br/></React.Fragment>)}</span>
           </button>
           <input type="file" accept=".txt,.pdf,.doc,.docx" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
 
@@ -167,18 +228,7 @@ export default function MyScripts() {
             <div className="w-9 h-9 rounded-xl bg-indigo-500/20 flex items-center justify-center">
               <span className="material-symbols-outlined text-indigo-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_library</span>
             </div>
-            <span className="text-indigo-400 font-bold text-[10px] text-center leading-tight">Kayıt-<br />larım</span>
-          </button>
-
-          {/* Metinler */}
-          <button
-            onClick={() => { }}
-            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-violet-500/30 bg-violet-500/15 active:scale-95 transition-all"
-          >
-            <div className="w-9 h-9 rounded-xl bg-violet-500/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-violet-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
-            </div>
-            <span className="text-violet-400 font-bold text-[10px] text-center leading-tight">Metin-<br />ler</span>
+            <span className="text-indigo-400 font-bold text-[10px] text-center leading-tight">{t('myVideos').split(' ').map((w,i)=><React.Fragment key={i}>{w}<br/></React.Fragment>)}</span>
           </button>
         </div>
       </div>
@@ -189,28 +239,28 @@ export default function MyScripts() {
           {/* Video Record */}
           <button
             onClick={() => navigate('/record')}
-            className="flex items-center gap-2 p-3.5 rounded-2xl active:scale-[0.98] transition-transform relative shadow-lg"
+            className="flex items-center gap-2 p-3.5 rounded-2xl active:scale-[0.98] transition-transform relative shadow-lg keep-white"
             style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}
           >
             <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
               <span className="material-symbols-outlined text-white text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>videocam</span>
             </div>
             <div className="flex-1 flex items-center justify-center pr-2">
-              <p className="text-white font-black text-[14px] leading-none">Video Kaydı Yap</p>
+              <p className="text-white font-black text-[14px] leading-none">{t('videoRecord')}</p>
             </div>
           </button>
 
           {/* Audio Record */}
           <button
             onClick={() => navigate('/record-audio')}
-            className="flex items-center gap-2 p-3.5 rounded-2xl active:scale-[0.98] transition-transform relative shadow-lg"
+            className="flex items-center gap-2 p-3.5 rounded-2xl active:scale-[0.98] transition-transform relative shadow-lg keep-white"
             style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' }}
           >
             <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
               <span className="material-symbols-outlined text-white text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>mic</span>
             </div>
             <div className="flex-1 flex items-center justify-center pr-2">
-              <p className="text-white font-black text-[14px] leading-none">Ses Kaydı Yap</p>
+              <p className="text-white font-black text-[14px] leading-none">{t('audioRecord')}</p>
             </div>
           </button>
         </div>
@@ -223,10 +273,10 @@ export default function MyScripts() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-teal-400 text-[18px]">description</span>
-              <span className="text-white font-bold text-[14px]">Metinler</span>
+              <span className="text-white font-bold text-[14px]">{t('scripts')}</span>
             </div>
             <div className="px-3 py-1 rounded-full bg-teal-500/15 border border-teal-500/20">
-              <span className="text-teal-400 text-[12px] font-bold">{scripts.length} metin hazır</span>
+              <span className="text-teal-400 text-[12px] font-bold">{scripts.length} {t('scriptsReady')}</span>
             </div>
           </div>
 
@@ -234,50 +284,52 @@ export default function MyScripts() {
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <span className="material-symbols-outlined text-[40px] text-white/15 mb-3">description</span>
               <p className="text-white/30 text-[13px]">{t('noScripts') || 'Henüz metin yok'}</p>
-              <p className="text-white/20 text-[11px] mt-1">Aşağıdan yeni bir metin oluşturun</p>
+              <p className="text-white/20 text-[11px] mt-1">{t('createBelow')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-2">
-              {scripts.map((script, idx) => {
-                const dot = dotColors[idx % dotColors.length];
-                const words = wordCount(script.content);
-                const preview = script.content.slice(0, 55).trim();
+            <div className="max-h-[280px] overflow-y-auto pr-1 -mr-1" style={{ scrollbarWidth: 'thin' }}>
+              <div className="grid grid-cols-2 gap-2 pb-2">
+                {scripts.map((script, idx) => {
+                  const dot = dotColors[idx % dotColors.length];
+                  const words = wordCount(script.content);
+                  const preview = script.content.slice(0, 55).trim();
 
-                return (
-                  <div
-                    key={script.id}
-                    onClick={() => handleOpenScript(script.id)}
-                    className="relative flex flex-col gap-2 p-3 rounded-2xl bg-white/5 border border-white/8 active:scale-[0.97] transition-all duration-150 cursor-pointer overflow-hidden"
-                  >
-                    {/* Colored top line */}
-                    <div className={`absolute top-0 left-0 right-0 h-0.5 ${dot} opacity-70 rounded-t-2xl`} />
+                  return (
+                    <div
+                      key={script.id}
+                      onClick={() => handleOpenScript(script.id)}
+                      className="relative flex flex-col p-3 h-[105px] rounded-2xl bg-white/5 border border-white/8 active:scale-[0.97] transition-all duration-150 cursor-pointer overflow-hidden"
+                    >
+                      {/* Colored top line */}
+                      <div className={`absolute top-0 left-0 right-0 h-0.5 ${dot} opacity-70 rounded-t-2xl`} />
 
-                    <h3 className="font-bold text-[13px] text-white leading-tight line-clamp-1 mt-1">{script.title}</h3>
-                    <p className="text-white/35 text-[10px] leading-relaxed line-clamp-2">{preview}{script.content.length > 55 ? '…' : ''}</p>
+                      <h3 className="font-bold text-[13px] text-white leading-tight line-clamp-1 mt-1 mb-1">{script.title}</h3>
+                      <p className="text-white/35 text-[10px] leading-snug line-clamp-1 mb-auto">{preview}{script.content.length > 55 ? '…' : ''}</p>
 
-                    <div className="flex items-center justify-between mt-auto pt-1">
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-white/25 text-[10px]">{words} kelime</span>
-                        <span className="text-teal-400/60 text-[10px] font-bold">{estimatedReadTime(script.content)}</span>
-                      </div>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={(e) => { e.stopPropagation(); handleRecord(script.id); }}
-                          className="w-7 h-7 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 active:scale-90"
-                        >
-                          <span className="material-symbols-outlined text-[13px]" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
-                        </button>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); setDeletingId(script.id); }}
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-white/20 hover:text-rose-400 active:scale-90"
-                        >
-                          <span className="material-symbols-outlined text-[13px]">delete</span>
-                        </button>
+                      <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-1">
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-white/30 text-[9px] font-medium tracking-wide">{words} {t('wordCountUpper')}</span>
+                          <span className="text-teal-400/70 text-[9px] font-bold">{estimatedReadTime(script.content)}</span>
+                        </div>
+                        <div className="flex gap-1 shrink-0">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleRecord(script.id); }}
+                            className="w-7 h-7 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 active:scale-90"
+                          >
+                            <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setDeletingId(script.id); }}
+                            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/20 hover:text-rose-400 active:scale-90"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">delete</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

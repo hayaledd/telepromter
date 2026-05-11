@@ -127,7 +127,7 @@ export default function Recordings() {
             <p className="text-white/40 text-[14px]">{t('noVideosDesc') || 'Henüz kayıtlı video bulunmuyor.'}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
             {videos.map((video, idx) => (
               <VideoCard
                 key={idx}
@@ -203,26 +203,26 @@ function VideoCard({ video, onShare, onDelete }) {
         </button>
 
         {/* Alt bilgi */}
-        <div className="p-3 flex flex-col gap-1.5">
-          <h3 className="font-bold text-[13px] text-white truncate" title={video.name}>
+        <div className="p-2 flex flex-col gap-1">
+          <h3 className="font-bold text-[11px] text-white truncate" title={video.name}>
             {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ')}
           </h3>
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-[10px] text-white/40">{video.date}</p>
-            <div className="flex gap-1.5">
+          <div className="flex flex-col gap-1 mt-0.5">
+            <p className="text-[9px] text-white/40">{video.date}</p>
+            <div className="flex gap-1">
               <button
                 onClick={() => onShare(video)}
-                className="w-7 h-7 flex items-center justify-center bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white rounded-lg transition-all active:scale-90"
+                className="w-6 h-6 flex items-center justify-center bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white rounded-md transition-all active:scale-90"
                 title={t('share')}
               >
-                <span className="material-symbols-outlined text-[14px]">share</span>
+                <span className="material-symbols-outlined text-[12px]">share</span>
               </button>
               <button
                 onClick={() => onDelete(video.name)}
-                className="w-7 h-7 flex items-center justify-center bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition-all active:scale-90"
+                className="w-6 h-6 flex items-center justify-center bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-md transition-all active:scale-90"
                 title={t('delete')}
               >
-                <span className="material-symbols-outlined text-[14px]">delete</span>
+                <span className="material-symbols-outlined text-[12px]">delete</span>
               </button>
             </div>
           </div>
