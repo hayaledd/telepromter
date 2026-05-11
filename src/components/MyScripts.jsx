@@ -256,9 +256,8 @@ export default function MyScripts() {
                     <p className="text-white/35 text-[10px] leading-relaxed line-clamp-2">{preview}{script.content.length > 55 ? '…' : ''}</p>
 
                     <div className="flex items-center justify-between mt-auto pt-1">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex flex-col min-w-0">
                         <span className="text-white/25 text-[10px]">{words} kelime</span>
-                        <span className="text-white/15 text-[10px]">·</span>
                         <span className="text-teal-400/60 text-[10px] font-bold">{estimatedReadTime(script.content)}</span>
                       </div>
                       <div className="flex gap-1">
