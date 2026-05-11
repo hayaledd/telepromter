@@ -281,6 +281,18 @@ export default function ProfessionalRecord() {
     setSpeed(prev => Math.max(1, Math.min(10, prev + delta)));
   };
 
+  // Estimated reading time based on current speed
+  const getReadTime = () => {
+    if (!script) return '';
+    const wpm = speed * 30; // speed 1=30wpm, speed 5=150wpm, speed 10=300wpm
+    const words = script.content.trim().split(/\s+/).filter(Boolean).length;
+    const totalSecs = Math.round((words / wpm) * 60);
+    if (totalSecs < 60) return `~${totalSecs}sn`;
+    const mins = Math.floor(totalSecs / 60);
+    const secs = totalSecs % 60;
+    return secs > 0 ? `~${mins}dk ${secs}sn` : `~${mins}dk`;
+  };
+
   // Camera Setup
   useEffect(() => {
     let cancelled = false;
@@ -472,16 +484,19 @@ export default function ProfessionalRecord() {
           <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-black/20 to-transparent z-10 pointer-events-none"></div>
           {/* Floating Speed Control */}
           <div className="fixed bottom-[90px] left-1/2 -translate-x-1/2 w-auto z-40">
-            <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-full border border-white/10 shadow-2xl py-1.5 px-3 flex items-center justify-center gap-2">
-              <button onClick={() => adjustSpeed(-1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
-                <span className="material-symbols-outlined text-[18px] font-bold">remove</span>
-              </button>
-              <div className="flex items-center justify-center min-w-[40px]">
-                <span className="font-black text-primary text-[14px] leading-none">{speed / 5}x</span>
+            <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl py-2 px-3 flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <button onClick={() => adjustSpeed(-1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+                  <span className="material-symbols-outlined text-[18px] font-bold">remove</span>
+                </button>
+                <div className="flex items-center justify-center min-w-[44px]">
+                  <span className="font-black text-primary text-[15px] leading-none">{speed / 5}x</span>
+                </div>
+                <button onClick={() => adjustSpeed(1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+                  <span className="material-symbols-outlined text-[18px] font-bold">add</span>
+                </button>
               </div>
-              <button onClick={() => adjustSpeed(1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
-                <span className="material-symbols-outlined text-[18px] font-bold">add</span>
-              </button>
+              <span className="text-[10px] text-white/30 font-bold tracking-wide">{getReadTime()}</span>
             </div>
           </div>
         </div>

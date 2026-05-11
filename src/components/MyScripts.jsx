@@ -13,6 +13,17 @@ function wordCount(text) {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
+// At speed 5 (normal) = ~150 wpm. Speed range 1-10 maps to 30-300 wpm.
+function estimatedReadTime(text, speed = 5) {
+  const wpm = speed * 30;
+  const words = wordCount(text);
+  const totalSeconds = Math.round((words / wpm) * 60);
+  if (totalSeconds < 60) return `~${totalSeconds}sn`;
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  return secs > 0 ? `~${mins}dk ${secs}sn` : `~${mins}dk`;
+}
+
 export default function MyScripts() {
   const navigate = useNavigate();
   const { scripts, setActiveScriptId, createNewScript, importScript, deleteScript } = useScript();
@@ -245,7 +256,11 @@ export default function MyScripts() {
                     <p className="text-white/35 text-[10px] leading-relaxed line-clamp-2">{preview}{script.content.length > 55 ? '…' : ''}</p>
 
                     <div className="flex items-center justify-between mt-auto pt-1">
-                      <span className="text-white/25 text-[10px]">{words} kelime</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-white/25 text-[10px]">{words} kelime</span>
+                        <span className="text-white/15 text-[10px]">·</span>
+                        <span className="text-teal-400/60 text-[10px] font-bold">{estimatedReadTime(script.content)}</span>
+                      </div>
                       <div className="flex gap-1">
                         <button
                           onClick={(e) => { e.stopPropagation(); handleRecord(script.id); }}
