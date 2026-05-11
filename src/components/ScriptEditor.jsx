@@ -29,107 +29,109 @@ export default function ScriptEditor() {
   };
 
   return (
-    <div className="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col overflow-hidden dark">
+    <div className="bg-[#0f0f14] text-white font-sans antialiased min-h-screen flex flex-col overflow-hidden">
+      
+      {/* Background glow */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[100px] pointer-events-none" />
+
       {/* TopAppBar */}
-      <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-control-bar-height bg-surface-container-lowest border-b border-surface-container-low">
-        <div className="flex items-center gap-2 md:gap-4">
-          {/* Menu button removed as requested */}
-          <button 
+      <header className="relative z-10 w-full flex items-center justify-between px-5 pt-12 pb-4 bg-white/5 border-b border-white/5 backdrop-blur-md">
+        <div className="flex items-center gap-3">
+          <button
             onClick={() => navigate('/scripts')}
-            aria-label="Back" 
-            className="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2 active:scale-95 duration-100 hidden md:block"
+            aria-label="Back"
+            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors active:scale-95"
           >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_back</span>
+            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_back</span>
           </button>
-          <h1 className="font-headline-md text-headline-md text-on-surface hidden md:block">{t('editScript')}</h1>
+          <div className="hidden md:block">
+            <h1 className="font-bold text-[16px] text-white">{t('editScript')}</h1>
+            <p className="text-white/40 text-[12px] mt-0.5">{script.title || t('untitledScript')}</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {saved && (
-            <span className="text-green-400 text-[13px] font-bold flex items-center gap-1 animate-pulse">
-              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+            <span className="text-teal-400 text-[12px] font-bold flex items-center gap-1 animate-pulse px-3 py-1.5 bg-teal-500/10 rounded-full border border-teal-500/20">
+              <span className="material-symbols-outlined text-[14px]">check_circle</span>
               {t('saved')}
             </span>
           )}
-          <button 
+          <button
             onClick={handleSave}
-            className="text-primary font-bold px-4 py-2 rounded-full hover:bg-primary-container/50 transition-colors active:scale-95 text-[14px]"
+            className="text-white/60 font-bold px-4 py-2 rounded-full hover:bg-white/10 hover:text-white transition-colors active:scale-95 text-[13px]"
           >
             {t('save')}
           </button>
-          <button 
+          <button
             onClick={() => navigate('/record')}
-            className="btn-gradient !px-4 !py-2 md:!px-6 rounded-full"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-teal-500 text-white font-bold active:scale-95 transition-transform shadow-[0_0_15px_rgba(20,184,166,0.3)]"
           >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>videocam</span>
-            <span className="hidden md:inline">{t('startRec')}</span>
+            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>videocam</span>
+            <span className="hidden md:inline text-[13px]">{t('startRec')}</span>
           </button>
         </div>
       </header>
 
       {/* Main Content Area - Script Editor */}
-      <main className="flex-grow pt-control-bar-height pb-[100px] flex flex-col md:px-edge-margin-tablet px-edge-margin-mobile max-w-4xl mx-auto w-full relative h-screen">
+      <main className="relative z-10 flex-grow pb-[120px] flex flex-col px-5 max-w-4xl mx-auto w-full h-screen">
         {/* Script Title Input */}
-        <input 
-          className="w-full bg-transparent border-none text-headline-md font-headline-md text-on-surface focus:ring-0 focus:outline-none py-6 placeholder-on-surface-variant/50" 
-          placeholder={t('titlePlaceholder')} 
-          type="text" 
+        <input
+          className="w-full bg-transparent border-none text-[24px] font-black text-white focus:ring-0 focus:outline-none py-6 placeholder-white/20"
+          placeholder={t('titlePlaceholder') || 'Metin Başlığı'}
+          type="text"
           value={script.title}
           onChange={(e) => updateActiveScript({ title: e.target.value })}
         />
         {/* Script Text Area */}
-        <textarea 
-          className="flex-grow w-full bg-transparent border-none resize-none focus:ring-0 focus:outline-none font-prompter-standard text-on-surface placeholder-on-surface-variant/30 py-4" 
-          placeholder={t('contentPlaceholder')}
+        <textarea
+          className="flex-grow w-full bg-transparent border-none resize-none focus:ring-0 focus:outline-none font-sans text-white/90 placeholder-white/20 py-4 leading-relaxed"
+          placeholder={t('contentPlaceholder') || 'Metninizi buraya yazın...'}
           value={script.content}
           onChange={(e) => updateActiveScript({ content: e.target.value })}
-          style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4 }}
+          style={{ fontSize: `${globalFontSize}px` }}
         />
       </main>
 
       {/* Floating Editor Toolbar */}
-      <div className="fixed bottom-[calc(72px+16px)] md:bottom-gutter left-1/2 transform -translate-x-1/2 w-[calc(100%-32px)] md:w-auto md:min-w-[300px] z-40">
-        <div className="bg-surface-container-high rounded-full border border-outline-variant/30 shadow-lg py-1 px-4 flex items-center justify-center gap-4">
-          {/* Font Size Controls */}
-          <div className="flex items-center gap-2">
-            <button 
+      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-auto z-40">
+        <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-full border border-white/10 shadow-2xl py-2 px-6 flex items-center justify-center gap-4">
+          <div className="flex items-center gap-4">
+            <button
               onClick={() => setGlobalFontSize(prev => Math.max(16, prev - 4))}
-              aria-label="Decrease Font Size" 
-              className="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full p-1.5 transition-colors active:scale-95"
+              className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95"
             >
-              <span className="material-symbols-outlined text-[18px]">text_decrease</span>
+              <span className="text-[16px] font-bold">A-</span>
             </button>
-            <span className="font-body-sm text-on-surface-variant select-none w-8 text-center">{globalFontSize}</span>
-            <button 
+            <div className="flex flex-col items-center justify-center min-w-[40px]">
+              <span className="text-[10px] text-white/40 font-bold uppercase tracking-wider mb-0.5">{t('size') || 'Boyut'}</span>
+              <span className="font-black text-white text-[15px]">{globalFontSize}</span>
+            </div>
+            <button
               onClick={() => setGlobalFontSize(prev => Math.min(96, prev + 4))}
-              aria-label="Increase Font Size" 
-              className="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded-full p-1.5 transition-colors active:scale-95"
+              className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95"
             >
-              <span className="material-symbols-outlined text-[20px]">text_increase</span>
+              <span className="text-[18px] font-bold">A+</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* BottomNavBar (Mobile) */}
-      <nav className="fixed bottom-0 w-full z-50 flex justify-around items-center px-edge-margin-mobile py-2 bg-surface-container border-t border-surface-container-high md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 8px)' }}>
-        <button onClick={() => navigate('/scripts')} className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant rounded-full active:scale-90 transition-transform">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>description</span>
-          <span className="font-label-caps text-label-caps mt-1">{t('scripts')}</span>
+      <nav className="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-4 bg-gradient-to-t from-[#0f0f14] via-[#0f0f14]/95 to-transparent md:hidden">
+        <button onClick={() => navigate('/scripts')} className="flex flex-col items-center justify-center text-white/40 p-2 hover:text-white active:scale-90 transition-all">
+          <span className="material-symbols-outlined text-[24px]">description</span>
         </button>
-        <button className="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 active:scale-90 transition-transform">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
-          <span className="font-label-caps text-label-caps mt-1">{t('editor')}</span>
+        <button className="flex flex-col items-center justify-center bg-teal-500/20 text-teal-400 rounded-2xl px-6 py-2 border border-teal-500/30 active:scale-95 transition-all">
+          <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
         </button>
-        <button onClick={() => navigate('/record')} className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant rounded-full active:scale-90 transition-transform">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>videocam</span>
-          <span className="font-label-caps text-label-caps mt-1">{t('record')}</span>
+        <button onClick={() => navigate('/record')} className="flex flex-col items-center justify-center text-white/40 p-2 hover:text-white active:scale-90 transition-all">
+          <span className="material-symbols-outlined text-[24px]">videocam</span>
         </button>
-        <button onClick={() => navigate('/scripts')} className="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant rounded-full active:scale-90 transition-transform">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>settings</span>
-          <span className="font-label-caps text-label-caps mt-1">{t('settings')}</span>
+        <button onClick={() => navigate('/recordings')} className="flex flex-col items-center justify-center text-white/40 p-2 hover:text-white active:scale-90 transition-all">
+          <span className="material-symbols-outlined text-[24px]">video_library</span>
         </button>
       </nav>
-      {/* Mobile Menu */}
+
       <MobileMenu show={showMenu} onClose={() => setShowMenu(false)} />
     </div>
   );

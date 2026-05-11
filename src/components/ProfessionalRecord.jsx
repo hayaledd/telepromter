@@ -353,9 +353,11 @@ export default function ProfessionalRecord() {
     <div className="bg-background text-on-background fixed inset-0 h-[100dvh] w-screen overflow-hidden overscroll-none flex flex-col font-body-md dark">
       {/* HUD Overlay */}
       <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start pointer-events-none">
-        {/* Left Side: Menu + Status */}
-        <div className="flex items-center gap-2 pointer-events-auto">
-          {/* Menu button removed as requested */}
+        {/* Left Side: Back + Status */}
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-full bg-surface-container/30 backdrop-blur-xl border border-white/10 shadow-lg flex items-center justify-center text-on-surface hover:bg-white/10 transition-colors">
+            <span className="material-symbols-outlined text-[20px]">arrow_back_ios_new</span>
+          </button>
           <div className="flex items-center gap-2 bg-surface-container/30 backdrop-blur-xl shadow-sm rounded-full px-4 py-2 border border-white/10">
             <span className="flex h-3 w-3 relative">
               {isRecordingActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>}
@@ -415,29 +417,48 @@ export default function ProfessionalRecord() {
           <div className="absolute top-0 w-full h-16 bg-gradient-to-b from-black/20 to-transparent z-10 pointer-events-none"></div>
           <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-black/20 to-transparent z-10 pointer-events-none"></div>
           {/* Floating Speed Control */}
-          <div className="absolute right-edge-margin-tablet bottom-[120px] landscape:bottom-[20px] z-30 bg-surface-container-high/40 backdrop-blur-xl rounded-full p-1.5 flex flex-col items-center gap-2 border border-white/10 shadow-2xl">
-            <button onClick={() => adjustSpeed(1)} className="w-8 h-8 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
-              <span className="material-symbols-outlined text-[16px]">add</span>
-            </button>
-            <div className="h-24 w-1 bg-black/40 rounded-full relative shadow-inner mx-auto">
-              <div className="absolute bottom-0 w-full bg-gradient-to-t from-primary/50 to-primary rounded-full shadow-[0_0_8px_rgba(173,198,255,0.4)]" style={{ height: `${speed * 10}%` }}></div>
+          <div className="fixed bottom-[90px] left-1/2 -translate-x-1/2 w-auto z-40">
+            <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-full border border-white/10 shadow-2xl py-1.5 px-3 flex items-center justify-center gap-2">
+              <button onClick={() => adjustSpeed(-1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+                <span className="material-symbols-outlined text-[18px] font-bold">remove</span>
+              </button>
+              <div className="flex items-center justify-center min-w-[40px]">
+                <span className="font-black text-primary text-[14px] leading-none">{speed / 5}x</span>
+              </div>
+              <button onClick={() => adjustSpeed(1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+                <span className="material-symbols-outlined text-[18px] font-bold">add</span>
+              </button>
             </div>
-            <span className="font-label-caps text-[10px] text-primary drop-shadow-sm">{speed / 5}x</span>
-            <button onClick={() => adjustSpeed(-1)} className="w-8 h-8 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
-              <span className="material-symbols-outlined text-[16px]">remove</span>
-            </button>
           </div>
         </div>
       </div>
 
       {/* Persistent Bottom Control Bar */}
       <div className="fixed bottom-0 landscape:bottom-auto landscape:right-0 landscape:h-screen left-0 w-full landscape:w-control-bar-height bg-surface-container-lowest/80 backdrop-blur-2xl h-control-bar-height flex landscape:flex-col items-center justify-center px-2 landscape:py-4 z-50 border-t landscape:border-t-0 landscape:border-l border-white/5 shadow-[0_-4px_24px_rgba(0,0,0,0.5)]">
-        <div className="flex landscape:flex-col items-center gap-2 w-full landscape:h-full max-w-2xl justify-between">
+        <div className="flex landscape:flex-col items-end landscape:items-center gap-2 w-full landscape:h-full max-w-2xl justify-between relative -top-2 landscape:top-0">
           {/* Left Actions */}
-          <div className="flex landscape:flex-col gap-1">
-            <div className="flex flex-col items-center gap-1">
+          <div className="flex landscape:flex-col items-end landscape:items-center gap-1">
+            <div className="relative flex flex-col items-center gap-1">
+              {showFilters && (
+                 <div className="absolute bottom-[100%] left-0 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 shadow-2xl z-[70] min-w-[160px] max-h-[50vh] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+                    {FILTERS.map(f => (
+                      <button
+                        key={f.id}
+                        onClick={() => { setActiveFilter(f.id); setShowFilters(false); }}
+                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all ${
+                          activeFilter === f.id
+                            ? 'bg-primary/20 text-primary'
+                            : 'text-white hover:bg-surface-variant/50'
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-[18px]" style={{ filter: f.style !== 'none' ? f.style : undefined }}>{f.icon}</span>
+                        {f.label}
+                      </button>
+                    ))}
+                 </div>
+              )}
               <button 
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={() => { setShowFilters(!showFilters); setShowLayoutMenu(false); }}
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${showFilters ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
               >
                 <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
@@ -476,47 +497,53 @@ export default function ProfessionalRecord() {
             </div>
           </div>
           {/* Action Buttons Container */}
-          <div className="flex items-center gap-4 relative -top-3 landscape:top-0 landscape:-left-3 shrink-0">
+          <div className="flex items-end gap-4 shrink-0">
             {/* Play/Read Only Button */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center gap-1">
               <button 
                 onClick={toggleReading} 
                 disabled={isRecordingActive}
-                className={`w-14 h-14 rounded-full flex items-center justify-center border-2 active:scale-95 transition-all duration-300 ${
+                className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all duration-300 ${
                   isPlaying && !isRecordingActive
-                    ? 'bg-primary text-on-primary border-primary shadow-[0_0_20px_rgba(99,102,241,0.6)]' 
-                    : 'bg-surface-container-high text-primary border-primary/50 hover:bg-surface-variant'
-                } ${isRecordingActive ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    ? 'bg-[#1a1a24] border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.5)]' 
+                    : 'bg-[#1a1a24] border-white/10 shadow-[0_8px_20px_rgba(0,0,0,0.5)] hover:border-indigo-400/30'
+                } ${isRecordingActive ? 'opacity-50 cursor-not-allowed scale-90 grayscale' : ''}`}
               >
-                <span className="material-symbols-outlined text-[28px]">{(isPlaying && !isRecordingActive) ? 'pause' : 'play_arrow'}</span>
+                <span className={`material-symbols-outlined text-[28px] transition-colors ${
+                  isPlaying && !isRecordingActive ? 'text-indigo-400' : 'text-white'
+                }`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                  {(isPlaying && !isRecordingActive) ? 'pause' : 'play_arrow'}
+                </span>
               </button>
-              <span className={`text-[9px] uppercase font-bold tracking-widest mt-2 drop-shadow-sm ${(isPlaying && !isRecordingActive) ? 'text-primary' : 'text-on-surface-variant'}`}>
+              <span className={`text-[9px] uppercase font-bold tracking-widest drop-shadow-sm ${(isPlaying && !isRecordingActive) ? 'text-indigo-400' : 'text-white/60'}`}>
                 {(isPlaying && !isRecordingActive) ? (t('stop') || 'DURDUR') : (t('read') || 'OKU')}
               </span>
             </div>
 
             {/* Primary Record/Stop Action */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center gap-1">
               <button 
                 onClick={toggleRecording} 
                 disabled={isPlaying && !isRecordingActive}
-                className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-[4px] active:scale-95 transition-all duration-300 ${
+                className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all duration-300 ${
                   isRecordingActive 
-                    ? 'bg-surface-container-lowest border-surface-variant/80 shadow-[inset_0_4px_12px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-xl' 
-                    : 'btn-gradient border-transparent !rounded-full !p-0 shadow-[0_0_30px_rgba(99,102,241,0.6)] hover:shadow-[0_0_40px_rgba(99,102,241,0.8)]'
-                } ${(isPlaying && !isRecordingActive) ? 'opacity-50 cursor-not-allowed scale-90' : ''}`}
+                    ? 'bg-[#1a1a24] border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.5)]' 
+                    : 'bg-[#1a1a24] border-white/10 shadow-[0_8px_20px_rgba(0,0,0,0.5)] hover:border-rose-400/30'
+                } ${(isPlaying && !isRecordingActive) ? 'opacity-50 cursor-not-allowed scale-90 grayscale' : ''}`}
               >
                 <div className={`transition-all duration-300 ${
                   isRecordingActive 
-                    ? 'w-6 h-6 md:w-8 md:h-8 rounded-sm bg-gradient-to-br from-error to-error-container animate-pulse shadow-[0_0_16px_rgba(255,180,171,0.6)]' 
-                    : 'w-8 h-8 md:w-10 md:h-10 bg-white rounded-full'
+                    ? 'w-5 h-5 rounded-md bg-rose-500 animate-pulse shadow-[0_0_12px_rgba(244,63,94,0.8)]' 
+                    : 'w-7 h-7 rounded-full bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.4)]'
                 }`}></div>
               </button>
-              <span className={`text-[10px] uppercase font-bold tracking-widest mt-1 md:mt-2 drop-shadow-sm ${isRecordingActive ? 'text-error' : 'text-primary'}`}>{isRecordingActive ? t('stop') : (t('record') || 'KAYIT')}</span>
+              <span className={`text-[9px] uppercase font-bold tracking-widest drop-shadow-sm ${isRecordingActive ? 'text-rose-400' : 'text-white/60'}`}>
+                {isRecordingActive ? t('stop') : (t('record') || 'KAYIT')}
+              </span>
             </div>
           </div>
           {/* Right Actions */}
-          <div className="flex landscape:flex-col gap-1">
+          <div className="flex landscape:flex-col items-end landscape:items-center gap-1">
             <div className="flex flex-col items-center gap-1">
               <div className="flex items-center bg-surface-variant/30 rounded-full h-12 px-1 gap-0.5 border border-white/5">
                 <button 
@@ -535,7 +562,7 @@ export default function ProfessionalRecord() {
               <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">{t('size')}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <button onClick={() => navigate('/editor')} className="w-12 h-12 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
+              <button onClick={() => navigate(-1)} className="w-12 h-12 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 transition-colors">
                 <span className="material-symbols-outlined text-[24px]">close</span>
               </button>
               <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">{t('close')}</span>
@@ -652,35 +679,7 @@ export default function ProfessionalRecord() {
         </div>
       )}
 
-      {/* Filters Panel */}
-      {showFilters && (
-        <div className="fixed bottom-[72px] left-0 w-full z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border-t border-white/10 px-4 py-4 shadow-[0_-8px_32px_rgba(0,0,0,0.6)]">
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">{t('cameraFilters')}</span>
-            <button onClick={() => setShowFilters(false)} className="text-on-surface-variant">
-              <span className="material-symbols-outlined text-[20px]">close</span>
-            </button>
-          </div>
-          <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
-            {FILTERS.map(f => (
-              <button
-                key={f.id}
-                onClick={() => setActiveFilter(f.id)}
-                className={`flex-shrink-0 flex flex-col items-center gap-1.5 px-3 py-2 rounded-xl border transition-all ${
-                  activeFilter === f.id
-                    ? 'bg-primary/20 border-primary text-primary'
-                    : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
-                }`}
-              >
-                <div className="w-12 h-12 rounded-lg bg-black/40 flex items-center justify-center overflow-hidden border border-white/10">
-                  <span className="material-symbols-outlined text-[22px]" style={{ filter: f.style !== 'none' ? f.style : undefined }}>{f.icon}</span>
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wide">{f.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+
 
 
       {recordedVideoUrl && (

@@ -15,13 +15,13 @@ export default function SplashScreen() {
           clearInterval(interval);
           return 100;
         }
-        return p + 2;
+        return p + 3;
       });
-    }, 40); // 100 * 40 = 4000ms but it will navigate before
+    }, 40);
 
     const timer = setTimeout(() => {
       navigate('/scripts');
-    }, 2500);
+    }, 2000);
 
     return () => {
       clearTimeout(timer);
@@ -30,48 +30,48 @@ export default function SplashScreen() {
   }, [navigate]);
 
   return (
-    <div className="bg-black text-on-background min-h-screen relative overflow-hidden flex flex-col items-center justify-center font-body-md dark">
-      {/* Deep Ambient Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[600px] max-h-[600px] bg-primary rounded-full mix-blend-screen filter blur-[150px] opacity-[0.15] animate-pulse pointer-events-none"></div>
+    <div className="bg-[#0f0f14] text-white min-h-screen relative overflow-hidden flex flex-col items-center justify-center font-sans">
+      
+      {/* Background glows */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse" />
 
-      <div className="z-10 flex flex-col items-center justify-center space-y-8 w-full max-w-md px-8 relative">
+      <div className="z-10 flex flex-col items-center justify-center space-y-8 w-full max-w-md px-8">
         
-        {/* Animated Rings Icon */}
-        <div className="relative group flex items-center justify-center">
-          {/* Pulsing Outer Ring */}
-          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-ping" style={{ animationDuration: '3s' }}></div>
-          {/* Solid Glass Center */}
-          <div className="relative w-28 h-28 rounded-full flex items-center justify-center bg-surface-container-lowest/40 backdrop-blur-2xl border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.8)] z-10">
-            <div className="absolute inset-0 rounded-full border-t border-white/30"></div>
-            <span className="material-symbols-outlined text-[56px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+        {/* Logo Icon */}
+        <div className="relative group">
+          <div className="absolute inset-0 bg-teal-400/20 rounded-[32px] blur-2xl animate-pulse" />
+          <div className="relative w-24 h-24 rounded-[32px] bg-white/5 backdrop-blur-2xl border border-white/10 flex items-center justify-center shadow-2xl overflow-hidden">
+             <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-transparent" />
+             <span className="material-symbols-outlined text-[48px] text-teal-400 drop-shadow-[0_0_15px_rgba(45,212,191,0.5)]" style={{ fontVariationSettings: "'FILL' 1" }}>
               video_camera_front
             </span>
           </div>
         </div>
         
         {/* Typography */}
-        <div className="text-center space-y-2">
-          <h1 className="font-display-xl text-[40px] font-black text-white tracking-tighter drop-shadow-2xl">
-            Tele<span className="text-primary">Promt</span>
+        <div className="text-center">
+          <h1 className="text-[44px] font-black text-white tracking-tighter leading-none">
+            Tele<span className="text-teal-400">Promt</span>
           </h1>
-          <p className="font-body-lg text-on-surface-variant text-[14px] font-medium tracking-wide max-w-[250px] mx-auto opacity-80">
-            {t('splashTagline')}
+          <p className="text-white/30 text-[14px] font-medium tracking-wide mt-3 max-w-[200px] mx-auto leading-relaxed">
+            {t('splashTagline') || 'Profesyonel Video Deneyimi'}
           </p>
         </div>
       </div>
 
-      {/* Loading Bar */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-[60%] max-w-[200px] z-10">
-        <div className="w-full h-[3px] bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
+      {/* Loading Progress */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-[180px] z-10 flex flex-col items-center">
+        <div className="w-full h-[3px] bg-white/5 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-primary to-primary-fixed rounded-full shadow-[0_0_10px_rgba(173,198,255,0.8)] transition-all ease-out"
-            style={{ width: `${progress}%`, transitionDuration: '40ms' }}
-          ></div>
+            className="h-full bg-teal-400 transition-all duration-75 ease-out shadow-[0_0_15px_rgba(45,212,191,0.8)]"
+            style={{ width: `${progress}%` }}
+          />
         </div>
-        <p className="text-center text-[10px] text-on-surface-variant font-bold tracking-widest uppercase mt-3 opacity-50">
-            {t('splashLoading')}
+        <p className="text-[10px] text-white/20 font-black tracking-[0.2em] uppercase mt-4">
+            {t('splashLoading') || 'HAZIRLANIYOR'}
           </p>
       </div>
     </div>
   );
 }
+

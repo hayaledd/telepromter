@@ -7,6 +7,7 @@ import SplashScreen from './components/SplashScreen'
 import MyScripts from './components/MyScripts'
 import ScriptEditor from './components/ScriptEditor'
 import ProfessionalRecord from './components/ProfessionalRecord'
+import AudioRecord from './components/AudioRecord'
 import Recordings from './components/Recordings'
 import Tutorial from './components/Tutorial'
 
@@ -91,6 +92,7 @@ function App() {
             <Route path="/scripts" element={<MyScripts />} />
             <Route path="/editor" element={<ScriptEditor />} />
             <Route path="/record" element={<ProfessionalRecord />} />
+            <Route path="/record-audio" element={<AudioRecord />} />
             <Route path="/recordings" element={<Recordings />} />
             <Route path="/tutorial" element={<Tutorial />} />
           </Routes>

@@ -85,26 +85,91 @@ export default function MyScripts() {
         <p className="text-white/40 text-[13px]">{greeting} 👋</p>
       </div>
 
-      {/* ── RECORD BANNER ── */}
+      {/* ── QUICK ACTIONS ── */}
       <div className="relative z-10 px-5 mb-5">
-        <button
-          onClick={() => navigate('/record')}
-          className="w-full flex items-center justify-between px-5 py-4 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform"
-          style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}
-        >
-          <div>
-            <p className="text-white/70 text-[11px] font-semibold uppercase tracking-widest mb-0.5">Hızlı Başlat</p>
-            <p className="text-white font-black text-[18px]">Hemen Kayıt Yap</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-[26px]" style={{ fontVariationSettings: "'FILL' 1" }}>videocam</span>
+        <div className="grid grid-cols-4 gap-2">
+          {/* Metin Yaz */}
+          <button
+            onClick={handleCreateNew}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-teal-500/30 active:scale-95 transition-all"
+            style={{ background: 'linear-gradient(135deg, rgba(13,148,136,0.25), rgba(8,145,178,0.10))' }}
+          >
+            <div className="w-9 h-9 rounded-xl bg-teal-500/20 flex items-center justify-center">
+              <span className="material-symbols-outlined text-teal-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
             </div>
-            <span className="material-symbols-outlined text-white/80 text-[20px]">arrow_forward_ios</span>
-          </div>
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/5 rounded-full pointer-events-none" />
-          <div className="absolute -right-2 -bottom-6 w-16 h-16 bg-white/5 rounded-full pointer-events-none" />
-        </button>
+            <span className="text-teal-400 font-bold text-[10px] text-center leading-tight">Metin<br/>Yaz</span>
+          </button>
+
+          {/* İçe Aktar */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/10 bg-white/5 active:scale-95 transition-all"
+          >
+            <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+              <span className="material-symbols-outlined text-white/60 text-[18px]">upload_file</span>
+            </div>
+            <span className="text-white/50 font-bold text-[10px] text-center leading-tight">İçe<br/>Aktar</span>
+          </button>
+          <input type="file" accept=".txt" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+
+          {/* Kayıtlarım */}
+          <button
+            onClick={() => navigate('/recordings')}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-indigo-500/30 active:scale-95 transition-all"
+            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.20), rgba(139,92,246,0.10))' }}
+          >
+            <div className="w-9 h-9 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+              <span className="material-symbols-outlined text-indigo-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_library</span>
+            </div>
+            <span className="text-indigo-400 font-bold text-[10px] text-center leading-tight">Kayıt-<br/>larım</span>
+          </button>
+
+          {/* Metinler */}
+          <button
+            onClick={() => {}}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-violet-500/30 bg-violet-500/15 active:scale-95 transition-all"
+          >
+            <div className="w-9 h-9 rounded-xl bg-violet-500/20 flex items-center justify-center">
+              <span className="material-symbols-outlined text-violet-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
+            </div>
+            <span className="text-violet-400 font-bold text-[10px] text-center leading-tight">Metin-<br/>ler</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ── RECORD ACTION BUTTONS ── */}
+      <div className="relative z-10 px-5 mb-5">
+        <div className="grid grid-cols-2 gap-3">
+          {/* Video Record */}
+          <button
+            onClick={() => navigate('/record')}
+            className="flex items-center gap-2 p-3.5 rounded-2xl active:scale-[0.98] transition-transform relative shadow-lg"
+            style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}
+          >
+            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
+              <span className="material-symbols-outlined text-white text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>videocam</span>
+            </div>
+            <div className="flex-1 text-center pr-2">
+              <p className="text-white/80 text-[9px] font-bold uppercase tracking-wider mb-0.5 leading-none">VİDEO</p>
+              <p className="text-white font-black text-[13px] leading-none mt-1">Video Kaydı Yap</p>
+            </div>
+          </button>
+
+          {/* Audio Record */}
+          <button
+            onClick={() => navigate('/record-audio')}
+            className="flex items-center gap-2 p-3.5 rounded-2xl active:scale-[0.98] transition-transform relative shadow-lg"
+            style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' }}
+          >
+            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
+              <span className="material-symbols-outlined text-white text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>mic</span>
+            </div>
+            <div className="flex-1 text-center pr-2">
+              <p className="text-white/80 text-[9px] font-bold uppercase tracking-wider mb-0.5 leading-none">SES</p>
+              <p className="text-white font-black text-[13px] leading-none mt-1">Ses Kaydı Yap</p>
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* ── SCRIPTS BOX (2-column grid inside container) ── */}
@@ -171,57 +236,7 @@ export default function MyScripts() {
         </div>
       </div>
 
-      {/* ── BOTTOM QUICK ACTIONS (fixed) ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-5 pb-6 pt-4 bg-gradient-to-t from-[#0f0f14] via-[#0f0f14]/95 to-transparent">
-        <div className="grid grid-cols-4 gap-2">
-          {/* Metin Yaz */}
-          <button
-            onClick={handleCreateNew}
-            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-teal-500/30 active:scale-95 transition-all"
-            style={{ background: 'linear-gradient(135deg, rgba(13,148,136,0.25), rgba(8,145,178,0.10))' }}
-          >
-            <div className="w-9 h-9 rounded-xl bg-teal-500/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-teal-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
-            </div>
-            <span className="text-teal-400 font-bold text-[10px] text-center leading-tight">Metin<br/>Yaz</span>
-          </button>
 
-          {/* İçe Aktar */}
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/10 bg-white/5 active:scale-95 transition-all"
-          >
-            <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-white/60 text-[18px]">upload_file</span>
-            </div>
-            <span className="text-white/50 font-bold text-[10px] text-center leading-tight">İçe<br/>Aktar</span>
-          </button>
-          <input type="file" accept=".txt" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
-
-          {/* Kayıtlarım */}
-          <button
-            onClick={() => navigate('/recordings')}
-            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-indigo-500/30 active:scale-95 transition-all"
-            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.20), rgba(139,92,246,0.10))' }}
-          >
-            <div className="w-9 h-9 rounded-xl bg-indigo-500/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-indigo-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_library</span>
-            </div>
-            <span className="text-indigo-400 font-bold text-[10px] text-center leading-tight">Kayıt-<br/>larım</span>
-          </button>
-
-          {/* Metinler */}
-          <button
-            onClick={() => {}}
-            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-violet-500/30 bg-violet-500/15 active:scale-95 transition-all"
-          >
-            <div className="w-9 h-9 rounded-xl bg-violet-500/20 flex items-center justify-center">
-              <span className="material-symbols-outlined text-violet-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
-            </div>
-            <span className="text-violet-400 font-bold text-[10px] text-center leading-tight">Metin-<br/>ler</span>
-          </button>
-        </div>
-      </div>
 
       {/* Delete Confirm Dialog */}
       {deletingId && (

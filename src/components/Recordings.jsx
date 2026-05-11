@@ -23,23 +23,20 @@ export default function Recordings() {
       });
 
       // Filter webm and mp4 files created by the app
-      const videoFiles = result.files.filter(f => 
+      const videoFiles = result.files.filter(f =>
         (f.name.startsWith('ScriptFlow_Recording_') || f.name.endsWith('.webm') || f.name.endsWith('.mp4')) && !f.type || f.type === 'file'
       );
 
       // Map to usable objects
       const formattedVideos = await Promise.all(videoFiles.map(async (file) => {
-        // file.uri or we construct it
         const stat = await Filesystem.stat({
           path: file.name,
           directory: Directory.Documents
         });
-        
+
         const videoUrl = Capacitor.convertFileSrc(stat.uri);
-        
-        // Convert timestamp from filename or stat to readable date
         const date = new Date(stat.ctime || stat.mtime || Date.now());
-        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth()+1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
         return {
           name: file.name,
@@ -52,7 +49,7 @@ export default function Recordings() {
 
       // Sort newest first
       formattedVideos.sort((a, b) => b.name.localeCompare(a.name));
-      
+
       setVideos(formattedVideos);
     } catch (e) {
       console.error("Error loading videos", e);
@@ -89,31 +86,45 @@ export default function Recordings() {
   };
 
   return (
-    <div className="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col dark">
+    <div className="bg-[#0f0f14] text-white font-sans antialiased min-h-screen flex flex-col relative overflow-hidden pb-[100px]">
+      
+      {/* Background glow */}
+      <div className="fixed top-20 right-0 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="fixed bottom-0 -left-10 w-[300px] h-[300px] bg-teal-500/5 rounded-full blur-[80px] pointer-events-none" />
+
       {/* TopAppBar */}
-      <header className="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-control-bar-height bg-surface-container-lowest border-b border-surface-container-low backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          <button 
+      <header className="relative z-10 w-full flex items-center justify-between px-5 pt-12 pb-4 bg-white/5 border-b border-white/5 backdrop-blur-md">
+        <div className="flex items-center gap-3">
+          <button
             onClick={() => navigate('/scripts')}
-            aria-label="Back" 
-            className="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2 active:scale-95 duration-100"
+            aria-label="Back"
+            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors active:scale-95"
           >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_back</span>
+            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_back</span>
           </button>
-          <h1 className="font-headline-md text-headline-md text-on-surface">{t('myVideos')}</h1>
+          <div>
+            <h1 className="font-bold text-[18px] text-white tracking-tight">{t('myVideos')}</h1>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="px-3 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/20">
+            <span className="text-indigo-400 text-[12px] font-bold">{videos.length} kayıt</span>
+          </div>
         </div>
       </header>
 
       {/* Main Gallery Area */}
-      <main className="flex-grow p-4 pb-24 max-w-6xl mx-auto w-full">
+      <main className="relative z-10 flex-grow px-5 py-6 max-w-6xl mx-auto w-full">
         {loading ? (
           <div className="flex justify-center items-center h-40">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
           </div>
         ) : videos.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-60 text-on-surface-variant opacity-60">
-            <span className="material-symbols-outlined text-[64px] mb-4">videocam_off</span>
-            <p>{t('noVideosDesc')}</p>
+          <div className="flex flex-col items-center justify-center h-60 text-center">
+            <div className="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+              <span className="material-symbols-outlined text-[40px] text-white/20">videocam_off</span>
+            </div>
+            <p className="text-white/40 text-[14px]">{t('noVideosDesc') || 'Henüz kayıtlı video bulunmuyor.'}</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
@@ -128,6 +139,22 @@ export default function Recordings() {
           </div>
         )}
       </main>
+
+      {/* BottomNavBar (Mobile) */}
+      <nav className="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-4 bg-gradient-to-t from-[#0f0f14] via-[#0f0f14]/95 to-transparent md:hidden">
+        <button onClick={() => navigate('/scripts')} className="flex flex-col items-center justify-center text-white/40 p-2 hover:text-white active:scale-90 transition-all">
+          <span className="material-symbols-outlined text-[24px]">description</span>
+        </button>
+        <button onClick={() => navigate('/editor')} className="flex flex-col items-center justify-center text-white/40 p-2 hover:text-white active:scale-90 transition-all">
+          <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 0" }}>edit_note</span>
+        </button>
+        <button onClick={() => navigate('/record')} className="flex flex-col items-center justify-center text-white/40 p-2 hover:text-white active:scale-90 transition-all">
+          <span className="material-symbols-outlined text-[24px]">videocam</span>
+        </button>
+        <button className="flex flex-col items-center justify-center bg-indigo-500/20 text-indigo-400 rounded-2xl px-6 py-2 border border-indigo-500/30 active:scale-95 transition-all">
+          <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_library</span>
+        </button>
+      </nav>
 
     </div>
   );
@@ -145,7 +172,7 @@ function VideoCard({ video, onShare, onDelete }) {
 
   return (
     <>
-      <div className="bg-surface-container rounded-2xl overflow-hidden border border-white/5 shadow-md flex flex-col group">
+      <div className="bg-white/5 rounded-2xl overflow-hidden border border-white/10 shadow-lg flex flex-col group backdrop-blur-sm transition-all hover:bg-white/10">
         {/* Thumbnail alanı */}
         <button
           onClick={() => setPlayerOpen(true)}
@@ -156,46 +183,46 @@ function VideoCard({ video, onShare, onDelete }) {
             <img
               src={thumbnail}
               alt="video thumbnail"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
             />
           ) : (
-            <div className="w-full h-full bg-surface-container-low flex items-center justify-center">
-              <span className="material-symbols-outlined text-[40px] text-on-surface-variant opacity-40">movie</span>
+            <div className="w-full h-full bg-[#1a1a24] flex items-center justify-center">
+              <span className="material-symbols-outlined text-[40px] text-white/10">movie</span>
             </div>
           )}
           {/* Play overlay butonu */}
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 active:bg-black/40 transition-colors">
-            <div className="w-14 h-14 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-lg">
-              <span className="material-symbols-outlined text-[32px] text-white" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
+            <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xl group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-[28px] text-white ml-1" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
             </div>
           </div>
           {/* Boyut rozeti */}
-          <div className="absolute bottom-2 left-2 bg-black/60 rounded-md px-2 py-0.5">
-            <span className="text-[10px] text-white font-mono">{video.size}</span>
+          <div className="absolute bottom-2 left-2 bg-black/70 backdrop-blur-md rounded-lg px-2 py-1">
+            <span className="text-[10px] text-white/80 font-bold">{video.size}</span>
           </div>
         </button>
 
         {/* Alt bilgi */}
-        <div className="p-3 flex flex-col gap-1">
-          <h3 className="font-bold text-[12px] text-on-surface truncate" title={video.name}>
-            {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix'))}
+        <div className="p-3 flex flex-col gap-1.5">
+          <h3 className="font-bold text-[13px] text-white truncate" title={video.name}>
+            {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ')}
           </h3>
           <div className="flex justify-between items-center mt-1">
-            <p className="text-[10px] text-on-surface-variant">{video.date}</p>
-            <div className="flex gap-1">
-              <button 
+            <p className="text-[10px] text-white/40">{video.date}</p>
+            <div className="flex gap-1.5">
+              <button
                 onClick={() => onShare(video)}
-                className="text-primary hover:bg-primary/10 p-1 rounded-full transition-colors"
+                className="w-7 h-7 flex items-center justify-center bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white rounded-lg transition-all active:scale-90"
                 title={t('share')}
               >
-                <span className="material-symbols-outlined text-[16px]">share</span>
+                <span className="material-symbols-outlined text-[14px]">share</span>
               </button>
-              <button 
+              <button
                 onClick={() => onDelete(video.name)}
-                className="text-error hover:bg-error/10 p-1 rounded-full transition-colors"
+                className="w-7 h-7 flex items-center justify-center bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition-all active:scale-90"
                 title={t('delete')}
               >
-                <span className="material-symbols-outlined text-[16px]">delete</span>
+                <span className="material-symbols-outlined text-[14px]">delete</span>
               </button>
             </div>
           </div>
@@ -259,24 +286,24 @@ function VideoPlayerModal({ video, onClose }) {
   const { t } = useLanguage();
   return (
     <div
-      className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center"
+      className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center"
       style={{ touchAction: 'none' }}
     >
       {/* Kapat butonu */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center border border-white/20"
+        className="absolute top-8 right-5 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md flex items-center justify-center border border-white/20 active:scale-90"
         aria-label={t('close')}
       >
-        <span className="material-symbols-outlined text-white text-[22px]">close</span>
+        <span className="material-symbols-outlined text-white text-[24px]">close</span>
       </button>
 
       {/* Video adı ve tarihi */}
-      <div className="absolute top-4 left-4 right-16 z-10">
-        <p className="text-white text-[12px] font-medium truncate opacity-80">
-          {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix'))}
+      <div className="absolute top-8 left-5 right-20 z-10">
+        <p className="text-white text-[16px] font-bold truncate">
+          {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ')}
         </p>
-        <p className="text-white/50 text-[10px]">{video.date}</p>
+        <p className="text-white/60 text-[12px] mt-1">{video.date}</p>
       </div>
 
       {/* Video oynatıcı */}
@@ -285,7 +312,7 @@ function VideoPlayerModal({ video, onClose }) {
         controls
         autoPlay
         playsInline
-        className="w-full h-full object-contain"
+        className="w-full h-full object-contain rounded-lg"
         style={{ maxHeight: '100dvh' }}
       />
     </div>
