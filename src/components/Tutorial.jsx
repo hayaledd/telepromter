@@ -27,6 +27,11 @@ export default function Tutorial() {
       icon: 'share',
       title: t('tutorialStep4Title'),
       desc: t('tutorialStep4Desc')
+    },
+    {
+      icon: 'settings_remote',
+      title: t('tutorialStep5Title'),
+      desc: t('tutorialStep5Desc')
     }
   ];
 
