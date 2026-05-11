@@ -20,64 +20,66 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
     <div className="fixed inset-0 z-[100] flex">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative z-10 w-72 h-full border-r border-white/5 flex flex-col py-8 px-4 shadow-2xl animate-in slide-in-from-left-4 duration-200" style={{ backgroundColor: 'rgba(15, 15, 20, 1)', backdropFilter: 'blur(20px)' }}>
-        <div className="flex items-center gap-3 mb-8 px-2">
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>video_camera_front</span>
+        {/* Top Logo - Centered */}
+        <div className="flex flex-col items-center justify-center gap-2 mb-10 px-2 text-center mt-4">
+          <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mb-1 shadow-[0_0_15px_rgba(173,198,255,0.2)]">
+            <span className="material-symbols-outlined text-primary text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_camera_front</span>
           </div>
           <div>
-            <p className="font-bold text-white text-[16px]">TelePromt</p>
-            <p className="text-white/40 text-[12px]">v2.5.0</p>
+            <p className="font-bold text-white text-[18px] tracking-tight">TelePromt</p>
+            <p className="text-white/30 text-[12px] font-mono mt-0.5">v2.5.0</p>
           </div>
         </div>
-        <div className="flex flex-col gap-1 flex-1">
-          <button onClick={() => { navigate('/scripts'); onClose(); }} className="btn-icon">
-            <div className="icon-wrap text-primary">
-              <span className="material-symbols-outlined">description</span>
-            </div>
+
+        {/* Menu Items - No Icons */}
+        <div className="flex flex-col gap-3 flex-1 px-2">
+          <button onClick={() => { navigate('/scripts'); onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
             <div className="flex flex-col text-left">
               <span className="text-[15px] font-bold text-white">{t('scripts')}</span>
-              <span className="text-[11px] text-white/40">Tüm metinleriniz</span>
+              <span className="text-[11px] text-white/40 mt-0.5">Tüm metinleriniz</span>
             </div>
-            <span className="material-symbols-outlined arrow text-white ml-auto">chevron_right</span>
+            <span className="material-symbols-outlined text-white/20">chevron_right</span>
           </button>
-          <button onClick={handleCreateNew} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:bg-white/5 transition-colors">
-            <span className="material-symbols-outlined">add_circle</span>
-            <span>{t('createNew')}</span>
-          </button>
-          <button onClick={() => { navigate('/recordings'); onClose(); }} className="btn-icon">
-            <div className="icon-wrap" style={{ background: 'rgba(0,220,229,0.12)', color: '#00dce5' }}>
-              <span className="material-symbols-outlined">video_library</span>
+
+          <button onClick={handleCreateNew} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
+            <div className="flex flex-col text-left">
+              <span className="text-[15px] font-bold text-white">{t('createNew')}</span>
+              <span className="text-[11px] text-white/40 mt-0.5">Yeni metin oluştur</span>
             </div>
+            <span className="material-symbols-outlined text-white/20">chevron_right</span>
+          </button>
+
+          <button onClick={() => { navigate('/recordings'); onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
             <div className="flex flex-col text-left">
               <span className="text-[15px] font-bold text-white">{t('myVideos')}</span>
-              <span className="text-[11px] text-white/40">Kayıtlı videolar</span>
+              <span className="text-[11px] text-white/40 mt-0.5">Kayıtlı videolar</span>
             </div>
-            <span className="material-symbols-outlined arrow text-white ml-auto">chevron_right</span>
+            <span className="material-symbols-outlined text-white/20">chevron_right</span>
           </button>
-          <div className="h-[1px] bg-white/10 my-2 mx-4"></div>
-          <button onClick={() => { navigate('/tutorial'); onClose(); }} className="btn-icon">
-            <div className="icon-wrap text-amber-400" style={{ background: 'rgba(251, 191, 36, 0.12)' }}>
-              <span className="material-symbols-outlined">school</span>
-            </div>
+
+          <div className="h-px bg-white/10 my-2 mx-2"></div>
+
+          <button onClick={() => { navigate('/tutorial'); onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
             <div className="flex flex-col text-left">
               <span className="text-[15px] font-bold text-white">{t('tutorial')}</span>
-              <span className="text-[11px] text-white/40">Adım adım öğren</span>
+              <span className="text-[11px] text-white/40 mt-0.5">Adım adım öğren</span>
             </div>
-            <span className="material-symbols-outlined arrow text-white ml-auto">chevron_right</span>
+            <span className="material-symbols-outlined text-white/20">chevron_right</span>
           </button>
-          <button className="btn-icon opacity-50 cursor-not-allowed">
-            <div className="icon-wrap text-emerald-400" style={{ background: 'rgba(52, 211, 153, 0.12)' }}>
-              <span className="material-symbols-outlined">cloud_sync</span>
-            </div>
+
+          <button className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 opacity-50 cursor-not-allowed">
             <div className="flex flex-col text-left">
               <span className="text-[15px] font-bold text-white">Bulut Senkron</span>
-              <span className="text-[11px] text-white/40">Yakında</span>
+              <span className="text-[11px] text-white/40 mt-0.5">Yakında Eklenecek</span>
             </div>
+            <span className="material-symbols-outlined text-white/20">cloud_sync</span>
           </button>
         </div>
-        <button onClick={toggleLang} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-white/5 transition-colors border border-white/10">
-          <span className="material-symbols-outlined">language</span>
-          <span>{t('langSwitch')}</span>
+
+        {/* Footer actions */}
+        <button onClick={toggleLang} className="flex items-center justify-center gap-2 mt-auto mx-2 py-4 rounded-2xl text-white/40 hover:bg-white/5 transition-colors border border-white/10">
+          <span className="material-symbols-outlined text-[18px]">language</span>
+          <span className="font-bold text-[13px]">{t('langSwitch')}</span>
         </button>
       </div>
     </div>
