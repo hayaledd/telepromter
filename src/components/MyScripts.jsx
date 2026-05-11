@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { useLanguage } from '../context/LanguageContext';
 import MobileMenu from './MobileMenu';
+import mammoth from 'mammoth';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Set up PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 
 function wordCount(text) {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -31,16 +36,42 @@ export default function MyScripts() {
     navigate('/editor');
   };
 
-  const handleFileChange = (e) => {
+  const [importing, setImporting] = useState(false);
+
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      importScript(file.name.replace(/\.[^/.]+$/, ''), event.target.result);
-      navigate('/editor');
-    };
-    reader.readAsText(file);
+    const name = file.name.replace(/\.[^/.]+$/, '');
+    const ext = file.name.split('.').pop().toLowerCase();
     e.target.value = null;
+    setImporting(true);
+    try {
+      let text = '';
+      if (ext === 'txt') {
+        text = await file.text();
+      } else if (ext === 'docx' || ext === 'doc') {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        text = result.value;
+      } else if (ext === 'pdf') {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const pages = [];
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          pages.push(content.items.map(item => item.str).join(' '));
+        }
+        text = pages.join('\n\n');
+      }
+      importScript(name, text);
+      navigate('/editor');
+    } catch (err) {
+      console.error('Import error:', err);
+      alert('Dosya okunamadı. Lütfen geçerli bir TXT, PDF veya Word dosyası seçin.');
+    } finally {
+      setImporting(false);
+    }
   };
 
   const hour = new Date().getHours();
@@ -104,17 +135,17 @@ export default function MyScripts() {
             <span className="text-teal-400 font-bold text-[10px] text-center leading-tight">Metin<br/>Yaz</span>
           </button>
 
-          {/* İçe Aktar */}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/10 bg-white/5 active:scale-95 transition-all"
+            disabled={importing}
+            className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/10 bg-white/5 active:scale-95 transition-all disabled:opacity-50"
           >
             <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-white/60 text-[18px]">upload_file</span>
+              <span className="material-symbols-outlined text-white/60 text-[18px]">{importing ? 'hourglass_empty' : 'upload_file'}</span>
             </div>
-            <span className="text-white/50 font-bold text-[10px] text-center leading-tight">İçe<br/>Aktar</span>
+            <span className="text-white/50 font-bold text-[10px] text-center leading-tight">{importing ? 'Yükleniyor...' : 'İçe\nAktar'}</span>
           </button>
-          <input type="file" accept=".txt" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+          <input type="file" accept=".txt,.pdf,.doc,.docx" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
 
           {/* Kayıtlarım */}
           <button
