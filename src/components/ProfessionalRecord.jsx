@@ -42,6 +42,9 @@ export default function ProfessionalRecord() {
   const [countdownDuration, setCountdownDuration] = useState(3);
   const [facingMode, setFacingMode] = useState('user');
   const [textWidth, setTextWidth] = useState('100%');
+  const [frameRate, setFrameRate] = useState(30);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [showCameraSettings, setShowCameraSettings] = useState(false);
   // Detect best supported MIME type for this device
   const getSupportedMimeType = () => {
     const types = [
@@ -294,6 +297,7 @@ export default function ProfessionalRecord() {
             facingMode: { exact: facingMode },
             width: { ideal: 1920 },
             height: { ideal: 1080 },
+            frameRate: { ideal: frameRate },
           },
           audio: true,
         });
@@ -317,7 +321,7 @@ export default function ProfessionalRecord() {
         // exact constraint başarısız olursa ideal ile tekrar dene
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: facingMode },
+            video: { facingMode: facingMode, frameRate: { ideal: frameRate } },
             audio: true,
           });
           if (cancelled) { stream.getTracks().forEach(t => t.stop()); return; }
@@ -346,7 +350,7 @@ export default function ProfessionalRecord() {
         videoRef.current.srcObject = null;
       }
     };
-  }, [facingMode]);
+  }, [facingMode, frameRate]);
 
 
   // Scrolling Engine
@@ -430,7 +434,7 @@ export default function ProfessionalRecord() {
         <div className="absolute inset-0 w-full h-full z-0 bg-black">
           <video ref={videoRef} autoPlay playsInline muted controls={false} disablePictureInPicture disableRemotePlayback
             className={`w-full h-full object-cover pointer-events-none transition-opacity duration-300 ${(layoutMode === 'prompter-only') ? 'opacity-0' : 'opacity-90'}`}
-            style={{ filter: currentFilter, transform: isMirrored ? 'scaleX(-1)' : 'none' }}
+            style={{ filter: currentFilter, transform: `scaleX(${isMirrored ? -1 : 1}) scale(${zoomLevel})` }}
           />
         </div>
 
@@ -705,6 +709,74 @@ export default function ProfessionalRecord() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* PROFESSIONAL CAMERA SETTINGS */}
+          <div className="mt-2 border-t border-white/10 pt-4">
+            <button
+              onClick={() => setShowCameraSettings(!showCameraSettings)}
+              className="w-full flex items-center justify-between mb-3 group"
+            >
+              <p className="text-[11px] text-primary uppercase tracking-widest font-bold flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[14px]">photo_camera</span>
+                Kamera Ayarları (Pro)
+              </p>
+              <span className="material-symbols-outlined text-[16px] text-white/40 transition-transform" style={{ transform: showCameraSettings ? 'rotate(180deg)' : 'rotate(0deg)' }}>expand_more</span>
+            </button>
+
+            {showCameraSettings && (
+              <div className="flex flex-col gap-4">
+                {/* Frame Rate */}
+                <div>
+                  <p className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Kare Hızı (FPS)</p>
+                  <div className="flex gap-2">
+                    {[24, 30, 60].map(fps => (
+                      <button
+                        key={fps}
+                        onClick={() => setFrameRate(fps)}
+                        className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
+                          frameRate === fps
+                            ? 'bg-primary text-on-primary border-primary'
+                            : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
+                        }`}
+                      >
+                        {fps} fps
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Zoom */}
+                <div>
+                  <p className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Yakınlaştırma &mdash; {zoomLevel.toFixed(1)}x</p>
+                  <input
+                    type="range"
+                    min="1"
+                    max="3"
+                    step="0.1"
+                    value={zoomLevel}
+                    onChange={e => setZoomLevel(parseFloat(e.target.value))}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-[10px] text-white/30 mt-1">
+                    <span>1x</span><span>2x</span><span>3x</span>
+                  </div>
+                </div>
+
+                {/* Mirror */}
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Ayna Modu</p>
+                  <button
+                    onClick={() => setIsMirrored(!isMirrored)}
+                    className={`w-12 h-6 rounded-full transition-colors flex items-center ${
+                      isMirrored ? 'bg-primary justify-end' : 'bg-surface-variant justify-start'
+                    } px-0.5`}
+                  >
+                    <div className="w-5 h-5 rounded-full bg-white shadow"></div>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <button
