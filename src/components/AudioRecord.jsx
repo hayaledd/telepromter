@@ -137,6 +137,43 @@ export default function AudioRecord() {
     };
   }, []);
 
+  // Bluetooth / Keyboard Remote Support
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      switch (e.key) {
+        case ' ':
+        case 'Enter':
+        case 'MediaPlayPause':
+          e.preventDefault();
+          if (!isRecordingActive) setIsPlaying(!isPlaying);
+          break;
+        case 'ArrowUp':
+        case 'PageUp':
+        case '+':
+          e.preventDefault();
+          adjustSpeed(1);
+          break;
+        case 'ArrowDown':
+        case 'PageDown':
+        case '-':
+          e.preventDefault();
+          adjustSpeed(-1);
+          break;
+        case 'r':
+        case 'R':
+        case 'Escape':
+          e.preventDefault();
+          toggleRecording();
+          break;
+        default:
+          break;
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPlaying, isRecordingActive]);
+
   useEffect(() => {
     if (isPlaying) {
       let lastTime = performance.now();
