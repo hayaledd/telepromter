@@ -143,7 +143,7 @@ export default function MyScripts() {
             <div className="w-9 h-9 rounded-xl bg-teal-500/20 flex items-center justify-center">
               <span className="material-symbols-outlined text-teal-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
             </div>
-            <span className="text-teal-400 font-bold text-[10px] text-center leading-tight">Metin<br/>Yaz</span>
+            <span className="text-teal-400 font-bold text-[10px] text-center leading-tight">Metin<br />Yaz</span>
           </button>
 
           <button
@@ -167,18 +167,18 @@ export default function MyScripts() {
             <div className="w-9 h-9 rounded-xl bg-indigo-500/20 flex items-center justify-center">
               <span className="material-symbols-outlined text-indigo-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>video_library</span>
             </div>
-            <span className="text-indigo-400 font-bold text-[10px] text-center leading-tight">Kayıt-<br/>larım</span>
+            <span className="text-indigo-400 font-bold text-[10px] text-center leading-tight">Kayıt-<br />larım</span>
           </button>
 
           {/* Metinler */}
           <button
-            onClick={() => {}}
+            onClick={() => { }}
             className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-violet-500/30 bg-violet-500/15 active:scale-95 transition-all"
           >
             <div className="w-9 h-9 rounded-xl bg-violet-500/20 flex items-center justify-center">
               <span className="material-symbols-outlined text-violet-400 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
             </div>
-            <span className="text-violet-400 font-bold text-[10px] text-center leading-tight">Metin-<br/>ler</span>
+            <span className="text-violet-400 font-bold text-[10px] text-center leading-tight">Metin-<br />ler</span>
           </button>
         </div>
       </div>
