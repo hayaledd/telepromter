@@ -221,6 +221,7 @@ export default function AudioRecord() {
             {isRecordingActive ? 'SES KAYDI' : isPlaying ? 'OKUNUYOR' : 'HAZIR'}
           </span>
           <span className="font-mono text-white/90 ml-2 text-[13px]">{formatTime(elapsedSeconds)}</span>
+          </div>
         </div>
       </div>
 
