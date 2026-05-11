@@ -27,7 +27,7 @@ function estimatedReadTime(text, speed = 5) {
 export default function MyScripts() {
   const navigate = useNavigate();
   const { scripts, setActiveScriptId, createNewScript, importScript, deleteScript } = useScript();
-  const { t, lang, toggleLang } = useLanguage();
+  const { t, lang, toggleLang, theme, toggleTheme } = useLanguage();
   const fileInputRef = useRef(null);
   const [deletingId, setDeletingId] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -91,7 +91,7 @@ export default function MyScripts() {
   const dotColors = ['bg-teal-400', 'bg-violet-400', 'bg-amber-400', 'bg-rose-400', 'bg-cyan-400', 'bg-emerald-400'];
 
   return (
-    <div className="bg-[#0f0f14] text-white min-h-screen flex flex-col font-sans pb-28">
+    <div className={`sf-page min-h-screen flex flex-col font-sans pb-28 transition-colors duration-300 ${theme === 'light' ? 'bg-[#f4f4f8] text-gray-900' : 'bg-[#0f0f14] text-white'}`}>
 
       {/* Background glows */}
       <div className="fixed top-0 right-0 w-72 h-72 bg-teal-500/8 rounded-full blur-3xl pointer-events-none" />

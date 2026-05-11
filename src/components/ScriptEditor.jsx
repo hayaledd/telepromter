@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -7,11 +7,13 @@ import MobileMenu from './MobileMenu';
 export default function ScriptEditor() {
   const navigate = useNavigate();
   const { getActiveScript, updateActiveScript, globalFontSize, setGlobalFontSize } = useScript();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const script = getActiveScript();
   const [saved, setSaved] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     if (!script) {
@@ -26,6 +28,34 @@ export default function ScriptEditor() {
     setTimeout(() => {
       navigate('/scripts');
     }, 900);
+  };
+
+  const toggleSTT = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Tarayıcınız ses tanımayı desteklemiyor.');
+      return;
+    }
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = lang === 'tr' ? 'tr-TR' : 'en-US';
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.onresult = (e) => {
+      const transcript = Array.from(e.results)
+        .map(r => r[0].transcript)
+        .join(' ');
+      updateActiveScript({ content: (script.content ? script.content + ' ' : '') + transcript });
+    };
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsListening(true);
   };
 
   return (
@@ -111,6 +141,24 @@ export default function ScriptEditor() {
               className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95"
             >
               <span className="text-[18px] font-bold">A+</span>
+            </button>
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-white/10"></div>
+
+            {/* Mic / Speech-to-Text */}
+            <button
+              onClick={toggleSTT}
+              className={`w-10 h-10 flex items-center justify-center rounded-full transition-all active:scale-95 ${
+                isListening
+                  ? 'bg-rose-500 text-white shadow-[0_0_16px_rgba(239,68,68,0.6)] animate-pulse'
+                  : 'bg-white/5 hover:bg-white/10 text-white/50 hover:text-white'
+              }`}
+              title="Sesle Yaz"
+            >
+              <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                {isListening ? 'mic' : 'mic_none'}
+              </span>
             </button>
           </div>
         </div>

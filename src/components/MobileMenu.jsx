@@ -6,7 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 export default function MobileMenu({ show, onClose, onImportClick }) {
   const navigate = useNavigate();
   const { createNewScript } = useScript();
-  const { t, lang, toggleLang } = useLanguage();
+  const { t, lang, toggleLang, theme, toggleTheme } = useLanguage();
 
   if (!show) return null;
 
@@ -85,10 +85,16 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
         </div>
 
         {/* Footer actions */}
-        <button onClick={toggleLang} className="flex items-center justify-center gap-2 mt-auto mx-2 py-4 rounded-2xl text-white/40 hover:bg-white/5 transition-colors border border-white/10">
-          <span className="material-symbols-outlined text-[18px]">language</span>
-          <span className="font-bold text-[13px]">{t('langSwitch')}</span>
-        </button>
+        <div className="flex gap-2 mt-auto mx-2">
+          <button onClick={toggleLang} className="flex-1 flex items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white/40 hover:bg-white/5 transition-colors border border-white/10">
+            <span className="material-symbols-outlined text-[16px]">language</span>
+            <span className="font-bold text-[12px]">{lang === 'tr' ? 'EN' : 'TR'}</span>
+          </button>
+          <button onClick={toggleTheme} className="flex-1 flex items-center justify-center gap-1.5 py-3.5 rounded-2xl text-white/40 hover:bg-white/5 transition-colors border border-white/10">
+            <span className="material-symbols-outlined text-[16px]">{theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
+            <span className="font-bold text-[12px]">{theme === 'dark' ? 'Açık' : 'Koyu'}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

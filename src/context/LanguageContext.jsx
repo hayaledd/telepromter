@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const translations = {
   en: {
@@ -209,6 +209,24 @@ const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
   const [lang, setLang] = useState(localStorage.getItem('sf_lang') || 'tr');
+  const [theme, setTheme] = useState(localStorage.getItem('sf_theme') || 'dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'light') {
+      document.documentElement.classList.add('light-theme');
+      document.documentElement.classList.remove('dark-theme');
+    } else {
+      document.documentElement.classList.add('dark-theme');
+      document.documentElement.classList.remove('light-theme');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('sf_theme', newTheme);
+  };
 
   const toggleLang = () => {
     const newLang = lang === 'tr' ? 'en' : 'tr';
@@ -219,7 +237,7 @@ export function LanguageProvider({ children }) {
   const t = (key) => translations[lang][key] || key;
 
   return (
-    <LanguageContext.Provider value={{ lang, toggleLang, t }}>
+    <LanguageContext.Provider value={{ lang, toggleLang, t, theme, toggleTheme }}>
       {children}
     </LanguageContext.Provider>
   );

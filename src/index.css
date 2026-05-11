@@ -133,3 +133,23 @@ video *::-webkit-media-controls-overlay-play-button {
 }
 .btn-shimmer:hover { border-color: rgba(184,195,255,0.5); box-shadow: 0 0 20px rgba(184,195,255,0.15); }
 .btn-shimmer:active { transform: scale(0.97); }
+
+/* ── LIGHT THEME ── */
+html.light-theme body {
+  background-color: #f4f4f8;
+  color: #1a1a2e;
+}
+html.light-theme .sf-page {
+  background-color: #f4f4f8 !important;
+  color: #1a1a2e !important;
+}
+html.light-theme .sf-card {
+  background: rgba(255,255,255,0.8) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+html.light-theme .sf-text-primary { color: #1a1a2e !important; }
+html.light-theme .sf-text-secondary { color: #555577 !important; }
+html.light-theme .sf-top-bar {
+  background-color: rgba(244,244,248,0.95) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+}
