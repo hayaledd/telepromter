@@ -153,9 +153,8 @@ export default function MyScripts() {
             <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
               <span className="material-symbols-outlined text-white text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>videocam</span>
             </div>
-            <div className="flex-1 text-center pr-2">
-              <p className="text-white/80 text-[9px] font-bold uppercase tracking-wider mb-0.5 leading-none">VİDEO</p>
-              <p className="text-white font-black text-[13px] leading-none mt-1">Video Kaydı Yap</p>
+            <div className="flex-1 flex items-center justify-center pr-2">
+              <p className="text-white font-black text-[14px] leading-none">Video Kaydı Yap</p>
             </div>
           </button>
 
@@ -168,9 +167,8 @@ export default function MyScripts() {
             <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
               <span className="material-symbols-outlined text-white text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>mic</span>
             </div>
-            <div className="flex-1 text-center pr-2">
-              <p className="text-white/80 text-[9px] font-bold uppercase tracking-wider mb-0.5 leading-none">SES</p>
-              <p className="text-white font-black text-[13px] leading-none mt-1">Ses Kaydı Yap</p>
+            <div className="flex-1 flex items-center justify-center pr-2">
+              <p className="text-white font-black text-[14px] leading-none">Ses Kaydı Yap</p>
             </div>
           </button>
         </div>
