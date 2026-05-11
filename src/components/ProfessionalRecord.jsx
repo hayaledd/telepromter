@@ -45,6 +45,7 @@ export default function ProfessionalRecord() {
   const [frameRate, setFrameRate] = useState(30);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [showCameraSettings, setShowCameraSettings] = useState(false);
+  const [prompterBg, setPrompterBg] = useState('none');
   // Detect best supported MIME type for this device
   const getSupportedMimeType = () => {
     const types = [
@@ -64,6 +65,17 @@ export default function ProfessionalRecord() {
     { id: 'yellow', value: '#facc15', bg: 'bg-yellow-400' },
     { id: 'green',  value: '#4ade80', bg: 'bg-green-400' },
     { id: 'cyan',   value: '#22d3ee', bg: 'bg-cyan-400' },
+  ];
+
+  const BG_COLORS = [
+    { id: 'none',    label: 'Saydam',   value: 'transparent',         border: 'border-white/20',  preview: 'bg-transparent border-2 border-white/30' },
+    { id: 'black',   label: 'Siyah',    value: 'rgba(0,0,0,0.85)',    border: 'border-white/10',  preview: 'bg-black' },
+    { id: 'navy',    label: 'Lacivert', value: 'rgba(10,15,50,0.90)', border: 'border-blue-500/20', preview: 'bg-[#0a0f32]' },
+    { id: 'dark',    label: 'Koyu Gri', value: 'rgba(20,20,25,0.90)', border: 'border-white/10',  preview: 'bg-[#141419]' },
+    { id: 'green',   label: 'Yeşil',    value: 'rgba(0,40,20,0.90)', border: 'border-green-500/20', preview: 'bg-[#002814]' },
+    { id: 'red',     label: 'Kırmızı',  value: 'rgba(50,0,0,0.90)',   border: 'border-red-500/20',  preview: 'bg-[#320000]' },
+    { id: 'purple',  label: 'Mor',      value: 'rgba(30,0,50,0.90)', border: 'border-purple-500/20', preview: 'bg-[#1e0032]' },
+    { id: 'white',   label: 'Beyaz',    value: 'rgba(255,255,255,0.90)', border: 'border-gray-300',  preview: 'bg-white' },
   ];
 
   const QUALITY_OPTIONS = [
@@ -439,11 +451,12 @@ export default function ProfessionalRecord() {
         </div>
 
         {/* Teleprompter Area */}
-        <div className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 ${layoutMode === 'prompter-only' ? 'bg-black' : 'bg-transparent'} ${
-          layoutMode === 'bottom' 
-            ? 'bottom-0 h-[50vh]' 
-            : 'inset-0 h-full'
-        }`}>
+        <div
+          className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 ${
+            layoutMode === 'bottom' ? 'bottom-0 h-[50vh]' : 'inset-0 h-full'
+          }`}
+          style={{ backgroundColor: prompterBg === 'none' ? (layoutMode === 'prompter-only' ? 'black' : 'transparent') : BG_COLORS.find(b => b.id === prompterBg)?.value }}
+        >
 
 
           {/* Scrolling Text Container */}
@@ -646,6 +659,25 @@ export default function ProfessionalRecord() {
                   }`}
                 >
                   <span className={`w-6 h-6 rounded-full shadow-inner ${c.bg}`}></span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* BG Color Picker */}
+          <div className="mb-4">
+            <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">Arka Plan Rengi</p>
+            <div className="grid grid-cols-4 gap-2">
+              {BG_COLORS.map(b => (
+                <button
+                  key={b.id}
+                  onClick={() => setPrompterBg(b.id)}
+                  className={`flex flex-col items-center gap-1.5 p-1.5 rounded-xl border-2 transition-all ${
+                    prompterBg === b.id ? 'border-primary scale-105' : 'border-transparent'
+                  }`}
+                >
+                  <span className={`w-8 h-8 rounded-lg shadow-inner ${b.preview}`}></span>
+                  <span className="text-[9px] text-white/50 font-bold">{b.label}</span>
                 </button>
               ))}
             </div>
