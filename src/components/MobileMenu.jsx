@@ -19,7 +19,7 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
   return (
     <div className="fixed inset-0 z-[100] flex">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-72 h-full bg-[#0f0f14] border-r border-white/5 flex flex-col py-8 px-4 shadow-2xl animate-in slide-in-from-left-4 duration-200">
+      <div className="relative z-10 w-72 h-full border-r border-white/5 flex flex-col py-8 px-4 shadow-2xl animate-in slide-in-from-left-4 duration-200" style={{ backgroundColor: '#0f0f14' }}>
         <div className="flex items-center gap-3 mb-8 px-2">
           <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
             <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>video_camera_front</span>
