@@ -67,9 +67,6 @@ export default function MyScripts() {
           </button>
         </div>
 
-        {/* Mobile Menu Component */}
-        <MobileMenu show={showMenu} onClose={() => setShowMenu(false)} />
-
         {/* Centered Logo */}
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-teal-500/20 flex items-center justify-center">
@@ -268,6 +265,9 @@ export default function MyScripts() {
           </div>
         </div>
       )}
+
+      {/* Mobile Menu Component */}
+      <MobileMenu show={showMenu} onClose={() => setShowMenu(false)} />
     </div>
   );
 }
