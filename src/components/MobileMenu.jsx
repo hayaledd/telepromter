@@ -65,6 +65,15 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
             </div>
             <span className="material-symbols-outlined arrow text-white ml-auto">chevron_right</span>
           </button>
+          <button className="btn-icon opacity-50 cursor-not-allowed">
+            <div className="icon-wrap text-emerald-400" style={{ background: 'rgba(52, 211, 153, 0.12)' }}>
+              <span className="material-symbols-outlined">cloud_sync</span>
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="text-[15px] font-bold text-white">Bulut Senkron</span>
+              <span className="text-[11px] text-white/40">Yakında</span>
+            </div>
+          </button>
         </div>
         <button onClick={toggleLang} className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-white/5 transition-colors border border-white/10">
           <span className="material-symbols-outlined">language</span>

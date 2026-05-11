@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScript } from '../context/ScriptContext';
 import { useLanguage } from '../context/LanguageContext';
+import MobileMenu from './MobileMenu';
 
 function wordCount(text) {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -59,33 +60,15 @@ export default function MyScripts() {
         {/* Menu (left) */}
         <div className="relative">
           <button
-            onClick={() => setShowMenu(!showMenu)}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors border ${showMenu ? 'bg-teal-500/20 text-teal-400 border-teal-500/30' : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10 border-white/10'}`}
+            onClick={() => setShowMenu(true)}
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors border bg-white/5 text-white/50 hover:text-white hover:bg-white/10 border-white/10`}
           >
-            <span className="material-symbols-outlined text-[18px]">{showMenu ? 'close' : 'menu'}</span>
+            <span className="material-symbols-outlined text-[18px]">menu</span>
           </button>
-          
-          {showMenu && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
-              <div className="absolute top-12 left-0 w-56 bg-[#1a1a24]/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2">
-                <button onClick={() => { setShowMenu(false); navigate('/tutorial'); }} className="w-full flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors">
-                  <span className="material-symbols-outlined text-[18px] text-teal-400">help</span>
-                  <span className="font-bold text-[13px]">{t('tutorial')}</span>
-                </button>
-                <button onClick={() => { setShowMenu(false); toggleLang(); }} className="w-full flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors">
-                  <span className="material-symbols-outlined text-[18px] text-indigo-400">language</span>
-                  <span className="font-bold text-[13px]">{lang === 'tr' ? 'Dil: Türkçe (TR)' : 'Language: English (EN)'}</span>
-                </button>
-                <div className="h-px bg-white/10 my-1 mx-2"></div>
-                <button className="w-full flex items-center gap-3 px-4 py-3 text-white/30 cursor-not-allowed">
-                  <span className="material-symbols-outlined text-[18px]">cloud_sync</span>
-                  <span className="font-bold text-[13px]">Bulut Senkron (Yakında)</span>
-                </button>
-              </div>
-            </>
-          )}
         </div>
+
+        {/* Mobile Menu Component */}
+        <MobileMenu show={showMenu} onClose={() => setShowMenu(false)} />
 
         {/* Centered Logo */}
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
