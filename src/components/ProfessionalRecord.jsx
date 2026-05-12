@@ -110,6 +110,25 @@ export default function ProfessionalRecord() {
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  const wakeLockRef = useRef(null);
+
+  useEffect(() => {
+    const acquireWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLockRef.current = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {
+        console.error('Wake Lock error:', err);
+      }
+    };
+    if (isPlaying || isRecordingActive) {
+      acquireWakeLock();
+    } else if (wakeLockRef.current) {
+      wakeLockRef.current.release().catch(()=>{});
+      wakeLockRef.current = null;
+    }
+  }, [isPlaying, isRecordingActive]);
 
   // Real elapsed time counter
   useEffect(() => {
@@ -224,12 +243,22 @@ export default function ProfessionalRecord() {
           const compositeCanvas = document.createElement('canvas');
           compositeCanvas.width = width;
           compositeCanvas.height = height;
+          
+          // Android WebView'de off-screen canvas hatasını önlemek için DOM'a ekliyoruz
+          compositeCanvas.style.position = 'absolute';
+          compositeCanvas.style.left = '-9999px';
+          compositeCanvas.style.opacity = '0';
+          document.body.appendChild(compositeCanvas);
+
           const ctx = compositeCanvas.getContext('2d');
           
           let isRecording = true;
+          let intervalId = null;
           const renderComposite = () => {
-             if (!isRecording) return;
-             requestAnimationFrame(renderComposite);
+             if (!isRecording) {
+               if (intervalId) clearInterval(intervalId);
+               return;
+             }
              
              ctx.save();
              if (isMirrored) {
@@ -239,12 +268,15 @@ export default function ProfessionalRecord() {
              if (currentFilter && currentFilter !== 'none') {
                ctx.filter = currentFilter;
              }
-             if (videoRef.current) {
+             if (videoRef.current && videoRef.current.readyState >= 2) {
                ctx.drawImage(videoRef.current, 0, 0, width, height);
+             } else {
+               ctx.fillStyle = "black";
+               ctx.fillRect(0, 0, width, height);
              }
              ctx.restore();
           };
-          renderComposite();
+          intervalId = setInterval(renderComposite, 1000 / 30); // 30 FPS
           
           const videoStream = compositeCanvas.captureStream(30);
           const audioTracks = mediaStreamRef.current.getAudioTracks();
@@ -262,6 +294,9 @@ export default function ProfessionalRecord() {
           };
           mediaRecorder.onstop = () => {
             isRecording = false;
+            if (document.body.contains(compositeCanvas)) {
+               document.body.removeChild(compositeCanvas);
+            }
             const blob = new Blob(recordedChunksRef.current, { type: mimeType });
             setRecordedVideoUrl(URL.createObjectURL(blob));
           };

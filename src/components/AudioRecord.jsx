@@ -31,6 +31,25 @@ export default function AudioRecord() {
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
+  const wakeLockRef = useRef(null);
+
+  useEffect(() => {
+    const acquireWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLockRef.current = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {
+        console.error('Wake Lock error:', err);
+      }
+    };
+    if (isPlaying || isRecordingActive) {
+      acquireWakeLock();
+    } else if (wakeLockRef.current) {
+      wakeLockRef.current.release().catch(()=>{});
+      wakeLockRef.current = null;
+    }
+  }, [isPlaying, isRecordingActive]);
 
   useEffect(() => {
     let interval = null;

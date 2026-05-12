@@ -15,9 +15,9 @@ export default function SplashScreen() {
           clearInterval(interval);
           return 100;
         }
-        return p + 3;
+        return p + 5;
       });
-    }, 40);
+    }, 30);
 
     const timer = setTimeout(() => {
       const hasSeen = localStorage.getItem('has_seen_onboarding');
@@ -26,7 +26,7 @@ export default function SplashScreen() {
       } else {
         navigate('/tutorial');
       }
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearTimeout(timer);
