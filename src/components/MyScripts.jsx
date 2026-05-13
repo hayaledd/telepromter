@@ -298,29 +298,29 @@ export default function MyScripts() {
                     <div
                       key={script.id}
                       onClick={() => handleOpenScript(script.id)}
-                      className="relative flex flex-col p-3 h-[105px] rounded-2xl bg-white/5 border border-white/8 active:scale-[0.97] transition-all duration-150 cursor-pointer overflow-hidden"
+                      className="relative flex flex-col h-full min-h-[110px] p-3 rounded-2xl bg-white/5 border border-white/8 active:scale-[0.97] transition-all duration-150 cursor-pointer overflow-hidden"
                     >
                       {/* Colored top line */}
                       <div className={`absolute top-0 left-0 right-0 h-0.5 ${dot} opacity-70 rounded-t-2xl`} />
 
-                      <h3 className="font-bold text-[13px] text-white leading-tight line-clamp-1 mt-1 mb-1">{script.title}</h3>
-                      <p className="text-white/35 text-[10px] leading-snug line-clamp-1 mb-auto">{preview}{script.content.length > 55 ? '…' : ''}</p>
+                      <h3 className="font-bold text-[13px] text-white leading-tight truncate mt-1 mb-1">{script.title}</h3>
+                      <p className="text-white/35 text-[10px] leading-snug line-clamp-2 mb-auto break-words">{preview}{script.content.length > 55 ? '…' : ''}</p>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-1">
-                        <div className="flex flex-col min-w-0">
-                          <span className="text-white/30 text-[9px] font-medium tracking-wide">{words} {t('wordCountUpper')}</span>
-                          <span className="text-teal-400/70 text-[9px] font-bold">{estimatedReadTime(script.content)}</span>
+                      <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-2">
+                        <div className="flex flex-col min-w-0 pr-1">
+                          <span className="text-white/30 text-[9px] font-medium tracking-wide truncate">{words} {t('wordCountUpper')}</span>
+                          <span className="text-teal-400/70 text-[9px] font-bold truncate">{estimatedReadTime(script.content)}</span>
                         </div>
                         <div className="flex gap-1 shrink-0">
                           <button
                             onClick={(e) => { e.stopPropagation(); handleRecord(script.id); }}
-                            className="w-7 h-7 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 active:scale-90"
+                            className="w-7 h-7 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 active:scale-90 shrink-0"
                           >
                             <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); setDeletingId(script.id); }}
-                            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/20 hover:text-rose-400 active:scale-90"
+                            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/20 hover:text-rose-400 active:scale-90 shrink-0"
                           >
                             <span className="material-symbols-outlined text-[14px]">delete</span>
                           </button>
