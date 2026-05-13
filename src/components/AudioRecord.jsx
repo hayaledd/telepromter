@@ -261,9 +261,9 @@ export default function AudioRecord() {
 
       {/* Teleprompter Area */}
       <div className="flex-1 w-full relative z-10">
-        <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center pb-[60vh] pt-[30vh]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center pb-[60vh] pt-[30vh]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', transform: 'translateZ(0)', willChange: 'scroll-position, transform' }}>
           {scriptLines.map((line, idx) => (
-            <p key={idx} className="font-bold drop-shadow-xl text-white/90" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4 }}>
+            <p key={idx} className="font-bold text-white/90" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, willChange: 'transform' }}>
               {line}
             </p>
           ))}

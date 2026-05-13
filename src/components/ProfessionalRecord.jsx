@@ -551,9 +551,9 @@ export default function ProfessionalRecord() {
 
 
           {/* Scrolling Text Container */}
-          <div ref={scrollContainerRef} className={`absolute inset-0 w-full h-full mx-auto px-edge-margin-tablet overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center z-10 pt-[40vh] pb-[60vh] ${layoutMode !== 'clean' ? 'text-shadow-lg' : ''}`} style={{ maxWidth: textWidth, scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
+          <div ref={scrollContainerRef} className={`absolute inset-0 w-full h-full mx-auto px-edge-margin-tablet overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center z-10 pt-[40vh] pb-[60vh] ${layoutMode !== 'clean' ? 'text-shadow-lg' : ''}`} style={{ maxWidth: textWidth, scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1) translateZ(0)' : 'translateZ(0)', willChange: 'scroll-position, transform' }}>
             {scriptLines.map((line, idx) => (
-              <p key={idx} className={`font-prompter-display font-bold ${layoutMode !== 'clean' ? 'drop-shadow-xl' : ''}`} style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor }}>
+              <p key={idx} className="font-prompter-display font-bold" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor, willChange: 'transform' }}>
                 {line}
               </p>
             ))}
