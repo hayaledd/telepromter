@@ -45,7 +45,7 @@ export default function ProfessionalRecord() {
   const [frameRate, setFrameRate] = useState(30);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [showCameraSettings, setShowCameraSettings] = useState(false);
-  const [prompterBg, setPrompterBg] = useState('dark');
+  const [prompterBg, setPrompterBg] = useState('none');
   // Detect best supported MIME type for this device
   const getSupportedMimeType = () => {
     const types = [

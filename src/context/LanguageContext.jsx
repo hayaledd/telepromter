@@ -247,7 +247,7 @@ const legacyTranslations = {
     smartVoice: 'Akıllı Ses',
     camBottom: 'Yarım Ekran',
     fullScreen: 'Tam Ekran',
-    cleanText: 'Temiz (Gölgesiz)',
+    cleanText: 'Temiz',
     color_none: 'Saydam',
     color_black: 'Siyah',
     color_navy: 'Lacivert',
