@@ -549,20 +549,18 @@ export default function ProfessionalRecord() {
             </>
           )}
           {/* Floating Speed Control */}
-          <div className="fixed bottom-[90px] left-1/2 -translate-x-1/2 w-auto z-40">
-            <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl py-2 px-3 flex flex-col items-center gap-1">
-              <div className="flex items-center gap-2">
-                <button onClick={() => adjustSpeed(-1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
-                  <span className="material-symbols-outlined text-[18px] font-bold">remove</span>
-                </button>
-                <div className="flex items-center justify-center min-w-[44px]">
-                  <span className="font-black text-primary text-[15px] leading-none">{speed / 5}x</span>
-                </div>
-                <button onClick={() => adjustSpeed(1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
-                  <span className="material-symbols-outlined text-[18px] font-bold">add</span>
-                </button>
+          <div className="fixed bottom-[100px] right-4 landscape:right-[100px] landscape:bottom-8 w-auto z-40">
+            <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl py-3 px-2 flex flex-col items-center gap-2">
+              <button onClick={() => adjustSpeed(1)} className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+                <span className="material-symbols-outlined text-[22px] font-bold">add</span>
+              </button>
+              <div className="flex flex-col items-center justify-center py-1">
+                <span className="font-black text-primary text-[16px] leading-none">{speed / 5}x</span>
               </div>
-              <div className="flex items-center justify-center w-full mt-1">
+              <button onClick={() => adjustSpeed(-1)} className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+                <span className="material-symbols-outlined text-[22px] font-bold">remove</span>
+              </button>
+              <div className="flex items-center justify-center w-full mt-1 border-t border-white/10 pt-2">
                 <span className="text-[10px] text-white/40 font-bold tracking-wide">{getReadTime()}</span>
               </div>
             </div>
