@@ -527,16 +527,20 @@ export default function ProfessionalRecord() {
 
 
           {/* Scrolling Text Container */}
-          <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full mx-auto px-edge-margin-tablet overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center z-10 text-shadow-lg pt-[40vh] pb-[60vh]" style={{ maxWidth: textWidth, scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
+          <div ref={scrollContainerRef} className={`absolute inset-0 w-full h-full mx-auto px-edge-margin-tablet overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center z-10 pt-[40vh] pb-[60vh] ${layoutMode !== 'clean' ? 'text-shadow-lg' : ''}`} style={{ maxWidth: textWidth, scrollBehavior: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', transform: isMirrored ? 'scaleX(-1)' : 'none' }}>
             {scriptLines.map((line, idx) => (
-              <p key={idx} className="font-prompter-display font-bold drop-shadow-xl" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor }}>
+              <p key={idx} className={`font-prompter-display font-bold ${layoutMode !== 'clean' ? 'drop-shadow-xl' : ''}`} style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor }}>
                 {line}
               </p>
             ))}
           </div>
           {/* Gradient fade masks - very subtle */}
-          <div className="absolute top-0 w-full h-16 bg-gradient-to-b from-black/20 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-black/20 to-transparent z-10 pointer-events-none"></div>
+          {layoutMode !== 'clean' && (
+            <>
+              <div className="absolute top-0 w-full h-16 bg-gradient-to-b from-black/20 to-transparent z-10 pointer-events-none"></div>
+              <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-black/20 to-transparent z-10 pointer-events-none"></div>
+            </>
+          )}
           {/* Floating Speed Control */}
           <div className="fixed bottom-[90px] left-1/2 -translate-x-1/2 w-auto z-40">
             <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl py-2 px-3 flex flex-col items-center gap-1">
@@ -605,6 +609,10 @@ export default function ProfessionalRecord() {
                     <span className="material-symbols-outlined text-[18px]">tv</span>
                     {t('prompterOnly')}
                   </button>
+                  <button onClick={() => { setLayoutMode('clean'); setShowLayoutMenu(false) }} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'clean' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
+                    <span className="material-symbols-outlined text-[18px]">format_clear</span>
+                    {t('cleanText')}
+                  </button>
                 </div>
               )}
               <button
@@ -613,11 +621,11 @@ export default function ProfessionalRecord() {
                 title={t('viewMode')}
               >
                 <span className="material-symbols-outlined text-[24px]">
-                  {layoutMode === 'full' ? 'fullscreen' : layoutMode === 'prompter-only' ? 'tv' : 'splitscreen'}
+                  {layoutMode === 'full' ? 'fullscreen' : layoutMode === 'prompter-only' ? 'tv' : layoutMode === 'clean' ? 'format_clear' : 'splitscreen'}
                 </span>
               </button>
               <span className="text-[9px] text-outline uppercase font-bold tracking-tighter">
-                {layoutMode === 'prompter-only' ? t('prompterOnly') || 'SADECE METİN' : t('viewMode')}
+                {layoutMode === 'prompter-only' ? t('prompterOnly') || 'SADECE METİN' : layoutMode === 'clean' ? t('cleanText') || 'TEMİZ METİN' : t('viewMode')}
               </span>
             </div>
           </div>
