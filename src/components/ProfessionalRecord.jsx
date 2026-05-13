@@ -45,7 +45,7 @@ export default function ProfessionalRecord() {
   const [frameRate, setFrameRate] = useState(30);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [showCameraSettings, setShowCameraSettings] = useState(false);
-  const [prompterBg, setPrompterBg] = useState('none');
+  const [prompterBg, setPrompterBg] = useState('dark');
   const [voiceTracking, setVoiceTracking] = useState(false);
   const recognitionRef = useRef(null);
   const lastSpeechTime = useRef(Date.now());
@@ -775,7 +775,7 @@ export default function ProfessionalRecord() {
 
       {/* Video Settings Panel */}
       {showSettings && (
-        <div className="fixed top-[72px] right-4 landscape:right-[88px] z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-2xl min-w-[220px]">
+        <div className="fixed top-[72px] right-4 landscape:right-[88px] z-[60] bg-surface-container-lowest/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-2xl min-w-[220px] max-h-[calc(100vh-100px)] overflow-y-auto pb-6" style={{ scrollbarWidth: 'none' }}>
           <div className="flex items-center justify-between mb-4">
             <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest">{t('videoSettings')}</span>
             <button onClick={() => setShowSettings(false)} className="text-on-surface-variant">
