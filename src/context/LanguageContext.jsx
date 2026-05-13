@@ -938,7 +938,7 @@ const itTranslations = {
   color_purple: 'Viola', color_white: 'Bianco',
   filter_clean: 'Pulito', filter_warm: 'Caldo', filter_cool: 'Freddo',
   filter_cinema: 'Cinema', filter_portrait: 'Ritratto', filter_studio: 'Studio',
-  filter_bw: 'B/N', filter_vivid: 'Vivido', filter_beauty: 'Bellezza', filter_retro: 'Retro', filter_dramatic: 'Drammatico', filter_golden: 'Ora d\\'Oro', filter_broadcast: 'Trasmissione', filter_matte: 'Opaco', filter_night: 'Notte',
+  filter_bw: 'B/N', filter_vivid: 'Vivido', filter_beauty: 'Bellezza', filter_retro: 'Retro', filter_dramatic: 'Drammatico', filter_golden: "Ora d'Oro", filter_broadcast: 'Trasmissione', filter_matte: 'Opaco', filter_night: 'Notte',
   width_wide: 'Largo', width_medium: 'Medio', width_narrow: 'Stretto',
 };
 
