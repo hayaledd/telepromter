@@ -230,7 +230,7 @@ export default function ProfessionalRecord() {
       // Actually start recording
       if (mediaStreamRef.current) {
         let isRecording = true;
-        let intervalId = null;
+        let rafId = null;
         let compositeCanvas = null;
         try {
           recordedChunksRef.current = [];
@@ -276,10 +276,7 @@ export default function ProfessionalRecord() {
           const ctx = compositeCanvas.getContext('2d');
 
           const renderComposite = () => {
-            if (!isRecording) {
-              if (intervalId) clearInterval(intervalId);
-              return;
-            }
+            if (!isRecording) return;
 
             ctx.save();
             if (isMirrored) {
@@ -296,8 +293,9 @@ export default function ProfessionalRecord() {
               ctx.fillRect(0, 0, width, height);
             }
             ctx.restore();
+            rafId = requestAnimationFrame(renderComposite);
           };
-          intervalId = setInterval(renderComposite, 1000 / 30); // 30 FPS
+          rafId = requestAnimationFrame(renderComposite);
 
           let videoStream;
           if (typeof compositeCanvas.captureStream === 'function') {
@@ -322,7 +320,7 @@ export default function ProfessionalRecord() {
           };
           mediaRecorder.onstop = () => {
             isRecording = false;
-            if (intervalId) clearInterval(intervalId);
+            if (rafId) cancelAnimationFrame(rafId);
             if (compositeCanvas && document.body.contains(compositeCanvas)) {
               document.body.removeChild(compositeCanvas);
             }
@@ -337,7 +335,7 @@ export default function ProfessionalRecord() {
         } catch (e) {
           console.error('MediaRecorder start failed:', e);
           isRecording = false;
-          if (intervalId) clearInterval(intervalId);
+          if (rafId) cancelAnimationFrame(rafId);
           if (compositeCanvas && document.body.contains(compositeCanvas)) {
             document.body.removeChild(compositeCanvas);
           }
