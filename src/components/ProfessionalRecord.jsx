@@ -109,6 +109,7 @@ export default function ProfessionalRecord() {
   const videoRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const animationRef = useRef(null);
+  const exactScrollRef = useRef(0);
 
   // Recording Refs
   const mediaStreamRef = useRef(null);
@@ -443,16 +444,32 @@ export default function ProfessionalRecord() {
   }, [facingMode, frameRate]);
   // Scrolling Engine
   useEffect(() => {
+    // Sync exact scroll with actual scroll when playback starts
+    if (isPlaying && scrollContainerRef.current) {
+      exactScrollRef.current = scrollContainerRef.current.scrollTop;
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
     if (isPlaying) {
       let lastTime = performance.now();
 
       const scrollLoop = (time) => {
-        const deltaTime = time - lastTime;
+        // Cap deltaTime to 50ms to prevent massive jumps on lag spikes
+        const deltaTime = Math.min(time - lastTime, 50);
         lastTime = time;
 
         if (scrollContainerRef.current && speed > 0) {
           const pixelsPerFrame = (speed * 0.05) * deltaTime;
-          scrollContainerRef.current.scrollTop += pixelsPerFrame;
+          
+          // Detect manual scroll by user
+          const currentScroll = scrollContainerRef.current.scrollTop;
+          if (Math.abs(currentScroll - exactScrollRef.current) > 2) {
+            exactScrollRef.current = currentScroll;
+          }
+
+          exactScrollRef.current += pixelsPerFrame;
+          scrollContainerRef.current.scrollTop = exactScrollRef.current;
         }
         animationRef.current = requestAnimationFrame(scrollLoop);
       };

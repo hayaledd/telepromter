@@ -28,6 +28,7 @@ export default function AudioRecord() {
 
   const scrollContainerRef = useRef(null);
   const animationRef = useRef(null);
+  const exactScrollRef = useRef(0);
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
@@ -194,13 +195,27 @@ export default function AudioRecord() {
   }, [isPlaying, isRecordingActive]);
 
   useEffect(() => {
+    if (isPlaying && scrollContainerRef.current) {
+      exactScrollRef.current = scrollContainerRef.current.scrollTop;
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
     if (isPlaying) {
       let lastTime = performance.now();
       const scrollLoop = (time) => {
-        const deltaTime = time - lastTime;
+        const deltaTime = Math.min(time - lastTime, 50);
         lastTime = time;
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTop += (speed * 0.05) * deltaTime;
+        if (scrollContainerRef.current && speed > 0) {
+          const pixelsPerFrame = (speed * 0.05) * deltaTime;
+          
+          const currentScroll = scrollContainerRef.current.scrollTop;
+          if (Math.abs(currentScroll - exactScrollRef.current) > 2) {
+            exactScrollRef.current = currentScroll;
+          }
+
+          exactScrollRef.current += pixelsPerFrame;
+          scrollContainerRef.current.scrollTop = exactScrollRef.current;
         }
         animationRef.current = requestAnimationFrame(scrollLoop);
       };
