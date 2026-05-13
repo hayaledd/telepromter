@@ -215,12 +215,17 @@ export default function ProfessionalRecord() {
       setCountdown(null);
       // Actually start recording
       if (mediaStreamRef.current) {
+        let isRecording = true;
+        let intervalId = null;
+        let compositeCanvas = null;
         try {
           recordedChunksRef.current = [];
           const mimeType = getSupportedMimeType();
           if (!mimeType) {
             console.error('MediaRecorder: No supported MIME type found on this device!');
             setSaveStatus('error');
+            setIsRecordingActive(false);
+            setIsPlaying(false);
             return;
           }
           setRecordedMimeType(mimeType);
@@ -240,20 +245,22 @@ export default function ProfessionalRecord() {
           }
           
           // Create a composite canvas to mix video, avatar, filters, and mirroring
-          const compositeCanvas = document.createElement('canvas');
+          compositeCanvas = document.createElement('canvas');
           compositeCanvas.width = width;
           compositeCanvas.height = height;
           
-          // Android WebView'de off-screen canvas hatasını önlemek için DOM'a ekliyoruz
-          compositeCanvas.style.position = 'absolute';
-          compositeCanvas.style.left = '-9999px';
-          compositeCanvas.style.opacity = '0';
+          // Android WebView'de off-screen canvas ekranı bozmasın diye fixed 1x1 yapıyoruz
+          compositeCanvas.style.position = 'fixed';
+          compositeCanvas.style.top = '0';
+          compositeCanvas.style.left = '0';
+          compositeCanvas.style.width = '1px';
+          compositeCanvas.style.height = '1px';
+          compositeCanvas.style.opacity = '0.01';
+          compositeCanvas.style.pointerEvents = 'none';
           document.body.appendChild(compositeCanvas);
 
           const ctx = compositeCanvas.getContext('2d');
           
-          let isRecording = true;
-          let intervalId = null;
           const renderComposite = () => {
              if (!isRecording) {
                if (intervalId) clearInterval(intervalId);
@@ -278,7 +285,14 @@ export default function ProfessionalRecord() {
           };
           intervalId = setInterval(renderComposite, 1000 / 30); // 30 FPS
           
-          const videoStream = compositeCanvas.captureStream(30);
+          let videoStream;
+          if (typeof compositeCanvas.captureStream === 'function') {
+             videoStream = compositeCanvas.captureStream(30);
+          } else {
+             console.warn("captureStream not supported, falling back to raw stream");
+             videoStream = new MediaStream(mediaStreamRef.current.getVideoTracks());
+          }
+
           const audioTracks = mediaStreamRef.current.getAudioTracks();
           if (audioTracks.length > 0) {
             videoStream.addTrack(audioTracks[0]);
@@ -294,7 +308,8 @@ export default function ProfessionalRecord() {
           };
           mediaRecorder.onstop = () => {
             isRecording = false;
-            if (document.body.contains(compositeCanvas)) {
+            if (intervalId) clearInterval(intervalId);
+            if (compositeCanvas && document.body.contains(compositeCanvas)) {
                document.body.removeChild(compositeCanvas);
             }
             const blob = new Blob(recordedChunksRef.current, { type: mimeType });
@@ -302,13 +317,21 @@ export default function ProfessionalRecord() {
           };
           // timeslice=1000 → her saniye ondataavailable tetiklenir (chunk garantisi)
           mediaRecorder.start(1000);
+          
+          setIsRecordingActive(true);
+          setIsPlaying(true);
         } catch (e) {
           console.error('MediaRecorder start failed:', e);
+          isRecording = false;
+          if (intervalId) clearInterval(intervalId);
+          if (compositeCanvas && document.body.contains(compositeCanvas)) {
+             document.body.removeChild(compositeCanvas);
+          }
           setSaveStatus('error');
+          setIsRecordingActive(false);
+          setIsPlaying(false);
         }
       }
-      setIsRecordingActive(true);
-      setIsPlaying(true);
       return;
     }
     const t = setTimeout(() => setCountdown(c => c - 1), 1000);
