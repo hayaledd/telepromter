@@ -161,25 +161,34 @@ export default function Recordings() {
 }
 
 // —— Video Thumbnail Kartı ——
+// —— Video Thumbnail Kartı ——
 function VideoCard({ video, onShare, onDelete }) {
   const { t } = useLanguage();
   const [thumbnail, setThumbnail] = React.useState(null);
   const [playerOpen, setPlayerOpen] = React.useState(false);
 
+  const isAudio = video.name.includes('_Audio_') || video.name.endsWith('.m4a');
+
   React.useEffect(() => {
-    generateThumbnail(video.url).then(setThumbnail);
-  }, [video.url]);
+    if (!isAudio) {
+      generateThumbnail(video.url).then(setThumbnail);
+    }
+  }, [video.url, isAudio]);
 
   return (
     <>
-      <div className="bg-white/5 rounded-2xl overflow-hidden border border-white/10 shadow-lg flex flex-col group backdrop-blur-sm transition-all hover:bg-white/10">
+      <div className={`bg-white/5 rounded-2xl overflow-hidden border ${isAudio ? 'border-indigo-500/20' : 'border-white/10'} shadow-lg flex flex-col group backdrop-blur-sm transition-all hover:bg-white/10`}>
         {/* Thumbnail alanı */}
         <button
           onClick={() => setPlayerOpen(true)}
-          className="relative aspect-[9/16] bg-black w-full overflow-hidden focus:outline-none"
+          className={`relative aspect-[9/16] w-full overflow-hidden focus:outline-none ${isAudio ? 'bg-[#12121a]' : 'bg-black'}`}
           aria-label={t('playVideo')}
         >
-          {thumbnail ? (
+          {isAudio ? (
+             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500/20 to-purple-500/5">
+                <span className="material-symbols-outlined text-[50px] text-indigo-400/50">mic_external_on</span>
+             </div>
+          ) : thumbnail ? (
             <img
               src={thumbnail}
               alt="video thumbnail"
@@ -190,22 +199,25 @@ function VideoCard({ video, onShare, onDelete }) {
               <span className="material-symbols-outlined text-[40px] text-white/10">movie</span>
             </div>
           )}
+          
           {/* Play overlay butonu */}
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
-            <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xl group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-[28px] text-white ml-1" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
+            <div className={`w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center border shadow-xl group-hover:scale-110 transition-transform ${isAudio ? 'bg-indigo-500/30 border-indigo-500/40' : 'bg-white/10 border-white/20'}`}>
+              <span className={`material-symbols-outlined text-[28px] ${isAudio ? 'text-indigo-400' : 'text-white'}`} style={{ fontVariationSettings: "'FILL' 1", marginLeft: isAudio ? '0px' : '4px' }}>
+                {isAudio ? 'headphones' : 'play_arrow'}
+              </span>
             </div>
           </div>
           {/* Boyut rozeti */}
-          <div className="absolute bottom-2 left-2 bg-black/70 backdrop-blur-md rounded-lg px-2 py-1">
-            <span className="text-[10px] text-white/80 font-bold">{video.size}</span>
+          <div className={`absolute bottom-2 left-2 backdrop-blur-md rounded-lg px-2 py-1 ${isAudio ? 'bg-indigo-500/40' : 'bg-black/70'}`}>
+            <span className={`text-[10px] font-bold ${isAudio ? 'text-indigo-100' : 'text-white/80'}`}>{video.size}</span>
           </div>
         </button>
 
         {/* Alt bilgi */}
         <div className="p-2 flex flex-col gap-1">
           <h3 className="font-bold text-[11px] text-white truncate" title={video.name}>
-            {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ')}
+            {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ').replace('_Audio_', ' (Ses) ')}
           </h3>
           <div className="flex flex-col gap-1 mt-0.5">
             <p className="text-[9px] text-white/40">{video.date}</p>
@@ -231,7 +243,7 @@ function VideoCard({ video, onShare, onDelete }) {
 
       {/* Tam ekran oynatıcı modal */}
       {playerOpen && (
-        <VideoPlayerModal video={video} onClose={() => setPlayerOpen(false)} />
+        <VideoPlayerModal video={video} isAudio={isAudio} onClose={() => setPlayerOpen(false)} />
       )}
     </>
   );
@@ -282,7 +294,7 @@ function generateThumbnail(src) {
 }
 
 // —— Tam Ekran Video Oynatıcı Modal ——
-function VideoPlayerModal({ video, onClose }) {
+function VideoPlayerModal({ video, isAudio, onClose }) {
   const { t } = useLanguage();
   return (
     <div
@@ -300,21 +312,35 @@ function VideoPlayerModal({ video, onClose }) {
 
       {/* Video adı ve tarihi */}
       <div className="absolute top-8 left-5 right-20 z-10">
-        <p className="text-white text-[16px] font-bold truncate">
-          {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ')}
+        <p className={`text-[16px] font-bold truncate ${isAudio ? 'text-indigo-400' : 'text-white'}`}>
+          {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ').replace('_Audio_', ' (Ses) ')}
         </p>
         <p className="text-white/60 text-[12px] mt-1">{video.date}</p>
       </div>
 
       {/* Video oynatıcı */}
-      <video
-        src={video.url}
-        controls
-        autoPlay
-        playsInline
-        className="w-full h-full object-contain rounded-lg"
-        style={{ maxHeight: '100dvh' }}
-      />
+      {isAudio ? (
+        <div className="w-full flex flex-col items-center justify-center gap-8 px-6">
+          <div className="w-32 h-32 rounded-full bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center animate-pulse">
+            <span className="material-symbols-outlined text-[60px] text-indigo-400">mic_external_on</span>
+          </div>
+          <audio
+            src={video.url}
+            controls
+            autoPlay
+            className="w-full max-w-sm"
+          />
+        </div>
+      ) : (
+        <video
+          src={video.url}
+          controls
+          autoPlay
+          playsInline
+          className="w-full h-full object-contain rounded-lg"
+          style={{ maxHeight: '100dvh' }}
+        />
+      )}
     </div>
   );
 }
