@@ -130,6 +130,7 @@ const legacyTranslations = {
     filter_studio: 'Studio',
     filter_bw: 'B&W',
     filter_vivid: 'Vivid',
+    filter_beauty: 'Beauty', filter_retro: 'Retro', filter_dramatic: 'Dramatic', filter_golden: 'Golden Hour', filter_broadcast: 'Broadcast', filter_matte: 'Matte', filter_night: 'Night',
     width_wide: 'Wide',
     width_medium: 'Medium',
     width_narrow: 'Narrow',
@@ -263,6 +264,7 @@ const legacyTranslations = {
     filter_studio: 'Stüdyo',
     filter_bw: 'S/B',
     filter_vivid: 'Canlı',
+    filter_beauty: 'Pürüzsüz', filter_retro: 'Retro', filter_dramatic: 'Dramatik', filter_golden: 'Altın Saat', filter_broadcast: 'Yayıncı', filter_matte: 'Matte', filter_night: 'Gece',
     width_wide: 'Geniş',
     width_medium: 'Orta',
     width_narrow: 'Dar',
@@ -396,6 +398,7 @@ const legacyTranslations = {
     filter_studio: 'Studio',
     filter_bw: 'S/W',
     filter_vivid: 'Lebendig',
+    filter_beauty: 'Beauty', filter_retro: 'Retro', filter_dramatic: 'Dramatisch', filter_golden: 'Goldene Stunde', filter_broadcast: 'Broadcast', filter_matte: 'Matt', filter_night: 'Nacht',
     width_wide: 'Breit',
     width_medium: 'Mittel',
     width_narrow: 'Schmal',
@@ -537,6 +540,7 @@ const esTranslations = {
   filter_studio: 'Estudio',
   filter_bw: 'B/N',
   filter_vivid: 'Vivo',
+  filter_beauty: 'Belleza', filter_retro: 'Retro', filter_dramatic: 'Dramático', filter_golden: 'Hora Dorada', filter_broadcast: 'Transmisión', filter_matte: 'Mate', filter_night: 'Noche',
   width_wide: 'Ancho',
   width_medium: 'Medio',
   width_narrow: 'Estrecho',
@@ -672,6 +676,7 @@ const frTranslations = {
   filter_studio: 'Studio',
   filter_bw: 'N/B',
   filter_vivid: 'Vif',
+  filter_beauty: 'Beauté', filter_retro: 'Rétro', filter_dramatic: 'Dramatique', filter_golden: 'Heure Dorée', filter_broadcast: 'Diffusion', filter_matte: 'Mat', filter_night: 'Nuit',
   width_wide: 'Large',
   width_medium: 'Moyen',
   width_narrow: 'Étroit',
@@ -807,6 +812,7 @@ const ruTranslations = {
   filter_studio: 'Студия',
   filter_bw: 'Ч/Б',
   filter_vivid: 'Яркий',
+  filter_beauty: 'Красота', filter_retro: 'Ретро', filter_dramatic: 'Драматичный', filter_golden: 'Золотой час', filter_broadcast: 'Эфир', filter_matte: 'Матовый', filter_night: 'Ночь',
   width_wide: 'Широкий',
   width_medium: 'Средний',
   width_narrow: 'Узкий',
@@ -870,7 +876,7 @@ const ptTranslations = {
   color_purple: 'Roxo', color_white: 'Branco',
   filter_clean: 'Limpo', filter_warm: 'Quente', filter_cool: 'Frio',
   filter_cinema: 'Cinema', filter_portrait: 'Retrato', filter_studio: 'Estúdio',
-  filter_bw: 'P&B', filter_vivid: 'Vivo',
+  filter_bw: 'P&B', filter_vivid: 'Vivo', filter_beauty: 'Beleza', filter_retro: 'Retro', filter_dramatic: 'Dramático', filter_golden: 'Hora Dourada', filter_broadcast: 'Transmissão', filter_matte: 'Mate', filter_night: 'Noite',
   width_wide: 'Largo', width_medium: 'Médio', width_narrow: 'Estreito',
 };
 
@@ -932,7 +938,7 @@ const itTranslations = {
   color_purple: 'Viola', color_white: 'Bianco',
   filter_clean: 'Pulito', filter_warm: 'Caldo', filter_cool: 'Freddo',
   filter_cinema: 'Cinema', filter_portrait: 'Ritratto', filter_studio: 'Studio',
-  filter_bw: 'B/N', filter_vivid: 'Vivido',
+  filter_bw: 'B/N', filter_vivid: 'Vivido', filter_beauty: 'Bellezza', filter_retro: 'Retro', filter_dramatic: 'Drammatico', filter_golden: 'Ora d\\'Oro', filter_broadcast: 'Trasmissione', filter_matte: 'Opaco', filter_night: 'Notte',
   width_wide: 'Largo', width_medium: 'Medio', width_narrow: 'Stretto',
 };
 
@@ -992,7 +998,7 @@ const koTranslations = {
   color_green:'녹색', color_red:'빨간색', color_purple:'보라색', color_white:'흰색',
   filter_clean:'클린', filter_warm:'따뜻한', filter_cool:'시원한',
   filter_cinema:'시네마', filter_portrait:'인물', filter_studio:'스튜디오',
-  filter_bw:'흑백', filter_vivid:'선명한',
+  filter_bw:'흑백', filter_vivid:'선명한', filter_beauty: '뷰티', filter_retro: '레트로', filter_dramatic: '드라마틱', filter_golden: '골든 아워', filter_broadcast: '방송', filter_matte: '매트', filter_night: '밤',
   width_wide:'넓게', width_medium:'중간', width_narrow:'좁게',
 };
 
@@ -1053,7 +1059,7 @@ const azTranslations = {
   color_purple:'Bənövşəyi', color_white:'Ağ',
   filter_clean:'Təmiz', filter_warm:'İsti', filter_cool:'Sərin',
   filter_cinema:'Kino', filter_portrait:'Portret', filter_studio:'Studiya',
-  filter_bw:'Q/A', filter_vivid:'Canlı',
+  filter_bw:'Q/A', filter_vivid:'Canlı', filter_beauty: 'Hamar', filter_retro: 'Retro', filter_dramatic: 'Dramatik', filter_golden: 'Qızıl Saat', filter_broadcast: 'Yayım', filter_matte: 'Mat', filter_night: 'Gecə',
   width_wide:'Geniş', width_medium:'Orta', width_narrow:'Dar',
 };
 

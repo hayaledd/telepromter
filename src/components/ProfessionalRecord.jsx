@@ -87,13 +87,20 @@ export default function ProfessionalRecord() {
 
   const FILTERS = [
     { id: 'clean', label: t('filter_clean'), icon: 'wb_auto', style: 'brightness(1.05) contrast(1.0) saturate(1.0)' },
+    { id: 'beauty', label: t('filter_beauty'), icon: 'face_retouching_natural', style: 'brightness(1.05) contrast(1.0) saturate(1.05) blur(0.5px)' },
     { id: 'warm', label: t('filter_warm'), icon: 'wb_sunny', style: 'brightness(1.05) contrast(1.05) saturate(1.2) sepia(0.15)' },
     { id: 'cool', label: t('filter_cool'), icon: 'ac_unit', style: 'brightness(1.02) contrast(1.05) saturate(0.9) hue-rotate(10deg)' },
+    { id: 'golden', label: t('filter_golden'), icon: 'landscape', style: 'brightness(1.05) contrast(1.1) saturate(1.3) sepia(0.3) hue-rotate(-10deg)' },
     { id: 'cinema', label: t('filter_cinema'), icon: 'movie', style: 'brightness(0.92) contrast(1.25) saturate(0.85)' },
+    { id: 'dramatic', label: t('filter_dramatic'), icon: 'contrast', style: 'brightness(0.95) contrast(1.4) saturate(0.8)' },
     { id: 'portrait', label: t('filter_portrait'), icon: 'face', style: 'brightness(1.08) contrast(0.95) saturate(1.1)' },
     { id: 'studio', label: t('filter_studio'), icon: 'videocam', style: 'brightness(1.0) contrast(1.15) saturate(1.05) hue-rotate(-5deg)' },
+    { id: 'broadcast', label: t('filter_broadcast'), icon: 'campaign', style: 'brightness(1.05) contrast(1.15) saturate(1.1)' },
     { id: 'bw', label: t('filter_bw'), icon: 'exposure', style: 'grayscale(1) brightness(1.05) contrast(1.2)' },
+    { id: 'matte', label: t('filter_matte'), icon: 'blur_on', style: 'brightness(1.0) contrast(0.85) saturate(0.9)' },
     { id: 'vivid', label: t('filter_vivid'), icon: 'palette', style: 'brightness(1.04) contrast(1.1) saturate(1.6)' },
+    { id: 'retro', label: t('filter_retro'), icon: 'camera_alt', style: 'brightness(0.9) contrast(0.9) saturate(0.7) sepia(0.6)' },
+    { id: 'night', label: t('filter_night'), icon: 'nights_stay', style: 'brightness(1.2) contrast(1.0) saturate(0.9) hue-rotate(5deg)' },
   ];
 
   const currentFilter = FILTERS.find(f => f.id === activeFilter)?.style || 'brightness(1) contrast(1)';
@@ -570,17 +577,17 @@ export default function ProfessionalRecord() {
           <div className="flex landscape:flex-col items-end landscape:items-center gap-1">
             <div className="relative flex flex-col items-center gap-1">
               {showFilters && (
-                <div className="absolute bottom-[100%] left-0 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 shadow-2xl z-[70] min-w-[160px] max-h-[50vh] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+                <div className="absolute bottom-[100%] left-0 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-1.5 flex flex-col gap-0.5 shadow-2xl z-[70] min-w-[120px] max-h-[45vh] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
                   {FILTERS.map(f => (
                     <button
                       key={f.id}
-                      onClick={() => { setActiveFilter(f.id); setShowFilters(false); }}
-                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all ${activeFilter === f.id
+                      onClick={() => setActiveFilter(f.id)}
+                      className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all ${activeFilter === f.id
                           ? 'bg-primary/20 text-primary'
                           : 'text-white hover:bg-surface-variant/50'
                         }`}
                     >
-                      <span className="material-symbols-outlined text-[18px]" style={{ filter: f.style !== 'none' ? f.style : undefined }}>{f.icon}</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ filter: f.style !== 'none' ? f.style : undefined }}>{f.icon}</span>
                       {f.label}
                     </button>
                   ))}
