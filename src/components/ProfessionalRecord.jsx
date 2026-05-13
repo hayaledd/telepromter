@@ -8,7 +8,7 @@ import { useLanguage } from '../context/LanguageContext';
 export default function ProfessionalRecord() {
   const navigate = useNavigate();
   const { getActiveScript, globalFontSize, setGlobalFontSize } = useScript();
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const script = getActiveScript();
 
   // If no script is active, redirect back to scripts list
