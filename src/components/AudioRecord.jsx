@@ -24,7 +24,8 @@ export default function AudioRecord() {
   const [recordedMimeType, setRecordedMimeType] = useState(null);
   const [saveStatus, setSaveStatus] = useState(null);
   const [countdown, setCountdown] = useState(null);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const elapsedSecondsRef = useRef(0);
+  const timerDisplayRef = useRef(null);
 
   const scrollContainerRef = useRef(null);
   const animationRef = useRef(null);
@@ -52,21 +53,30 @@ export default function AudioRecord() {
     }
   }, [isPlaying, isRecordingActive]);
 
+  function formatTime(secs) {
+    const h = String(Math.floor(secs / 3600)).padStart(2, '0');
+    const m = String(Math.floor((secs % 3600) / 60)).padStart(2, '0');
+    const s = String(secs % 60).padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  }
+
   useEffect(() => {
     let interval = null;
     if (isPlaying) {
-      interval = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
+      interval = setInterval(() => {
+        elapsedSecondsRef.current += 1;
+        if (timerDisplayRef.current) {
+          timerDisplayRef.current.innerText = formatTime(elapsedSecondsRef.current);
+        }
+      }, 1000);
     } else {
-      setElapsedSeconds(0);
+      elapsedSecondsRef.current = 0;
+      if (timerDisplayRef.current) {
+        timerDisplayRef.current.innerText = formatTime(0);
+      }
     }
     return () => clearInterval(interval);
   }, [isPlaying]);
-
-  const formatTime = (secs) => {
-    const m = String(Math.floor(secs / 60)).padStart(2, '0');
-    const s = String(secs % 60).padStart(2, '0');
-    return `${m}:${s}`;
-  };
 
   const getSupportedAudioMimeType = () => {
     const types = [
@@ -254,7 +264,7 @@ export default function AudioRecord() {
           <span className={`font-bold text-[12px] tracking-widest uppercase ${isRecordingActive ? 'text-rose-400' : isPlaying ? 'text-indigo-400' : 'text-white/40'}`}>
             {isRecordingActive ? 'SES KAYDI' : isPlaying ? 'OKUNUYOR' : 'HAZIR'}
           </span>
-          <span className="font-mono text-white/90 ml-2 text-[13px]">{formatTime(elapsedSeconds)}</span>
+          <span ref={timerDisplayRef} className="font-mono text-white/90 ml-2 text-[13px]">{formatTime(elapsedSecondsRef.current)}</span>
           </div>
         </div>
       </div>

@@ -33,7 +33,8 @@ export default function ProfessionalRecord() {
   const [showSettings, setShowSettings] = useState(false);
   const [showLayoutMenu, setShowLayoutMenu] = useState(false);
   const [countdown, setCountdown] = useState(null); // null | 3 | 2 | 1
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const elapsedSecondsRef = useRef(0);
+  const timerDisplayRef = useRef(null);
   const [videoQuality, setVideoQuality] = useState('auto');
   const [textColor, setTextColor] = useState('#ffffff');
   const [isMirrored, setIsMirrored] = useState(false);
@@ -135,23 +136,31 @@ export default function ProfessionalRecord() {
     }
   }, [isPlaying, isRecordingActive]);
 
-  // Real elapsed time counter
-  useEffect(() => {
-    let interval = null;
-    if (isPlaying) {
-      interval = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
-    } else {
-      setElapsedSeconds(0);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying]);
-
-  const formatTime = (secs) => {
+  function formatTime(secs) {
     const h = String(Math.floor(secs / 3600)).padStart(2, '0');
     const m = String(Math.floor((secs % 3600) / 60)).padStart(2, '0');
     const s = String(secs % 60).padStart(2, '0');
     return `${h}:${m}:${s}`;
-  };
+  }
+
+  // Real elapsed time counter
+  useEffect(() => {
+    let interval = null;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        elapsedSecondsRef.current += 1;
+        if (timerDisplayRef.current) {
+          timerDisplayRef.current.innerText = formatTime(elapsedSecondsRef.current);
+        }
+      }, 1000);
+    } else {
+      elapsedSecondsRef.current = 0;
+      if (timerDisplayRef.current) {
+        timerDisplayRef.current.innerText = formatTime(0);
+      }
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
   const startWithCountdown = () => {
     setCountdown(countdownDuration);
@@ -510,7 +519,7 @@ export default function ProfessionalRecord() {
               <span className={`relative inline-flex rounded-full h-3 w-3 ${isRecordingActive ? 'bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]' : isPlaying ? 'bg-primary shadow-[0_0_8px_rgba(99,102,241,0.8)]' : 'bg-surface-variant'}`}></span>
             </span>
             <span className={`font-bold text-[12px] tracking-widest uppercase ${isRecordingActive ? 'text-error' : isPlaying ? 'text-primary' : 'text-on-surface-variant'}`}>{isRecordingActive ? t('recording') : isPlaying ? (t('reading') || 'OKUNUYOR') : t('ready')}</span>
-            <span className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSeconds)}</span>
+            <span ref={timerDisplayRef} className="font-body-md text-on-surface ml-1 tabular-nums">{formatTime(elapsedSecondsRef.current)}</span>
           </div>
         </div>
 
