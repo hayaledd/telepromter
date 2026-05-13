@@ -440,9 +440,14 @@ export default function ProfessionalRecord() {
 
   // Voice Tracking Setup
   useEffect(() => {
+    let isCancelled = false;
+
     if (!voiceTracking) {
       if (recognitionRef.current) {
+        isCancelled = true;
+        try { recognitionRef.current.abort(); } catch (e) { }
         try { recognitionRef.current.stop(); } catch (e) { }
+        recognitionRef.current = null;
       }
       return;
     }
@@ -468,10 +473,12 @@ export default function ProfessionalRecord() {
     };
 
     recognition.onend = () => {
-      if (voiceTracking) {
+      if (!isCancelled) {
         setTimeout(() => {
-          try { recognition.start(); } catch (e) { }
-        }, 100);
+          if (!isCancelled) {
+            try { recognition.start(); } catch (e) { }
+          }
+        }, 1000); // 1 saniye gecikme ile tekrar başlat (Sürekli dıtlamayı önler)
       }
     };
 
@@ -479,7 +486,12 @@ export default function ProfessionalRecord() {
     try { recognition.start(); } catch (e) { }
 
     return () => {
-      try { recognition.stop(); } catch (e) { }
+      isCancelled = true;
+      if (recognitionRef.current) {
+        try { recognitionRef.current.abort(); } catch (e) { }
+        try { recognitionRef.current.stop(); } catch (e) { }
+        recognitionRef.current = null;
+      }
     };
   }, [voiceTracking, lang]);
 
