@@ -8,7 +8,7 @@ import { useLanguage } from '../context/LanguageContext';
 export default function ProfessionalRecord() {
   const navigate = useNavigate();
   const { getActiveScript, globalFontSize, setGlobalFontSize } = useScript();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const script = getActiveScript();
 
   // If no script is active, redirect back to scripts list
@@ -64,48 +64,48 @@ export default function ProfessionalRecord() {
   };
 
   const TEXT_COLORS = [
-    { id: 'white',  value: '#ffffff', bg: 'bg-white' },
+    { id: 'white', value: '#ffffff', bg: 'bg-white' },
     { id: 'yellow', value: '#facc15', bg: 'bg-yellow-400' },
-    { id: 'green',  value: '#4ade80', bg: 'bg-green-400' },
-    { id: 'cyan',   value: '#22d3ee', bg: 'bg-cyan-400' },
+    { id: 'green', value: '#4ade80', bg: 'bg-green-400' },
+    { id: 'cyan', value: '#22d3ee', bg: 'bg-cyan-400' },
   ];
 
   const BG_COLORS = [
-    { id: 'none',    label: t('color_none'),   value: 'transparent',         border: 'border-white/20',  preview: 'bg-transparent border-2 border-white/30' },
-    { id: 'black',   label: t('color_black'),    value: 'rgba(0,0,0,0.85)',    border: 'border-white/10',  preview: 'bg-black' },
-    { id: 'navy',    label: t('color_navy'), value: 'rgba(10,15,50,0.90)', border: 'border-blue-500/20', preview: 'bg-[#0a0f32]' },
-    { id: 'dark',    label: t('color_dark'), value: 'rgba(20,20,25,0.90)', border: 'border-white/10',  preview: 'bg-[#141419]' },
-    { id: 'green',   label: t('color_green'),    value: 'rgba(0,40,20,0.90)', border: 'border-green-500/20', preview: 'bg-[#002814]' },
-    { id: 'red',     label: t('color_red'),  value: 'rgba(50,0,0,0.90)',   border: 'border-red-500/20',  preview: 'bg-[#320000]' },
-    { id: 'purple',  label: t('color_purple'),      value: 'rgba(30,0,50,0.90)', border: 'border-purple-500/20', preview: 'bg-[#1e0032]' },
-    { id: 'white',   label: t('color_white'),    value: 'rgba(255,255,255,0.90)', border: 'border-gray-300',  preview: 'bg-white' },
+    { id: 'none', label: t('color_none'), value: 'transparent', border: 'border-white/20', preview: 'bg-transparent border-2 border-white/30' },
+    { id: 'black', label: t('color_black'), value: 'rgba(0,0,0,0.85)', border: 'border-white/10', preview: 'bg-black' },
+    { id: 'navy', label: t('color_navy'), value: 'rgba(10,15,50,0.90)', border: 'border-blue-500/20', preview: 'bg-[#0a0f32]' },
+    { id: 'dark', label: t('color_dark'), value: 'rgba(20,20,25,0.90)', border: 'border-white/10', preview: 'bg-[#141419]' },
+    { id: 'green', label: t('color_green'), value: 'rgba(0,40,20,0.90)', border: 'border-green-500/20', preview: 'bg-[#002814]' },
+    { id: 'red', label: t('color_red'), value: 'rgba(50,0,0,0.90)', border: 'border-red-500/20', preview: 'bg-[#320000]' },
+    { id: 'purple', label: t('color_purple'), value: 'rgba(30,0,50,0.90)', border: 'border-purple-500/20', preview: 'bg-[#1e0032]' },
+    { id: 'white', label: t('color_white'), value: 'rgba(255,255,255,0.90)', border: 'border-gray-300', preview: 'bg-white' },
   ];
 
   const QUALITY_OPTIONS = [
-    { id: 'auto',  label: 'Cihaz', bps: 8_000_000 }, // Cihazın kendi kalitesi
-    { id: '480p',  label: '480p',  width: 854,  height: 480,  bps: 1_000_000 },
-    { id: '720p',  label: '720p',  width: 1280, height: 720,  bps: 2_500_000 },
+    { id: 'auto', label: 'Cihaz', bps: 8_000_000 }, // Cihazın kendi kalitesi
+    { id: '480p', label: '480p', width: 854, height: 480, bps: 1_000_000 },
+    { id: '720p', label: '720p', width: 1280, height: 720, bps: 2_500_000 },
     { id: '1080p', label: '1080p', width: 1920, height: 1080, bps: 5_000_000 },
   ];
 
   const FILTERS = [
-    { id: 'clean',    label: t('filter_clean'),      icon: 'wb_auto',       style: 'brightness(1.05) contrast(1.0) saturate(1.0)' },
-    { id: 'warm',     label: t('filter_warm'),      icon: 'wb_sunny',      style: 'brightness(1.05) contrast(1.05) saturate(1.2) sepia(0.15)' },
-    { id: 'cool',     label: t('filter_cool'),      icon: 'ac_unit',       style: 'brightness(1.02) contrast(1.05) saturate(0.9) hue-rotate(10deg)' },
-    { id: 'cinema',   label: t('filter_cinema'),     icon: 'movie',         style: 'brightness(0.92) contrast(1.25) saturate(0.85)' },
-    { id: 'portrait', label: t('filter_portrait'),     icon: 'face',          style: 'brightness(1.08) contrast(0.95) saturate(1.1)' },
-    { id: 'studio',   label: t('filter_studio'),     icon: 'videocam',      style: 'brightness(1.0) contrast(1.15) saturate(1.05) hue-rotate(-5deg)' },
-    { id: 'bw',       label: t('filter_bw'),        icon: 'exposure',      style: 'grayscale(1) brightness(1.05) contrast(1.2)' },
-    { id: 'vivid',    label: t('filter_vivid'),      icon: 'palette',       style: 'brightness(1.04) contrast(1.1) saturate(1.6)' },
+    { id: 'clean', label: t('filter_clean'), icon: 'wb_auto', style: 'brightness(1.05) contrast(1.0) saturate(1.0)' },
+    { id: 'warm', label: t('filter_warm'), icon: 'wb_sunny', style: 'brightness(1.05) contrast(1.05) saturate(1.2) sepia(0.15)' },
+    { id: 'cool', label: t('filter_cool'), icon: 'ac_unit', style: 'brightness(1.02) contrast(1.05) saturate(0.9) hue-rotate(10deg)' },
+    { id: 'cinema', label: t('filter_cinema'), icon: 'movie', style: 'brightness(0.92) contrast(1.25) saturate(0.85)' },
+    { id: 'portrait', label: t('filter_portrait'), icon: 'face', style: 'brightness(1.08) contrast(0.95) saturate(1.1)' },
+    { id: 'studio', label: t('filter_studio'), icon: 'videocam', style: 'brightness(1.0) contrast(1.15) saturate(1.05) hue-rotate(-5deg)' },
+    { id: 'bw', label: t('filter_bw'), icon: 'exposure', style: 'grayscale(1) brightness(1.05) contrast(1.2)' },
+    { id: 'vivid', label: t('filter_vivid'), icon: 'palette', style: 'brightness(1.04) contrast(1.1) saturate(1.6)' },
   ];
 
   const currentFilter = FILTERS.find(f => f.id === activeFilter)?.style || 'brightness(1) contrast(1)';
-  
+
   // Refs
   const videoRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const animationRef = useRef(null);
-  
+
   // Recording Refs
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -125,7 +125,7 @@ export default function ProfessionalRecord() {
     if (isPlaying || isRecordingActive) {
       acquireWakeLock();
     } else if (wakeLockRef.current) {
-      wakeLockRef.current.release().catch(()=>{});
+      wakeLockRef.current.release().catch(() => { });
       wakeLockRef.current = null;
     }
   }, [isPlaying, isRecordingActive]);
@@ -233,7 +233,7 @@ export default function ProfessionalRecord() {
           const isPortrait = window.innerHeight > window.innerWidth;
           let width = 1920;
           let height = 1080;
-          
+
           if (videoQuality === 'auto' && videoRef.current) {
             // Telefonun kamerasından gelen Orijinal Çözünürlüğü kullan
             width = videoRef.current.videoWidth || (isPortrait ? 1080 : 1920);
@@ -243,12 +243,12 @@ export default function ProfessionalRecord() {
             width = isPortrait ? selectedQuality.height : selectedQuality.width;
             height = isPortrait ? selectedQuality.width : selectedQuality.height;
           }
-          
+
           // Create a composite canvas to mix video, avatar, filters, and mirroring
           compositeCanvas = document.createElement('canvas');
           compositeCanvas.width = width;
           compositeCanvas.height = height;
-          
+
           // Android WebView'de off-screen canvas ekranı bozmasın diye fixed 1x1 yapıyoruz
           compositeCanvas.style.position = 'fixed';
           compositeCanvas.style.top = '0';
@@ -260,37 +260,37 @@ export default function ProfessionalRecord() {
           document.body.appendChild(compositeCanvas);
 
           const ctx = compositeCanvas.getContext('2d');
-          
+
           const renderComposite = () => {
-             if (!isRecording) {
-               if (intervalId) clearInterval(intervalId);
-               return;
-             }
-             
-             ctx.save();
-             if (isMirrored) {
-               ctx.translate(width, 0);
-               ctx.scale(-1, 1);
-             }
-             if (currentFilter && currentFilter !== 'none') {
-               ctx.filter = currentFilter;
-             }
-             if (videoRef.current && videoRef.current.readyState >= 2) {
-               ctx.drawImage(videoRef.current, 0, 0, width, height);
-             } else {
-               ctx.fillStyle = "black";
-               ctx.fillRect(0, 0, width, height);
-             }
-             ctx.restore();
+            if (!isRecording) {
+              if (intervalId) clearInterval(intervalId);
+              return;
+            }
+
+            ctx.save();
+            if (isMirrored) {
+              ctx.translate(width, 0);
+              ctx.scale(-1, 1);
+            }
+            if (currentFilter && currentFilter !== 'none') {
+              ctx.filter = currentFilter;
+            }
+            if (videoRef.current && videoRef.current.readyState >= 2) {
+              ctx.drawImage(videoRef.current, 0, 0, width, height);
+            } else {
+              ctx.fillStyle = "black";
+              ctx.fillRect(0, 0, width, height);
+            }
+            ctx.restore();
           };
           intervalId = setInterval(renderComposite, 1000 / 30); // 30 FPS
-          
+
           let videoStream;
           if (typeof compositeCanvas.captureStream === 'function') {
-             videoStream = compositeCanvas.captureStream(30);
+            videoStream = compositeCanvas.captureStream(30);
           } else {
-             console.warn("captureStream not supported, falling back to raw stream");
-             videoStream = new MediaStream(mediaStreamRef.current.getVideoTracks());
+            console.warn("captureStream not supported, falling back to raw stream");
+            videoStream = new MediaStream(mediaStreamRef.current.getVideoTracks());
           }
 
           const audioTracks = mediaStreamRef.current.getAudioTracks();
@@ -310,14 +310,14 @@ export default function ProfessionalRecord() {
             isRecording = false;
             if (intervalId) clearInterval(intervalId);
             if (compositeCanvas && document.body.contains(compositeCanvas)) {
-               document.body.removeChild(compositeCanvas);
+              document.body.removeChild(compositeCanvas);
             }
             const blob = new Blob(recordedChunksRef.current, { type: mimeType });
             setRecordedVideoUrl(URL.createObjectURL(blob));
           };
           // timeslice=1000 → her saniye ondataavailable tetiklenir (chunk garantisi)
           mediaRecorder.start(1000);
-          
+
           setIsRecordingActive(true);
           setIsPlaying(true);
         } catch (e) {
@@ -325,7 +325,7 @@ export default function ProfessionalRecord() {
           isRecording = false;
           if (intervalId) clearInterval(intervalId);
           if (compositeCanvas && document.body.contains(compositeCanvas)) {
-             document.body.removeChild(compositeCanvas);
+            document.body.removeChild(compositeCanvas);
           }
           setSaveStatus('error');
           setIsRecordingActive(false);
@@ -442,7 +442,7 @@ export default function ProfessionalRecord() {
   useEffect(() => {
     if (!voiceTracking) {
       if (recognitionRef.current) {
-        try { recognitionRef.current.stop(); } catch(e){}
+        try { recognitionRef.current.stop(); } catch (e) { }
       }
       return;
     }
@@ -460,7 +460,7 @@ export default function ProfessionalRecord() {
     recognition.interimResults = true;
 
     recognition.onstart = () => {
-       lastSpeechTime.current = Date.now();
+      lastSpeechTime.current = Date.now();
     };
 
     recognition.onresult = (event) => {
@@ -470,16 +470,16 @@ export default function ProfessionalRecord() {
     recognition.onend = () => {
       if (voiceTracking) {
         setTimeout(() => {
-           try { recognition.start(); } catch(e){}
+          try { recognition.start(); } catch (e) { }
         }, 100);
       }
     };
 
     recognitionRef.current = recognition;
-    try { recognition.start(); } catch(e){}
+    try { recognition.start(); } catch (e) { }
 
     return () => {
-      try { recognition.stop(); } catch(e){}
+      try { recognition.stop(); } catch (e) { }
     };
   }, [voiceTracking, lang]);
 
@@ -488,7 +488,7 @@ export default function ProfessionalRecord() {
   useEffect(() => {
     if (isPlaying) {
       let lastTime = performance.now();
-      
+
       const scrollLoop = (time) => {
         const deltaTime = time - lastTime;
         lastTime = time;
@@ -496,11 +496,11 @@ export default function ProfessionalRecord() {
         let effectiveSpeed = speed;
 
         if (voiceTracking) {
-           const timeSinceLastSpeech = Date.now() - lastSpeechTime.current;
-           if (timeSinceLastSpeech > 1200) {
-              // Pause if no speech for 1.2s
-              effectiveSpeed = 0;
-           }
+          const timeSinceLastSpeech = Date.now() - lastSpeechTime.current;
+          if (timeSinceLastSpeech > 1200) {
+            // Pause if no speech for 1.2s
+            effectiveSpeed = 0;
+          }
         }
 
         if (scrollContainerRef.current && effectiveSpeed > 0) {
@@ -509,7 +509,7 @@ export default function ProfessionalRecord() {
         }
         animationRef.current = requestAnimationFrame(scrollLoop);
       };
-      
+
       animationRef.current = requestAnimationFrame(scrollLoop);
     } else {
       if (animationRef.current) {
@@ -552,7 +552,7 @@ export default function ProfessionalRecord() {
 
         {/* Right Side: Flip + Settings */}
         <div className="flex items-center gap-2 pointer-events-auto shrink-0 pl-2">
-          <button 
+          <button
             onClick={() => setFacingMode(prev => prev === 'user' ? 'environment' : 'user')}
             className="flex items-center gap-1.5 backdrop-blur-xl shadow-sm rounded-full px-3 py-2 border border-white/10 transition-colors bg-surface-container/30 text-on-surface hover:bg-surface-variant/50"
             title={t('flipCamera')}
@@ -580,9 +580,8 @@ export default function ProfessionalRecord() {
 
         {/* Teleprompter Area */}
         <div
-          className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 ${
-            layoutMode === 'bottom' ? 'bottom-0 h-[50vh]' : 'inset-0 h-full'
-          }`}
+          className={`absolute w-full flex flex-col items-center overflow-hidden transition-all duration-300 z-10 ${layoutMode === 'bottom' ? 'bottom-0 h-[50vh]' : 'inset-0 h-full'
+            }`}
           style={{ backgroundColor: prompterBg === 'none' ? (layoutMode === 'prompter-only' ? 'black' : 'transparent') : BG_COLORS.find(b => b.id === prompterBg)?.value }}
         >
 
@@ -613,8 +612,8 @@ export default function ProfessionalRecord() {
                 </button>
               </div>
               <div className="flex items-center gap-2 mt-1">
-                <button 
-                  onClick={() => setVoiceTracking(!voiceTracking)} 
+                <button
+                  onClick={() => setVoiceTracking(!voiceTracking)}
                   className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold border transition-all ${voiceTracking ? 'bg-primary/20 text-primary border-primary/30 animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.5)]' : 'bg-white/5 text-white/50 border-transparent hover:text-white hover:bg-white/10'}`}
                   title="Sesle Takip: Konuştuğunuzda akar, sustuğunuzda durur."
                 >
@@ -636,24 +635,23 @@ export default function ProfessionalRecord() {
           <div className="flex landscape:flex-col items-end landscape:items-center gap-1">
             <div className="relative flex flex-col items-center gap-1">
               {showFilters && (
-                 <div className="absolute bottom-[100%] left-0 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 shadow-2xl z-[70] min-w-[160px] max-h-[50vh] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
-                    {FILTERS.map(f => (
-                      <button
-                        key={f.id}
-                        onClick={() => { setActiveFilter(f.id); setShowFilters(false); }}
-                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all ${
-                          activeFilter === f.id
-                            ? 'bg-primary/20 text-primary'
-                            : 'text-white hover:bg-surface-variant/50'
+                <div className="absolute bottom-[100%] left-0 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 shadow-2xl z-[70] min-w-[160px] max-h-[50vh] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+                  {FILTERS.map(f => (
+                    <button
+                      key={f.id}
+                      onClick={() => { setActiveFilter(f.id); setShowFilters(false); }}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all ${activeFilter === f.id
+                          ? 'bg-primary/20 text-primary'
+                          : 'text-white hover:bg-surface-variant/50'
                         }`}
-                      >
-                        <span className="material-symbols-outlined text-[18px]" style={{ filter: f.style !== 'none' ? f.style : undefined }}>{f.icon}</span>
-                        {f.label}
-                      </button>
-                    ))}
-                 </div>
+                    >
+                      <span className="material-symbols-outlined text-[18px]" style={{ filter: f.style !== 'none' ? f.style : undefined }}>{f.icon}</span>
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
               )}
-              <button 
+              <button
                 onClick={() => { setShowFilters(!showFilters); setShowLayoutMenu(false); }}
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${showFilters ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
               >
@@ -663,24 +661,24 @@ export default function ProfessionalRecord() {
             </div>
             <div className="relative flex flex-col items-center gap-1">
               {showLayoutMenu && (
-                 <div className="absolute bottom-[100%] left-1/2 -translate-x-1/2 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 shadow-2xl z-[70] min-w-[150px]">
-                    <button onClick={() => {setLayoutMode('bottom'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'bottom' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
-                      <span className="material-symbols-outlined text-[18px]">splitscreen</span>
-                      {t('camBottom')}
-                    </button>
-                    <button onClick={() => {setLayoutMode('full'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'full' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
-                      <span className="material-symbols-outlined text-[18px]">fullscreen</span>
-                      {t('fullScreen')}
-                    </button>
-                    <button onClick={() => {setLayoutMode('prompter-only'); setShowLayoutMenu(false)}} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'prompter-only' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
-                      <span className="material-symbols-outlined text-[18px]">tv</span>
-                      {t('prompterOnly')}
-                    </button>
-                 </div>
+                <div className="absolute bottom-[100%] left-1/2 -translate-x-1/2 mb-4 landscape:mb-0 landscape:bottom-auto landscape:top-1/2 landscape:-translate-y-1/2 landscape:left-auto landscape:right-[100%] landscape:mr-4 bg-surface-container-lowest/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex flex-col gap-1 shadow-2xl z-[70] min-w-[150px]">
+                  <button onClick={() => { setLayoutMode('bottom'); setShowLayoutMenu(false) }} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'bottom' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
+                    <span className="material-symbols-outlined text-[18px]">splitscreen</span>
+                    {t('camBottom')}
+                  </button>
+                  <button onClick={() => { setLayoutMode('full'); setShowLayoutMenu(false) }} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'full' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
+                    <span className="material-symbols-outlined text-[18px]">fullscreen</span>
+                    {t('fullScreen')}
+                  </button>
+                  <button onClick={() => { setLayoutMode('prompter-only'); setShowLayoutMenu(false) }} className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[12px] font-bold ${layoutMode === 'prompter-only' ? 'bg-primary/20 text-primary' : 'text-white hover:bg-surface-variant/50'}`}>
+                    <span className="material-symbols-outlined text-[18px]">tv</span>
+                    {t('prompterOnly')}
+                  </button>
+                </div>
               )}
-              <button 
+              <button
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${showLayoutMenu || layoutMode !== 'bottom' ? 'bg-primary text-on-primary' : 'text-on-surface hover:bg-surface-variant/50'}`}
-                onClick={() => { setShowLayoutMenu(!showLayoutMenu); setShowFilters(false); }} 
+                onClick={() => { setShowLayoutMenu(!showLayoutMenu); setShowFilters(false); }}
                 title={t('viewMode')}
               >
                 <span className="material-symbols-outlined text-[24px]">
@@ -696,18 +694,16 @@ export default function ProfessionalRecord() {
           <div className="flex items-end gap-4 shrink-0">
             {/* Play/Read Only Button */}
             <div className="flex flex-col items-center gap-1">
-              <button 
-                onClick={toggleReading} 
+              <button
+                onClick={toggleReading}
                 disabled={isRecordingActive}
-                className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all duration-300 ${
-                  isPlaying && !isRecordingActive
-                    ? 'bg-[#1a1a24] border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.5)]' 
+                className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all duration-300 ${isPlaying && !isRecordingActive
+                    ? 'bg-[#1a1a24] border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.5)]'
                     : 'bg-[#1a1a24] border-white/10 shadow-[0_8px_20px_rgba(0,0,0,0.5)] hover:border-indigo-400/30'
-                } ${isRecordingActive ? 'opacity-50 cursor-not-allowed scale-90 grayscale' : ''}`}
+                  } ${isRecordingActive ? 'opacity-50 cursor-not-allowed scale-90 grayscale' : ''}`}
               >
-                <span className={`material-symbols-outlined text-[28px] transition-colors ${
-                  isPlaying && !isRecordingActive ? 'text-indigo-400' : 'text-white'
-                }`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                <span className={`material-symbols-outlined text-[28px] transition-colors ${isPlaying && !isRecordingActive ? 'text-indigo-400' : 'text-white'
+                  }`} style={{ fontVariationSettings: "'FILL' 1" }}>
                   {(isPlaying && !isRecordingActive) ? 'pause' : 'play_arrow'}
                 </span>
               </button>
@@ -718,20 +714,18 @@ export default function ProfessionalRecord() {
 
             {/* Primary Record/Stop Action */}
             <div className="flex flex-col items-center gap-1">
-              <button 
-                onClick={toggleRecording} 
+              <button
+                onClick={toggleRecording}
                 disabled={isPlaying && !isRecordingActive}
-                className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all duration-300 ${
-                  isRecordingActive 
-                    ? 'bg-[#1a1a24] border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.5)]' 
+                className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all duration-300 ${isRecordingActive
+                    ? 'bg-[#1a1a24] border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.5)]'
                     : 'bg-[#1a1a24] border-white/10 shadow-[0_8px_20px_rgba(0,0,0,0.5)] hover:border-rose-400/30'
-                } ${(isPlaying && !isRecordingActive) ? 'opacity-50 cursor-not-allowed scale-90 grayscale' : ''}`}
+                  } ${(isPlaying && !isRecordingActive) ? 'opacity-50 cursor-not-allowed scale-90 grayscale' : ''}`}
               >
-                <div className={`transition-all duration-300 ${
-                  isRecordingActive 
-                    ? 'w-5 h-5 rounded-md bg-rose-500 animate-pulse shadow-[0_0_12px_rgba(244,63,94,0.8)]' 
+                <div className={`transition-all duration-300 ${isRecordingActive
+                    ? 'w-5 h-5 rounded-md bg-rose-500 animate-pulse shadow-[0_0_12px_rgba(244,63,94,0.8)]'
                     : 'w-7 h-7 rounded-full bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.4)]'
-                }`}></div>
+                  }`}></div>
               </button>
               <span className={`text-[9px] uppercase font-bold tracking-widest drop-shadow-sm ${isRecordingActive ? 'text-rose-400' : 'text-white/60'}`}>
                 {isRecordingActive ? t('stop') : (t('record') || 'KAYIT')}
@@ -742,13 +736,13 @@ export default function ProfessionalRecord() {
           <div className="flex landscape:flex-col items-end landscape:items-center gap-1">
             <div className="flex flex-col items-center gap-1">
               <div className="flex items-center bg-surface-variant/30 rounded-full h-12 px-1 gap-0.5 border border-white/5">
-                <button 
+                <button
                   onClick={() => setGlobalFontSize(prev => Math.max(16, prev - 4))}
                   className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 active:scale-95"
                 >
                   <span className="material-symbols-outlined text-[16px]">text_decrease</span>
                 </button>
-                <button 
+                <button
                   onClick={() => setGlobalFontSize(prev => Math.min(96, prev + 4))}
                   className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant/50 active:scale-95"
                 >
@@ -788,7 +782,7 @@ export default function ProfessionalRecord() {
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           </div>
-          
+
           <div className="mb-4">
             <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('textColor')}</p>
             <div className="flex gap-2">
@@ -796,9 +790,8 @@ export default function ProfessionalRecord() {
                 <button
                   key={c.id}
                   onClick={() => setTextColor(c.value)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-transform ${
-                    textColor === c.value ? 'border-primary scale-110' : 'border-transparent'
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-transform ${textColor === c.value ? 'border-primary scale-110' : 'border-transparent'
+                    }`}
                 >
                   <span className={`w-6 h-6 rounded-full shadow-inner ${c.bg}`}></span>
                 </button>
@@ -814,9 +807,8 @@ export default function ProfessionalRecord() {
                 <button
                   key={b.id}
                   onClick={() => setPrompterBg(b.id)}
-                  className={`flex flex-col items-center gap-1.5 p-1.5 rounded-xl border-2 transition-all ${
-                    prompterBg === b.id ? 'border-primary scale-105' : 'border-transparent'
-                  }`}
+                  className={`flex flex-col items-center gap-1.5 p-1.5 rounded-xl border-2 transition-all ${prompterBg === b.id ? 'border-primary scale-105' : 'border-transparent'
+                    }`}
                 >
                   <span className={`w-8 h-8 rounded-lg shadow-inner ${b.preview}`}></span>
                   <span className="text-[9px] text-white/50 font-bold">{b.label}</span>
@@ -832,11 +824,10 @@ export default function ProfessionalRecord() {
                 <button
                   key={q.id}
                   onClick={() => setVideoQuality(q.id)}
-                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
-                    videoQuality === q.id
+                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${videoQuality === q.id
                       ? 'bg-primary text-on-primary border-primary'
                       : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
-                  }`}
+                    }`}
                 >
                   {q.label}
                 </button>
@@ -846,26 +837,25 @@ export default function ProfessionalRecord() {
               {t('webmNote')}
             </p>
           </div>
-          
+
           <div className="mb-4 mt-4">
             <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('eyeContact')}</p>
             <div className="flex gap-2">
-              {[{label: t('width_wide'), val: '100%'}, {label: t('width_medium'), val: '75%'}, {label: t('width_narrow'), val: '50%'}].map(opt => (
+              {[{ label: t('width_wide'), val: '100%' }, { label: t('width_medium'), val: '75%' }, { label: t('width_narrow'), val: '50%' }].map(opt => (
                 <button
                   key={opt.val}
                   onClick={() => setTextWidth(opt.val)}
-                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
-                    textWidth === opt.val
+                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${textWidth === opt.val
                       ? 'bg-primary text-on-primary border-primary'
                       : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
-                  }`}
+                    }`}
                 >
                   {opt.label}
                 </button>
               ))}
             </div>
           </div>
-          
+
           <div className="mb-4 mt-4">
             <p className="text-[11px] text-on-surface-variant uppercase tracking-widest mb-2 font-bold">{t('countdown')}</p>
             <div className="flex gap-2">
@@ -873,11 +863,10 @@ export default function ProfessionalRecord() {
                 <button
                   key={sec}
                   onClick={() => setCountdownDuration(sec)}
-                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
-                    countdownDuration === sec
+                  className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${countdownDuration === sec
                       ? 'bg-primary text-on-primary border-primary'
                       : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
-                  }`}
+                    }`}
                 >
                   {sec}s
                 </button>
@@ -908,11 +897,10 @@ export default function ProfessionalRecord() {
                       <button
                         key={fps}
                         onClick={() => setFrameRate(fps)}
-                        className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${
-                          frameRate === fps
+                        className={`flex-1 py-2 rounded-xl text-[12px] font-bold border transition-all ${frameRate === fps
                             ? 'bg-primary text-on-primary border-primary'
                             : 'bg-surface-container border-outline-variant/30 text-on-surface-variant'
-                        }`}
+                          }`}
                       >
                         {fps} fps
                       </button>
@@ -942,9 +930,8 @@ export default function ProfessionalRecord() {
                   <p className="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Ayna Modu</p>
                   <button
                     onClick={() => setIsMirrored(!isMirrored)}
-                    className={`w-12 h-6 rounded-full transition-colors flex items-center ${
-                      isMirrored ? 'bg-primary justify-end' : 'bg-surface-variant justify-start'
-                    } px-0.5`}
+                    className={`w-12 h-6 rounded-full transition-colors flex items-center ${isMirrored ? 'bg-primary justify-end' : 'bg-surface-variant justify-start'
+                      } px-0.5`}
                   >
                     <div className="w-5 h-5 rounded-full bg-white shadow"></div>
                   </button>
@@ -967,25 +954,25 @@ export default function ProfessionalRecord() {
 
       {recordedVideoUrl && (
         <div className="fixed inset-0 z-[100] bg-surface-container-lowest/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 pb-8 overflow-y-auto animate-in fade-in duration-300">
-          
+
           {/* Header */}
           <div className="w-full pt-4 pb-6 flex justify-center shrink-0">
-             <div className="bg-surface-container-high/50 backdrop-blur-md px-6 py-2 rounded-full border border-white/5 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[18px]">verified</span>
-                <span className="text-white font-bold tracking-wide text-[14px] uppercase">{t('saved')}</span>
-             </div>
+            <div className="bg-surface-container-high/50 backdrop-blur-md px-6 py-2 rounded-full border border-white/5 flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary text-[18px]">verified</span>
+              <span className="text-white font-bold tracking-wide text-[14px] uppercase">{t('saved')}</span>
+            </div>
           </div>
 
           {/* Video Player */}
           <div className="w-full max-w-[280px] sm:max-w-sm relative group shrink-0 mx-auto my-2">
             {/* Arka plan parlama efekti */}
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 to-tertiary/30 blur-2xl opacity-50 rounded-[40px] -z-10 transition-opacity duration-500 group-hover:opacity-70"></div>
-            
+
             <div className="rounded-[32px] overflow-hidden border-4 border-surface-container-high shadow-2xl relative bg-black aspect-[9/16] max-h-[55vh] flex items-center justify-center">
-              <video 
-                src={recordedVideoUrl} 
-                controls 
-                playsInline 
+              <video
+                src={recordedVideoUrl}
+                controls
+                playsInline
                 autoPlay
                 className="w-full h-full object-cover"
               ></video>
@@ -995,26 +982,25 @@ export default function ProfessionalRecord() {
           {/* Durum Mesajı */}
           <div className="h-12 mt-4 mb-2 flex items-center justify-center shrink-0">
             {saveStatus && (
-              <div className={`px-5 py-2 rounded-full text-[13px] font-bold flex items-center gap-2 animate-in slide-in-from-bottom-2 ${
-                saveStatus === 'saving' ? 'bg-surface-variant text-on-surface-variant' :
-                saveStatus === 'ok'     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                                         'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-              }`}>
+              <div className={`px-5 py-2 rounded-full text-[13px] font-bold flex items-center gap-2 animate-in slide-in-from-bottom-2 ${saveStatus === 'saving' ? 'bg-surface-variant text-on-surface-variant' :
+                  saveStatus === 'ok' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                    'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                }`}>
                 {saveStatus === 'saving' && <span className="animate-spin material-symbols-outlined text-[16px]">progress_activity</span>}
-                {saveStatus === 'ok'     && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
-                {saveStatus === 'error'  && <span className="material-symbols-outlined text-[16px]">error</span>}
+                {saveStatus === 'ok' && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
+                {saveStatus === 'error' && <span className="material-symbols-outlined text-[16px]">error</span>}
                 {saveStatus === 'saving' ? t('saving') :
-                 saveStatus === 'ok'    ? t('saveSuccess') :
-                                         t('saveError')}
+                  saveStatus === 'ok' ? t('saveSuccess') :
+                    t('saveError')}
               </div>
             )}
           </div>
-          
+
           {/* Aksiyon Butonları */}
           <div className="w-full max-w-[280px] sm:max-w-sm flex flex-col gap-3 shrink-0 pb-safe">
             {!saveStatus || saveStatus === 'error' ? (
               <>
-                <button 
+                <button
                   disabled={saveStatus === 'saving'}
                   onClick={async () => {
                     setSaveStatus('saving');
@@ -1035,7 +1021,7 @@ export default function ProfessionalRecord() {
                             });
                             setSavedFileName(fileName);
                             resolve();
-                          } catch(err) { reject(err); }
+                          } catch (err) { reject(err); }
                         };
                         reader.onerror = reject;
                       });
@@ -1049,8 +1035,8 @@ export default function ProfessionalRecord() {
                 >
                   {saveStatus === 'saving' ? (
                     <>
-                       <span className="animate-spin material-symbols-outlined text-[20px]">sync</span>
-                       {t('saving')}
+                      <span className="animate-spin material-symbols-outlined text-[20px]">sync</span>
+                      {t('saving')}
                     </>
                   ) : (
                     <>
@@ -1061,7 +1047,7 @@ export default function ProfessionalRecord() {
                 </button>
 
                 <div className="mt-1">
-                  <button 
+                  <button
                     disabled={saveStatus === 'saving'}
                     onClick={() => {
                       setRecordedVideoUrl(null);
@@ -1078,19 +1064,19 @@ export default function ProfessionalRecord() {
               </>
             ) : (
               <div className="flex gap-2 flex-col">
-                <button 
+                <button
                   onClick={async () => {
                     try {
                       const stat = await Filesystem.stat({ path: savedFileName, directory: Directory.Documents });
                       await Share.share({ title: savedFileName, text: t('recordedWith'), url: stat.uri, dialogTitle: t('shareVideoTitle') });
-                    } catch(e) { console.error('Share error', e); }
+                    } catch (e) { console.error('Share error', e); }
                   }}
                   className="w-full bg-tertiary text-on-tertiary font-bold text-[16px] py-4 rounded-2xl hover:bg-tertiary/90 active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2 mb-2"
                 >
                   <span className="material-symbols-outlined text-[20px]">share</span>
                   {t('share')}
                 </button>
-                <button 
+                <button
                   onClick={() => {
                     setRecordedVideoUrl(null);
                     setSaveStatus(null);
