@@ -46,9 +46,6 @@ export default function ProfessionalRecord() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [showCameraSettings, setShowCameraSettings] = useState(false);
   const [prompterBg, setPrompterBg] = useState('dark');
-  const [voiceTracking, setVoiceTracking] = useState(false);
-  const recognitionRef = useRef(null);
-  const lastSpeechTime = useRef(Date.now());
   // Detect best supported MIME type for this device
   const getSupportedMimeType = () => {
     const types = [
@@ -437,65 +434,6 @@ export default function ProfessionalRecord() {
       }
     };
   }, [facingMode, frameRate]);
-
-  // Voice Tracking Setup
-  useEffect(() => {
-    let isCancelled = false;
-
-    if (!voiceTracking) {
-      if (recognitionRef.current) {
-        isCancelled = true;
-        try { recognitionRef.current.abort(); } catch (e) { }
-        try { recognitionRef.current.stop(); } catch (e) { }
-        recognitionRef.current = null;
-      }
-      return;
-    }
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Cihazınız Sesle Takip (Voice Tracking) özelliğini desteklemiyor. (Chrome/Safari önerilir)");
-      setVoiceTracking(false);
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = lang === 'tr' ? 'tr-TR' : 'en-US';
-    recognition.continuous = true;
-    recognition.interimResults = true;
-
-    recognition.onstart = () => {
-      lastSpeechTime.current = Date.now();
-    };
-
-    recognition.onresult = (event) => {
-      lastSpeechTime.current = Date.now();
-    };
-
-    recognition.onend = () => {
-      if (!isCancelled) {
-        setTimeout(() => {
-          if (!isCancelled) {
-            try { recognition.start(); } catch (e) { }
-          }
-        }, 1000); // 1 saniye gecikme ile tekrar başlat (Sürekli dıtlamayı önler)
-      }
-    };
-
-    recognitionRef.current = recognition;
-    try { recognition.start(); } catch (e) { }
-
-    return () => {
-      isCancelled = true;
-      if (recognitionRef.current) {
-        try { recognitionRef.current.abort(); } catch (e) { }
-        try { recognitionRef.current.stop(); } catch (e) { }
-        recognitionRef.current = null;
-      }
-    };
-  }, [voiceTracking, lang]);
-
-
   // Scrolling Engine
   useEffect(() => {
     if (isPlaying) {
@@ -505,18 +443,8 @@ export default function ProfessionalRecord() {
         const deltaTime = time - lastTime;
         lastTime = time;
 
-        let effectiveSpeed = speed;
-
-        if (voiceTracking) {
-          const timeSinceLastSpeech = Date.now() - lastSpeechTime.current;
-          if (timeSinceLastSpeech > 1200) {
-            // Pause if no speech for 1.2s
-            effectiveSpeed = 0;
-          }
-        }
-
-        if (scrollContainerRef.current && effectiveSpeed > 0) {
-          const pixelsPerFrame = (effectiveSpeed * 0.05) * deltaTime;
+        if (scrollContainerRef.current && speed > 0) {
+          const pixelsPerFrame = (speed * 0.05) * deltaTime;
           scrollContainerRef.current.scrollTop += pixelsPerFrame;
         }
         animationRef.current = requestAnimationFrame(scrollLoop);
@@ -623,16 +551,7 @@ export default function ProfessionalRecord() {
                   <span className="material-symbols-outlined text-[18px] font-bold">add</span>
                 </button>
               </div>
-              <div className="flex items-center gap-2 mt-1">
-                <button
-                  onClick={() => setVoiceTracking(!voiceTracking)}
-                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold border transition-all ${voiceTracking ? 'bg-primary/20 text-primary border-primary/30 animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.5)]' : 'bg-white/5 text-white/50 border-transparent hover:text-white hover:bg-white/10'}`}
-                  title="Sesle Takip: Konuştuğunuzda akar, sustuğunuzda durur."
-                >
-                  <span className="material-symbols-outlined text-[14px]">{voiceTracking ? 'mic' : 'mic_off'}</span>
-                  {t('smartVoice')}
-                </button>
-                <span className="text-[10px] text-white/20 font-bold">|</span>
+              <div className="flex items-center justify-center w-full mt-1">
                 <span className="text-[10px] text-white/40 font-bold tracking-wide">{getReadTime()}</span>
               </div>
             </div>
