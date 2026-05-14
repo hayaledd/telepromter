@@ -4,6 +4,7 @@ import { useScript } from '../context/ScriptContext';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import { CameraPreview } from '@capacitor-community/camera-preview';
+import { Capacitor } from '@capacitor/core';
 import MobileMenu from './MobileMenu';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -173,9 +174,43 @@ export default function ProfessionalRecord() {
     setIsPlaying(prev => !prev);
   };
 
+  // Request CAMERA + RECORD_AUDIO at runtime (Android 6+)
+  async function requestAudioVideoPermissions() {
+    if (!Capacitor.isNativePlatform()) return true; // web/dev: skip
+    try {
+      // Try Capacitor Camera plugin permissions first
+      const { Camera } = await import('@capacitor/camera');
+      const camPerm = await Camera.checkPermissions();
+      if (camPerm.camera !== 'granted') {
+        const req = await Camera.requestPermissions({ permissions: ['camera', 'microphone'] });
+        if (req.camera !== 'granted') {
+          alert(t('permissionCameraRequired') || 'Kamera izni gereklidir.');
+          return false;
+        }
+        if (req.microphone !== 'granted') {
+          alert(t('permissionMicRequired') || 'Mikrofon izni gereklidir.');
+          return false;
+        }
+      } else if (camPerm.microphone !== 'granted') {
+        const req = await Camera.requestPermissions({ permissions: ['microphone'] });
+        if (req.microphone !== 'granted') {
+          alert(t('permissionMicRequired') || 'Mikrofon izni gereklidir.');
+          return false;
+        }
+      }
+      return true;
+    } catch (e) {
+      // Fallback: CameraPreview may handle permissions internally
+      console.warn('Permission check failed, proceeding anyway:', e);
+      return true;
+    }
+  }
+
   const toggleRecording = async () => {
     if (!isRecordingActive) {
       if (isPlaying) setIsPlaying(false);
+      const granted = await requestAudioVideoPermissions();
+      if (!granted) return;
       setCountdown(countdownDuration);
     } else {
       try {
