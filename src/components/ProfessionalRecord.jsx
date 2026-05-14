@@ -102,11 +102,26 @@ export default function ProfessionalRecord() {
 
     async function startNativeCamera() {
       try {
-        // Stop any existing session first
+        // ── Step 1: Request MICROPHONE permission upfront via getUserMedia ──
+        // This triggers the Android RECORD_AUDIO system dialog BEFORE the camera
+        // starts, so there are NO interruptions during countdown or recording.
+        if (Capacitor.isNativePlatform()) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            stream.getTracks().forEach(t => t.stop()); // release immediately
+          } catch (audioErr) {
+            console.warn('Audio permission not granted at mount:', audioErr);
+            // Continue anyway — user may still want prompter-only mode
+          }
+        }
+        if (!mounted) return;
+
+        // ── Step 2: Stop any existing camera session ──
         try { await CameraPreview.stop(); } catch (_) {}
         await new Promise(r => setTimeout(r, 300));
         if (!mounted) return;
 
+        // ── Step 3: Start native camera (camera permission requested here) ──
         await CameraPreview.start({
           position: facingMode,   // 'front' | 'rear'
           toBack: true,           // render BEHIND the WebView
@@ -120,7 +135,6 @@ export default function ProfessionalRecord() {
         if (mounted) setCameraReady(true);
       } catch (e) {
         console.error('CameraPreview.start error:', e);
-        // Fallback: show error state but don't crash
         if (mounted) setCameraReady(false);
       }
     }
@@ -174,28 +188,10 @@ export default function ProfessionalRecord() {
     setIsPlaying(prev => !prev);
   };
 
-  // Request RECORD_AUDIO at runtime via getUserMedia (Android 6+)
-  // getUserMedia({audio:true}) is the most reliable way to trigger the
-  // Android RECORD_AUDIO system permission dialog from a WebView.
-  async function requestAudioVideoPermissions() {
-    if (!Capacitor.isNativePlatform()) return true; // web/dev: skip
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      // Permission granted — immediately release the stream, CameraPreview will handle actual capture
-      stream.getTracks().forEach(track => track.stop());
-      return true;
-    } catch (e) {
-      console.error('Microphone permission denied:', e);
-      alert(t('permissionMicRequired') || 'Mikrofon izni gereklidir. Lütfen uygulama ayarlarından izin verin.');
-      return false;
-    }
-  }
-
   const toggleRecording = async () => {
     if (!isRecordingActive) {
       if (isPlaying) setIsPlaying(false);
-      const granted = await requestAudioVideoPermissions();
-      if (!granted) return;
+      // Permissions already requested at screen mount — start countdown immediately
       setCountdown(countdownDuration);
     } else {
       try {
