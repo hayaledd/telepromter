@@ -174,35 +174,20 @@ export default function ProfessionalRecord() {
     setIsPlaying(prev => !prev);
   };
 
-  // Request CAMERA + RECORD_AUDIO at runtime (Android 6+)
+  // Request RECORD_AUDIO at runtime via getUserMedia (Android 6+)
+  // getUserMedia({audio:true}) is the most reliable way to trigger the
+  // Android RECORD_AUDIO system permission dialog from a WebView.
   async function requestAudioVideoPermissions() {
     if (!Capacitor.isNativePlatform()) return true; // web/dev: skip
     try {
-      // Try Capacitor Camera plugin permissions first
-      const { Camera } = await import('@capacitor/camera');
-      const camPerm = await Camera.checkPermissions();
-      if (camPerm.camera !== 'granted') {
-        const req = await Camera.requestPermissions({ permissions: ['camera', 'microphone'] });
-        if (req.camera !== 'granted') {
-          alert(t('permissionCameraRequired') || 'Kamera izni gereklidir.');
-          return false;
-        }
-        if (req.microphone !== 'granted') {
-          alert(t('permissionMicRequired') || 'Mikrofon izni gereklidir.');
-          return false;
-        }
-      } else if (camPerm.microphone !== 'granted') {
-        const req = await Camera.requestPermissions({ permissions: ['microphone'] });
-        if (req.microphone !== 'granted') {
-          alert(t('permissionMicRequired') || 'Mikrofon izni gereklidir.');
-          return false;
-        }
-      }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      // Permission granted — immediately release the stream, CameraPreview will handle actual capture
+      stream.getTracks().forEach(track => track.stop());
       return true;
     } catch (e) {
-      // Fallback: CameraPreview may handle permissions internally
-      console.warn('Permission check failed, proceeding anyway:', e);
-      return true;
+      console.error('Microphone permission denied:', e);
+      alert(t('permissionMicRequired') || 'Mikrofon izni gereklidir. Lütfen uygulama ayarlarından izin verin.');
+      return false;
     }
   }
 
