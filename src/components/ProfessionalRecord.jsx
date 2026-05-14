@@ -92,36 +92,51 @@ export default function ProfessionalRecord() {
     return () => clearInterval(interval);
   }, [isPlaying]);
 
-  // Native Camera Setup
+  // Native Camera Setup — body must be transparent so native layer shows through WebView
   useEffect(() => {
     let mounted = true;
+
+    // Make body transparent while on this screen
+    document.body.classList.add('native-cam-active');
+
     async function startNativeCamera() {
       try {
+        // Stop any existing session first
+        try { await CameraPreview.stop(); } catch (_) {}
+        await new Promise(r => setTimeout(r, 300));
+        if (!mounted) return;
+
         await CameraPreview.start({
-          position: facingMode,
-          toBack: true,
-          width: window.innerWidth,
-          height: window.innerHeight,
+          position: facingMode,   // 'front' | 'rear'
+          toBack: true,           // render BEHIND the WebView
+          width: window.screen.width,
+          height: window.screen.height,
           x: 0,
           y: 0,
           storeToFile: false,
+          disableAudio: false,
         });
         if (mounted) setCameraReady(true);
       } catch (e) {
         console.error('CameraPreview.start error:', e);
+        // Fallback: show error state but don't crash
+        if (mounted) setCameraReady(false);
       }
     }
+
     startNativeCamera();
+
     return () => {
       mounted = false;
+      document.body.classList.remove('native-cam-active');
       CameraPreview.stop().catch(() => {});
       setCameraReady(false);
     };
   }, [facingMode]);
 
-  // Flip camera
-  const flipCamera = async () => {
-    try { await CameraPreview.flip(); } catch (e) { console.error(e); }
+  // Flip = change facingMode state → useEffect above restarts camera
+  const flipCamera = () => {
+    setFacingMode(prev => prev === 'front' ? 'rear' : 'front');
   };
 
   // Countdown
@@ -138,14 +153,18 @@ export default function ProfessionalRecord() {
 
   async function startActualRecording() {
     try {
+      // Some versions require cameraDirection param
       await CameraPreview.startRecordVideo({
-        quality: 'high',
+        cameraDirection: facingMode,
+        quality: '1',       // '0'=low '1'=medium '2'=high (number string)
         withFlash: false,
+        saveToGallery: false,
       });
       setIsRecordingActive(true);
       setIsPlaying(true);
     } catch (e) {
       console.error('startRecordVideo error:', e);
+      alert('Kayıt başlatılamadı: ' + (e?.message || String(e)));
     }
   }
 

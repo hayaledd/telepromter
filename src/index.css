@@ -17,10 +17,13 @@
     min-height: max(884px, 100dvh);
     background-color: #111317;
     color: #e2e2e8;
-    /* Prevent pull-to-refresh browser gesture interfering */
     overscroll-behavior: none;
-    /* Smoother scrolling everywhere */
     -webkit-overflow-scrolling: touch;
+  }
+  /* When native camera is active, make body transparent so camera shows through WebView */
+  body.native-cam-active {
+    background-color: transparent !important;
+    background: transparent !important;
   }
   * {
     /* Prevent text selection on UI elements for a native feel */
