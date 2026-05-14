@@ -111,6 +111,7 @@ export default function ProfessionalRecord() {
   const scrollContainerRef = useRef(null);
   const animationRef = useRef(null);
   const exactScrollRef = useRef(0);
+  const smoothedDeltaRef = useRef(16.66);
 
   // Recording Refs
   const mediaStreamRef = useRef(null);
@@ -454,6 +455,7 @@ export default function ProfessionalRecord() {
     // Sync exact scroll with actual scroll when playback starts
     if (isPlaying && scrollContainerRef.current) {
       exactScrollRef.current = scrollContainerRef.current.scrollTop;
+      smoothedDeltaRef.current = 16.66; // Reset smoothed delta
     }
   }, [isPlaying]);
 
@@ -462,12 +464,20 @@ export default function ProfessionalRecord() {
       let lastTime = performance.now();
 
       const scrollLoop = (time) => {
-        // Cap deltaTime to 50ms to prevent massive jumps on lag spikes
-        const deltaTime = Math.min(time - lastTime, 50);
+        const rawDelta = time - lastTime;
         lastTime = time;
 
+        // Skip massive lag spikes entirely (e.g., component mounted or thread blocked for >100ms)
+        if (rawDelta > 100) {
+          animationRef.current = requestAnimationFrame(scrollLoop);
+          return;
+        }
+
+        // Exponential smoothing for delta time to prevent micro-stutters (jitter) on frame drops
+        smoothedDeltaRef.current = smoothedDeltaRef.current * 0.9 + rawDelta * 0.1;
+
         if (scrollContainerRef.current && speed > 0) {
-          const pixelsPerFrame = (speed * 0.05) * deltaTime;
+          const pixelsPerFrame = (speed * 0.05) * smoothedDeltaRef.current;
           
           // Detect manual scroll by user
           const currentScroll = scrollContainerRef.current.scrollTop;

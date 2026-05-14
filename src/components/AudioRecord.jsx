@@ -30,6 +30,7 @@ export default function AudioRecord() {
   const scrollContainerRef = useRef(null);
   const animationRef = useRef(null);
   const exactScrollRef = useRef(0);
+  const smoothedDeltaRef = useRef(16.66);
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
@@ -207,6 +208,7 @@ export default function AudioRecord() {
   useEffect(() => {
     if (isPlaying && scrollContainerRef.current) {
       exactScrollRef.current = scrollContainerRef.current.scrollTop;
+      smoothedDeltaRef.current = 16.66;
     }
   }, [isPlaying]);
 
@@ -214,10 +216,18 @@ export default function AudioRecord() {
     if (isPlaying) {
       let lastTime = performance.now();
       const scrollLoop = (time) => {
-        const deltaTime = Math.min(time - lastTime, 50);
+        const rawDelta = time - lastTime;
         lastTime = time;
+
+        if (rawDelta > 100) {
+          animationRef.current = requestAnimationFrame(scrollLoop);
+          return;
+        }
+
+        smoothedDeltaRef.current = smoothedDeltaRef.current * 0.9 + rawDelta * 0.1;
+
         if (scrollContainerRef.current && speed > 0) {
-          const pixelsPerFrame = (speed * 0.05) * deltaTime;
+          const pixelsPerFrame = (speed * 0.05) * smoothedDeltaRef.current;
           
           const currentScroll = scrollContainerRef.current.scrollTop;
           if (Math.abs(currentScroll - exactScrollRef.current) > 2) {
