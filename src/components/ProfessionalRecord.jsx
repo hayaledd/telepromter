@@ -80,10 +80,10 @@ export default function ProfessionalRecord() {
   ];
 
   const QUALITY_OPTIONS = [
-    { id: 'auto', label: 'Cihaz', bps: 8_000_000 }, // Cihazın kendi kalitesi
-    { id: '480p', label: '480p', width: 854, height: 480, bps: 1_000_000 },
-    { id: '720p', label: '720p', width: 1280, height: 720, bps: 2_500_000 },
-    { id: '1080p', label: '1080p', width: 1920, height: 1080, bps: 5_000_000 },
+    { id: 'auto', label: 'Cihaz', bps: 12_000_000 }, // Cihazın kendi kalitesi
+    { id: '480p', label: '480p', width: 854, height: 480, bps: 2_000_000 },
+    { id: '720p', label: '720p', width: 1280, height: 720, bps: 4_000_000 },
+    { id: '1080p', label: '1080p', width: 1920, height: 1080, bps: 8_000_000 },
   ];
 
   const FILTERS = [
@@ -275,25 +275,30 @@ export default function ProfessionalRecord() {
           document.body.appendChild(compositeCanvas);
 
           const ctx = compositeCanvas.getContext('2d');
+          let lastDrawTime = performance.now();
 
-          const renderComposite = () => {
+          const renderComposite = (time) => {
             if (!isRecording) return;
 
-            ctx.save();
-            if (isMirrored) {
-              ctx.translate(width, 0);
-              ctx.scale(-1, 1);
+            // Sadece saniyede 30 kare (33.3ms) çizim yaparak CPU/GPU'yu rahatlat ve video akıcılığını artır
+            if (time - lastDrawTime >= 33.3) {
+              lastDrawTime = time;
+              ctx.save();
+              if (isMirrored) {
+                ctx.translate(width, 0);
+                ctx.scale(-1, 1);
+              }
+              if (currentFilter && currentFilter !== 'none') {
+                ctx.filter = currentFilter;
+              }
+              if (videoRef.current && videoRef.current.readyState >= 2) {
+                ctx.drawImage(videoRef.current, 0, 0, width, height);
+              } else {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, width, height);
+              }
+              ctx.restore();
             }
-            if (currentFilter && currentFilter !== 'none') {
-              ctx.filter = currentFilter;
-            }
-            if (videoRef.current && videoRef.current.readyState >= 2) {
-              ctx.drawImage(videoRef.current, 0, 0, width, height);
-            } else {
-              ctx.fillStyle = "black";
-              ctx.fillRect(0, 0, width, height);
-            }
-            ctx.restore();
             rafId = requestAnimationFrame(renderComposite);
           };
           rafId = requestAnimationFrame(renderComposite);
