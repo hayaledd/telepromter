@@ -49,7 +49,7 @@ export default function AudioRecord() {
     if (isPlaying || isRecordingActive) {
       acquireWakeLock();
     } else if (wakeLockRef.current) {
-      wakeLockRef.current.release().catch(()=>{});
+      wakeLockRef.current.release().catch(() => { });
       wakeLockRef.current = null;
     }
   }, [isPlaying, isRecordingActive]);
@@ -228,7 +228,7 @@ export default function AudioRecord() {
 
         if (scrollContainerRef.current && speed > 0) {
           const pixelsPerFrame = (speed * 0.05) * smoothedDeltaRef.current;
-          
+
           const currentScroll = scrollContainerRef.current.scrollTop;
           if (Math.abs(currentScroll - exactScrollRef.current) > 2) {
             exactScrollRef.current = currentScroll;
@@ -253,7 +253,7 @@ export default function AudioRecord() {
 
   return (
     <div className="bg-[#0f0f14] text-white fixed inset-0 h-[100dvh] w-screen overflow-hidden overscroll-none flex flex-col font-sans">
-      
+
       {/* Dynamic Background */}
       <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden pointer-events-none">
         <div className={`w-[80vw] h-[80vw] bg-indigo-600/10 rounded-full blur-[100px] transition-all duration-700 ${isRecordingActive ? 'scale-150 opacity-100 animate-pulse' : 'scale-100 opacity-50'}`} />
@@ -268,13 +268,13 @@ export default function AudioRecord() {
           </button>
           <div className="flex items-center gap-2 pointer-events-auto bg-white/5 backdrop-blur-xl rounded-full px-4 py-2 border border-white/10">
             <span className="flex h-3 w-3 relative">
-            {isRecordingActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>}
-            <span className={`relative inline-flex rounded-full h-3 w-3 ${isRecordingActive ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]' : isPlaying ? 'bg-indigo-500' : 'bg-white/30'}`}></span>
-          </span>
-          <span className={`font-bold text-[12px] tracking-widest uppercase ${isRecordingActive ? 'text-rose-400' : isPlaying ? 'text-indigo-400' : 'text-white/40'}`}>
-            {isRecordingActive ? 'SES KAYDI' : isPlaying ? 'OKUNUYOR' : 'HAZIR'}
-          </span>
-          <span ref={timerDisplayRef} className="font-mono text-white/90 ml-2 text-[13px]">{formatTime(elapsedSecondsRef.current)}</span>
+              {isRecordingActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>}
+              <span className={`relative inline-flex rounded-full h-3 w-3 ${isRecordingActive ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]' : isPlaying ? 'bg-indigo-500' : 'bg-white/30'}`}></span>
+            </span>
+            <span className={`font-bold text-[12px] tracking-widest uppercase ${isRecordingActive ? 'text-rose-400' : isPlaying ? 'text-indigo-400' : 'text-white/40'}`}>
+              {isRecordingActive ? 'SES KAYDI' : isPlaying ? 'OKUNUYOR' : 'HAZIR'}
+            </span>
+            <span ref={timerDisplayRef} className="font-mono text-white/90 ml-2 text-[13px]">{formatTime(elapsedSecondsRef.current)}</span>
           </div>
         </div>
       </div>
@@ -290,7 +290,7 @@ export default function AudioRecord() {
         </div>
         <div className="absolute top-0 w-full h-24 bg-gradient-to-b from-[#0f0f14] to-transparent z-10 pointer-events-none"></div>
         <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-[#0f0f14] to-transparent z-10 pointer-events-none"></div>
-        
+
         {/* Floating Speed Control */}
         <div className="fixed bottom-[120px] right-4 w-auto z-40">
           <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl py-3 px-1 flex flex-col items-center gap-2">
@@ -320,23 +320,21 @@ export default function AudioRecord() {
             </button>
           </div>
         </div>
-        
+
         {/* Record Button */}
         <div className="flex items-center justify-center">
-           <button 
-             onClick={toggleRecording} 
-             className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all duration-300 ${
-               isRecordingActive 
-                 ? 'bg-[#1a1a24] border-white/10 shadow-[inset_0_4px_12px_rgba(0,0,0,0.5)]' 
-                 : 'bg-[#1a1a24] border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:border-indigo-400'
-             }`}
-           >
-             <div className={`transition-all duration-300 ${
-               isRecordingActive 
-                 ? 'w-5 h-5 rounded-md bg-rose-500 animate-pulse shadow-[0_0_12px_rgba(244,63,94,0.6)]' 
-                 : 'w-7 h-7 rounded-full bg-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.4)]'
-             }`}></div>
-           </button>
+          <button
+            onClick={toggleRecording}
+            className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all duration-300 ${isRecordingActive
+                ? 'bg-[#1a1a24] border-white/10 shadow-[inset_0_4px_12px_rgba(0,0,0,0.5)]'
+                : 'bg-[#1a1a24] border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:border-indigo-400'
+              }`}
+          >
+            <div className={`transition-all duration-300 ${isRecordingActive
+                ? 'w-5 h-5 rounded-md bg-rose-500 animate-pulse shadow-[0_0_12px_rgba(244,63,94,0.6)]'
+                : 'w-7 h-7 rounded-full bg-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.4)]'
+              }`}></div>
+          </button>
         </div>
 
         {/* Right Actions */}
@@ -359,11 +357,11 @@ export default function AudioRecord() {
       {recordedAudioUrl && (
         <div className="fixed inset-0 z-[100] bg-[#0f0f14]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
           <div className="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center border border-indigo-500/30 mb-6 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
-             <span className="material-symbols-outlined text-[40px] text-indigo-400">mic_external_on</span>
+            <span className="material-symbols-outlined text-[40px] text-indigo-400">mic_external_on</span>
           </div>
           <h2 className="text-white font-bold text-[22px] mb-2">Ses Kaydı Tamamlandı</h2>
           <p className="text-white/40 text-[13px] mb-8 text-center max-w-[250px]">Kayıt başarılı bir şekilde oluşturuldu. Dinleyebilir veya cihazına kaydedebilirsin.</p>
-          
+
           <div className="w-full max-w-xs bg-white/5 rounded-2xl p-4 border border-white/10 mb-8">
             <audio src={recordedAudioUrl} controls className="w-full h-12" />
           </div>
@@ -373,7 +371,7 @@ export default function AudioRecord() {
 
           <div className="w-full max-w-xs flex flex-col gap-3">
             {!saveStatus || saveStatus === 'error' ? (
-              <button 
+              <button
                 disabled={saveStatus === 'saving'}
                 onClick={async () => {
                   setSaveStatus('saving');
@@ -382,7 +380,7 @@ export default function AudioRecord() {
                     const blob = await res.blob();
                     const ext = recordedMimeType.includes('mp4') ? 'm4a' : 'webm';
                     const fileName = `ScriptFlow_Recording_Audio_${Date.now()}.${ext}`;
-                    
+
                     const reader = new FileReader();
                     reader.readAsDataURL(blob);
                     reader.onloadend = async () => {
@@ -393,7 +391,7 @@ export default function AudioRecord() {
                       });
                       setSaveStatus('ok');
                     };
-                  } catch(e) {
+                  } catch (e) {
                     setSaveStatus('error');
                   }
                 }}
@@ -403,7 +401,7 @@ export default function AudioRecord() {
                 Cihaza Kaydet
               </button>
             ) : (
-               <button 
+              <button
                 onClick={() => navigate('/recordings')}
                 className="w-full bg-indigo-500 text-white font-bold py-4 rounded-xl active:scale-95 transition-all flex items-center justify-center gap-2"
               >
@@ -412,7 +410,7 @@ export default function AudioRecord() {
               </button>
             )}
 
-            <button 
+            <button
               disabled={saveStatus === 'saving'}
               onClick={() => {
                 setRecordedAudioUrl(null);

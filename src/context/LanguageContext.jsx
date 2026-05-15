@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const legacyTranslations = {
   en: {
-    appName: 'ScriptFlow',
+    appName: 'TelePromt',
     myScripts: 'My Scripts',
     createNew: 'Create New Script',
     importTxt: 'Import .TXT File',
@@ -79,7 +79,7 @@ const legacyTranslations = {
     deleteError: 'Error deleting: ',
     shareError: 'Share error: ',
     shareVideoTitle: 'Share Video',
-    recordedWith: 'Recorded with ScriptFlow',
+    recordedWith: 'Recorded with TelePromt',
     noVideosDesc: 'No saved videos found.',
     recordingPrefix: 'Recording ',
     playVideo: 'Play Video',
@@ -136,7 +136,7 @@ const legacyTranslations = {
     width_narrow: 'Narrow',
   },
   tr: {
-    appName: 'ScriptFlow',
+    appName: 'TelePromt',
     myScripts: 'Metinlerim',
     createNew: 'Yeni Metin Oluştur',
     importTxt: '.TXT Dosyası İçe Aktar',
@@ -213,7 +213,7 @@ const legacyTranslations = {
     deleteError: 'Silinirken hata oluştu: ',
     shareError: 'Paylaşım hatası: ',
     shareVideoTitle: 'Videoyu Paylaş',
-    recordedWith: 'ScriptFlow ile çekildi',
+    recordedWith: 'TelePromt ile çekildi',
     noVideosDesc: 'Henüz kayıtlı video bulunmuyor.',
     recordingPrefix: 'Kayıt ',
     playVideo: 'Videoyu oynat',
@@ -270,7 +270,7 @@ const legacyTranslations = {
     width_narrow: 'Dar',
   },
   de: {
-    appName: 'ScriptFlow',
+    appName: 'TelePromt',
     myScripts: 'Meine Skripte',
     createNew: 'Neues Skript erstellen',
     importTxt: '.TXT-Datei importieren',
@@ -347,7 +347,7 @@ const legacyTranslations = {
     deleteError: 'Fehler beim Löschen: ',
     shareError: 'Fehler beim Teilen: ',
     shareVideoTitle: 'Video teilen',
-    recordedWith: 'Aufgenommen mit ScriptFlow',
+    recordedWith: 'Aufgenommen mit TelePromt',
     noVideosDesc: 'Keine gespeicherten Videos gefunden.',
     recordingPrefix: 'Aufnahme ',
     playVideo: 'Video abspielen',
@@ -412,7 +412,7 @@ const deTranslations = legacyTranslations.de;
 
 // ── ESPAÑOL ───────────────────────────────────────────────────────────────
 const esTranslations = {
-  appName: 'ScriptFlow',
+  appName: 'TelePromt',
   myScripts: 'Mis Guiones',
   createNew: 'Crear nuevo guín',
   importTxt: 'Importar archivo .TXT',
@@ -489,7 +489,7 @@ const esTranslations = {
   deleteError: 'Error al eliminar: ',
   shareError: 'Error al compartir: ',
   shareVideoTitle: 'Compartir vídeo',
-  recordedWith: 'Grabado con ScriptFlow',
+  recordedWith: 'Grabado con TelePromt',
   noVideosDesc: 'No se encontraron vídeos guardados.',
   recordingPrefix: 'Grabación ',
   playVideo: 'Reproducir vídeo',
@@ -548,7 +548,7 @@ const esTranslations = {
 
 // ── FRANÇAIS ───────────────────────────────────────────────────────────────
 const frTranslations = {
-  appName: 'ScriptFlow',
+  appName: 'TelePromt',
   myScripts: 'Mes Scripts',
   createNew: 'Créer un nouveau script',
   importTxt: 'Importer un fichier .TXT',
@@ -625,7 +625,7 @@ const frTranslations = {
   deleteError: 'Erreur lors de la suppression : ',
   shareError: 'Erreur de partage : ',
   shareVideoTitle: 'Partager la vidéo',
-  recordedWith: 'Enregistré avec ScriptFlow',
+  recordedWith: 'Enregistré avec TelePromt',
   noVideosDesc: 'Aucune vidéo enregistrée trouvée.',
   recordingPrefix: 'Enregistrement ',
   playVideo: 'Lire la vidéo',
@@ -684,7 +684,7 @@ const frTranslations = {
 
 // ── РУССКИЙ ───────────────────────────────────────────────────────────────
 const ruTranslations = {
-  appName: 'ScriptFlow',
+  appName: 'TelePromt',
   myScripts: 'Мои сценарии',
   createNew: 'Создать новый сценарий',
   importTxt: 'Импортировать .TXT файл',
@@ -761,7 +761,7 @@ const ruTranslations = {
   deleteError: 'Ошибка удаления: ',
   shareError: 'Ошибка публикации: ',
   shareVideoTitle: 'Поделиться видео',
-  recordedWith: 'Записано с ScriptFlow',
+  recordedWith: 'Записано с TelePromt',
   noVideosDesc: 'Сохранённые видео не найдены.',
   recordingPrefix: 'Запись ',
   playVideo: 'Воспроизвести видео',
@@ -820,7 +820,7 @@ const ruTranslations = {
 
 // ── PORTUGUÊS (Brasil) ───────────────────────────────────────────────────
 const ptTranslations = {
-  appName: 'ScriptFlow', myScripts: 'Meus Roteiros', createNew: 'Criar novo roteiro',
+  appName: 'TelePromt', myScripts: 'Meus Roteiros', createNew: 'Criar novo roteiro',
   importTxt: 'Importar arquivo .TXT', scripts: 'Roteiros', editor: 'Editor',
   record: 'Gravar', settings: 'Configurações', filter: 'Filtro', favorites: 'Favoritos',
   recentRecordings: 'Últimas gravações', cloudSync: 'Sincronização em nuvem',
@@ -852,7 +852,7 @@ const ptTranslations = {
   videoLoading: 'Carregando vídeo...', switchToLang: 'Türkçe\'ye Geç',
   deleteVideoMsg: 'Excluir este vídeo?', deleteError: 'Erro ao excluir: ',
   shareError: 'Erro ao compartilhar: ', shareVideoTitle: 'Compartilhar vídeo',
-  recordedWith: 'Gravado com ScriptFlow', noVideosDesc: 'Nenhum vídeo salvo encontrado.',
+  recordedWith: 'Gravado com TelePromt', noVideosDesc: 'Nenhum vídeo salvo encontrado.',
   recordingPrefix: 'Gravação ', playVideo: 'Reproduzir vídeo', share: 'Compartilhar',
   tutorial: 'Como usar', tutorialStep1Title: 'Adicionar roteiro',
   tutorialStep1Desc: 'Na tela Meus Roteiros, toque em "Novo roteiro" para escrever ou importar um arquivo.',
@@ -882,7 +882,7 @@ const ptTranslations = {
 
 // ── ITALIANO ──────────────────────────────────────────────────────────────
 const itTranslations = {
-  appName: 'ScriptFlow', myScripts: 'I miei copioni', createNew: 'Crea nuovo copione',
+  appName: 'TelePromt', myScripts: 'I miei copioni', createNew: 'Crea nuovo copione',
   importTxt: 'Importa file .TXT', scripts: 'Copioni', editor: 'Editor',
   record: 'Registra', settings: 'Impostazioni', filter: 'Filtro', favorites: 'Preferiti',
   recentRecordings: 'Registrazioni recenti', cloudSync: 'Sincronizzazione cloud',
@@ -914,7 +914,7 @@ const itTranslations = {
   videoLoading: 'Caricamento video...', switchToLang: 'Türkçe\'ye Geç',
   deleteVideoMsg: 'Eliminare questo video?', deleteError: 'Errore eliminazione: ',
   shareError: 'Errore condivisione: ', shareVideoTitle: 'Condividi video',
-  recordedWith: 'Registrato con ScriptFlow', noVideosDesc: 'Nessun video salvato trovato.',
+  recordedWith: 'Registrato con TelePromt', noVideosDesc: 'Nessun video salvato trovato.',
   recordingPrefix: 'Registrazione ', playVideo: 'Riproduci video', share: 'Condividi',
   tutorial: 'Come usare', tutorialStep1Title: 'Aggiungi copione',
   tutorialStep1Desc: 'Nella schermata I miei copioni, tocca "Nuovo copione" per scrivere o importare un file.',
@@ -943,7 +943,7 @@ const itTranslations = {
 };
 
 const koTranslations = {
-  appName:'ScriptFlow', myScripts:'나의 스크립트', createNew:'새 스크립트 만들기',
+  appName:'TelePromt', myScripts:'나의 스크립트', createNew:'새 스크립트 만들기',
   importTxt:'.TXT 파일 가져오기', scripts:'스크립트', editor:'편집기',
   record:'녹화', settings:'설정', filter:'필터', favorites:'즐겨찾기',
   recentRecordings:'최근 녹화', cloudSync:'클라우드 동기화',
@@ -975,7 +975,7 @@ const koTranslations = {
   videoLoading:'동영상 로딩 중...', switchToLang:'Türkçeye Geç',
   deleteVideoMsg:'이 동영상을 삭제하시겠습니까?',
   deleteError:'삭제 오류: ', shareError:'공유 오류: ',
-  shareVideoTitle:'동영상 공유', recordedWith:'ScriptFlow로 녹화됨',
+  shareVideoTitle:'동영상 공유', recordedWith:'TelePromt로 녹화됨',
   noVideosDesc:'저장된 동영상이 없습니다.', recordingPrefix:'녹화 ',
   playVideo:'동영상 재생', share:'공유',
   tutorial:'사용 방법', tutorialStep1Title:'스크립트 추가',
@@ -1003,7 +1003,7 @@ const koTranslations = {
 };
 
 const azTranslations = {
-  appName:'ScriptFlow', myScripts:'Mənim Skriptlərim', createNew:'Yeni skript yarat',
+  appName:'TelePromt', myScripts:'Mənim Skriptlərim', createNew:'Yeni skript yarat',
   importTxt:'.TXT fayl idxal et', scripts:'Skriptlər', editor:'Redaktor',
   record:'Qeyd', settings:'Parametrlər', filter:'Filtr', favorites:'Sevimlilər',
   recentRecordings:'Son qeydlər', cloudSync:'Bulud sinxronizasiyası',
@@ -1035,7 +1035,7 @@ const azTranslations = {
   videoLoading:'Video yüklənir...', switchToLang:'Türkçeye Geç',
   deleteVideoMsg:'Bu videonu silmək istəyirsinizmi?',
   deleteError:'Silmə xətası: ', shareError:'Paylaşma xətası: ',
-  shareVideoTitle:'Videoyu paylaş', recordedWith:'ScriptFlow ilə çəkildi',
+  shareVideoTitle:'Videoyu paylaş', recordedWith:'TelePromt ilə çəkildi',
   noVideosDesc:'Saxlanılmış video tapılmadı.', recordingPrefix:'Qeyd ',
   playVideo:'Videoyu oynat', share:'Paylaş',
   tutorial:'Necə istifadə etməli', tutorialStep1Title:'Skript əlavə et',

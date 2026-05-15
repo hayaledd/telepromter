@@ -87,7 +87,7 @@ export default function Recordings() {
 
   return (
     <div className="bg-[#0f0f14] text-white font-sans antialiased min-h-screen flex flex-col relative overflow-hidden pb-[100px]">
-      
+
       {/* Background glow */}
       <div className="fixed top-20 right-0 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
       <div className="fixed bottom-0 -left-10 w-[300px] h-[300px] bg-teal-500/5 rounded-full blur-[80px] pointer-events-none" />
@@ -185,9 +185,9 @@ function VideoCard({ video, onShare, onDelete }) {
           aria-label={t('playVideo')}
         >
           {isAudio ? (
-             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500/20 to-purple-500/5">
-                <span className="material-symbols-outlined text-[50px] text-indigo-400/50">mic_external_on</span>
-             </div>
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500/20 to-purple-500/5">
+              <span className="material-symbols-outlined text-[50px] text-indigo-400/50">mic_external_on</span>
+            </div>
           ) : thumbnail ? (
             <img
               src={thumbnail}
@@ -199,7 +199,7 @@ function VideoCard({ video, onShare, onDelete }) {
               <span className="material-symbols-outlined text-[40px] text-white/10">movie</span>
             </div>
           )}
-          
+
           {/* Play overlay butonu */}
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
             <div className={`w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center border shadow-xl group-hover:scale-110 transition-transform ${isAudio ? 'bg-indigo-500/30 border-indigo-500/40' : 'bg-white/10 border-white/20'}`}>

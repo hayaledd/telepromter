@@ -72,7 +72,7 @@ export default function ProfessionalRecord() {
     };
     if (isPlaying || isRecordingActive) acquireWakeLock();
     else if (wakeLockRef.current) {
-      wakeLockRef.current.release().catch(() => {});
+      wakeLockRef.current.release().catch(() => { });
       wakeLockRef.current = null;
     }
   }, [isPlaying, isRecordingActive]);
@@ -117,7 +117,7 @@ export default function ProfessionalRecord() {
         if (!mounted) return;
 
         // ── Step 2: Stop any existing camera session ──
-        try { await CameraPreview.stop(); } catch (_) {}
+        try { await CameraPreview.stop(); } catch (_) { }
         await new Promise(r => setTimeout(r, 300));
         if (!mounted) return;
 
@@ -144,7 +144,7 @@ export default function ProfessionalRecord() {
     return () => {
       mounted = false;
       document.body.classList.remove('native-cam-active');
-      CameraPreview.stop().catch(() => {});
+      CameraPreview.stop().catch(() => { });
       setCameraReady(false);
     };
   }, [facingMode]);
@@ -168,12 +168,10 @@ export default function ProfessionalRecord() {
 
   async function startActualRecording() {
     try {
-      // Some versions require cameraDirection param
       await CameraPreview.startRecordVideo({
         cameraDirection: facingMode,
-        quality: '1',       // '0'=low '1'=medium '2'=high (number string)
+        quality: 1,          // 0=low 1=medium 2=high (number)
         withFlash: false,
-        saveToGallery: false,
       });
       setIsRecordingActive(true);
       setIsPlaying(true);
@@ -198,13 +196,43 @@ export default function ProfessionalRecord() {
         const result = await CameraPreview.stopRecordVideo();
         setIsRecordingActive(false);
         setIsPlaying(false);
-        if (result && result.videoFilePath) {
-          setSavedVideoPath(result.videoFilePath);
+        // Log full result so we can debug path issues
+        console.log('stopRecordVideo result:', JSON.stringify(result));
+        // Plugin returns different property names across versions
+        const videoPath = result?.videoFilePath || result?.filePath || result?.path || result?.uri || null;
+        if (videoPath) {
+          try {
+            // Android CameraPreview saves to cache. We MUST copy it to Documents for Recordings.jsx to see it.
+            const fileName = `TelePromt_Recording_${Date.now()}.mp4`;
+            let normalizedPath = videoPath;
+            if (!normalizedPath.startsWith('file://') && normalizedPath.startsWith('/')) {
+                normalizedPath = 'file://' + normalizedPath;
+            }
+            
+            await Filesystem.copy({
+              from: normalizedPath,
+              to: fileName,
+              toDirectory: Directory.Documents
+            });
+            
+            const newStat = await Filesystem.stat({
+               path: fileName,
+               directory: Directory.Documents
+            });
+            setSavedVideoPath(newStat.uri);
+          } catch(copyErr) {
+            console.error('Copy to Documents failed:', copyErr);
+            setSavedVideoPath(videoPath); // fallback
+          }
+        } else {
+          // Fallback if no path returned
+          setSavedVideoPath('gallery');
         }
       } catch (e) {
         console.error('stopRecordVideo error:', e);
         setIsRecordingActive(false);
         setIsPlaying(false);
+        alert('Kayıt durdurulamadı: ' + (e?.message || String(e)));
       }
     }
   };
@@ -457,27 +485,36 @@ export default function ProfessionalRecord() {
       {savedVideoPath && (
         <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 gap-4">
           <div className="bg-white/10 px-6 py-2 rounded-full border border-white/10 flex items-center gap-2 mb-4">
-            <span className="material-symbols-outlined text-indigo-400 text-[18px]">verified</span>
+            <span className="material-symbols-outlined text-green-400 text-[18px]">verified</span>
             <span className="text-white font-bold text-[14px] uppercase">{t('saved')}</span>
           </div>
-
+          <div className="flex items-center gap-2 mb-2">
+            <span className="material-symbols-outlined text-white/40 text-[16px]">photo_library</span>
+            <span className="text-white/50 text-[12px]">
+              {savedVideoPath === 'gallery'
+                ? (t('savedToGallery') || 'Video galerinize kaydedildi')
+                : savedVideoPath.split('/').pop()}
+            </span>
+          </div>
           <div className="w-full max-w-xs flex flex-col gap-3">
-            <button
-              onClick={async () => {
-                try {
-                  await Share.share({
-                    title: 'ScriptFlow Recording',
-                    text: t('recordedWith'),
-                    url: savedVideoPath,
-                    dialogTitle: t('shareVideoTitle'),
-                  });
-                } catch (e) { console.error('Share error', e); }
-              }}
-              className="w-full bg-indigo-500 text-white font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] flex items-center justify-center gap-2"
-            >
-              <span className="material-symbols-outlined text-[20px]">share</span>
-              {t('share')}
-            </button>
+            {savedVideoPath !== 'gallery' && (
+              <button
+                onClick={async () => {
+                  try {
+                    await Share.share({
+                      title: 'ScriptFlow Recording',
+                      text: t('recordedWith'),
+                      url: savedVideoPath,
+                      dialogTitle: t('shareVideoTitle'),
+                    });
+                  } catch (e) { console.error('Share error', e); }
+                }}
+                className="w-full bg-indigo-500 text-white font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] flex items-center justify-center gap-2"
+              >
+                <span className="material-symbols-outlined text-[20px]">share</span>
+                {t('share')}
+              </button>
+            )}
 
             <button
               onClick={() => setSavedVideoPath(null)}
