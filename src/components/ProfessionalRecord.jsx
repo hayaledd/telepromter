@@ -102,17 +102,20 @@ export default function ProfessionalRecord() {
     document.body.classList.add('native-cam-active');
 
     async function startNativeCamera() {
+      if (layoutMode === 'prompter-only') {
+        try { await CameraPreview.stop(); } catch (_) { }
+        if (mounted) setCameraReady(false);
+        return;
+      }
+
       try {
         // ── Step 1: Request MICROPHONE permission upfront via getUserMedia ──
-        // This triggers the Android RECORD_AUDIO system dialog BEFORE the camera
-        // starts, so there are NO interruptions during countdown or recording.
         if (Capacitor.isNativePlatform()) {
           try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
             stream.getTracks().forEach(t => t.stop()); // release immediately
           } catch (audioErr) {
             console.warn('Audio permission not granted at mount:', audioErr);
-            // Continue anyway — user may still want prompter-only mode
           }
         }
         if (!mounted) return;
@@ -122,7 +125,7 @@ export default function ProfessionalRecord() {
         await new Promise(r => setTimeout(r, 300));
         if (!mounted) return;
 
-        // ── Step 3: Start native camera (camera permission requested here) ──
+        // ── Step 3: Start native camera ──
         await CameraPreview.start({
           position: facingMode,   // 'front' | 'rear'
           toBack: true,           // render BEHIND the WebView
@@ -148,7 +151,7 @@ export default function ProfessionalRecord() {
       CameraPreview.stop().catch(() => { });
       setCameraReady(false);
     };
-  }, [facingMode]);
+  }, [facingMode, layoutMode]);
 
   // Flip = change facingMode state → useEffect above restarts camera
   const flipCamera = () => {
