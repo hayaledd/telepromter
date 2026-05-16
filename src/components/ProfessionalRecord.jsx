@@ -43,6 +43,7 @@ export default function ProfessionalRecord() {
 
   const TEXT_COLORS = [
     { id: 'white', value: '#ffffff', bg: 'bg-white' },
+    { id: 'black', value: '#000000', bg: 'bg-black' },
     { id: 'yellow', value: '#facc15', bg: 'bg-yellow-400' },
     { id: 'green', value: '#4ade80', bg: 'bg-green-400' },
     { id: 'cyan', value: '#22d3ee', bg: 'bg-cyan-400' },
@@ -522,6 +523,14 @@ export default function ProfessionalRecord() {
             >
               <span className="material-symbols-outlined text-[20px]">videocam</span>
               {t('newRecording')}
+            </button>
+
+            <button
+              onClick={() => navigate('/recordings')}
+              className="w-full bg-white/5 text-white/70 font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] border border-transparent hover:bg-white/10 flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[20px]">video_library</span>
+              {t('myVideos') || 'Kayıtlarım'}
             </button>
           </div>
         </div>
