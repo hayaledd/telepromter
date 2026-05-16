@@ -174,7 +174,7 @@ export default function ProfessionalRecord() {
     try {
       await CameraPreview.startRecordVideo({
         cameraDirection: facingMode,
-        quality: 1,          // 0=low 1=medium 2=high (number)
+        quality: 2,          // 0=low 1=medium 2=high (number) - Set to 2 for High Quality
         withFlash: false,
       });
       setIsRecordingActive(true);
@@ -332,11 +332,13 @@ export default function ProfessionalRecord() {
           className="absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-10 text-center pt-[35vh] pb-[60vh]"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', transform: 'translateZ(0)', willChange: 'scroll-position' }}
         >
-          {scriptLines.map((line, idx) => (
-            <p key={idx} className="font-bold" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor, maxWidth: textWidth, margin: '0 auto' }}>
-              {line}
-            </p>
-          ))}
+          <div style={{ transform: 'translateZ(0)', willChange: 'transform', pointerEvents: isPlaying ? 'none' : 'auto' }}>
+            {scriptLines.map((line, idx) => (
+              <p key={idx} className="font-bold" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, color: textColor, maxWidth: textWidth, margin: '0 auto' }}>
+                {line}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
 
