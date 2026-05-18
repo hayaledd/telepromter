@@ -212,7 +212,16 @@ export default function ProfessionalRecord() {
         if (videoPath) {
           try {
             // Android CameraPreview saves to cache. We MUST copy it to Documents for Recordings.jsx to see it.
-            const fileName = `TelePromt_Recording_${Date.now()}.mp4`;
+            const now = new Date();
+            const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+            let nextIndex = 1;
+            try {
+              const res = await Filesystem.readdir({ path: '', directory: Directory.Documents });
+              const todayVids = res.files.filter(f => f.name.startsWith(dateStr));
+              nextIndex = todayVids.length + 1;
+            } catch(e) {}
+            const fileName = `${dateStr}-${nextIndex}.mp4`;
+            
             let normalizedPath = videoPath;
             if (!normalizedPath.startsWith('file://') && normalizedPath.startsWith('/')) {
                 normalizedPath = 'file://' + normalizedPath;

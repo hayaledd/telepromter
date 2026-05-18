@@ -379,7 +379,15 @@ export default function AudioRecord() {
                     const res = await fetch(recordedAudioUrl);
                     const blob = await res.blob();
                     const ext = recordedMimeType.includes('mp4') ? 'm4a' : 'webm';
-                    const fileName = `TelePromt_Recording_Audio_${Date.now()}.${ext}`;
+                    const now = new Date();
+                    const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+                    let nextIndex = 1;
+                    try {
+                      const res = await Filesystem.readdir({ path: '', directory: Directory.Documents });
+                      const todayVids = res.files.filter(f => f.name.startsWith(dateStr));
+                      nextIndex = todayVids.length + 1;
+                    } catch(e) {}
+                    const fileName = `${dateStr}-${nextIndex}_Ses.${ext}`;
 
                     const reader = new FileReader();
                     reader.readAsDataURL(blob);
