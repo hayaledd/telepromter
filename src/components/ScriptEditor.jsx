@@ -6,7 +6,7 @@ import MobileMenu from './MobileMenu';
 
 export default function ScriptEditor() {
   const navigate = useNavigate();
-  const { getActiveScript, updateActiveScript, globalFontSize, setGlobalFontSize } = useScript();
+  const { getActiveScript, updateActiveScript, globalFontSize, setGlobalFontSize, deleteScript } = useScript();
   const { t, lang } = useLanguage();
 
   const script = getActiveScript();
@@ -21,12 +21,29 @@ export default function ScriptEditor() {
     }
   }, [script, navigate]);
 
+  const scriptRef = useRef(script);
+  useEffect(() => {
+    scriptRef.current = script;
+  }, [script]);
+
+  useEffect(() => {
+    // Sayfadan çıkıldığında (unmount) çalışır
+    return () => {
+      const current = scriptRef.current;
+      if (current) {
+        const contentEmpty = !current.content?.trim();
+        if (contentEmpty) {
+          deleteScript(current.id);
+        }
+      }
+    };
+  }, [deleteScript]);
+
   if (!script) return null;
 
   const handleSave = () => {
-    const titleEmpty = !script.title?.trim();
     const contentEmpty = !script.content?.trim();
-    if (titleEmpty && contentEmpty) {
+    if (contentEmpty) {
       setEmptyError(true);
       setTimeout(() => setEmptyError(false), 2000);
       return;
@@ -58,7 +75,7 @@ export default function ScriptEditor() {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[100px] pointer-events-none" />
 
       {/* TopAppBar */}
-      <header className="relative z-10 w-full flex items-center justify-between px-5 pt-12 pb-4 bg-white/5 border-b border-white/5 backdrop-blur-md">
+      <header className="relative z-10 w-full flex items-center justify-between px-5 pt-12 landscape:pt-4 pb-4 landscape:pb-2 bg-white/5 border-b border-white/5 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/scripts')}
@@ -106,10 +123,10 @@ export default function ScriptEditor() {
       </header>
 
       {/* Main Content Area - Script Editor */}
-      <main className="relative z-10 flex-grow pb-[120px] flex flex-col px-5 max-w-4xl mx-auto w-full h-screen">
+      <main className="relative z-10 flex-grow pb-[120px] landscape:pb-[20px] flex flex-col px-5 max-w-4xl mx-auto w-full h-screen">
         {/* Script Title Input */}
         <input
-          className="w-full bg-transparent border-none text-[24px] font-black text-white focus:ring-0 focus:outline-none py-6 placeholder-white/20"
+          className="w-full bg-transparent border-none text-[24px] landscape:text-[18px] font-black text-white focus:ring-0 focus:outline-none py-6 landscape:py-2 placeholder-white/20"
           placeholder={t('titlePlaceholder') || 'Metin Başlığı'}
           type="text"
           value={script.title}
@@ -117,7 +134,7 @@ export default function ScriptEditor() {
         />
         {/* Script Text Area */}
         <textarea
-          className="flex-grow w-full bg-transparent border-none resize-none focus:ring-0 focus:outline-none font-sans text-white/90 placeholder-white/20 py-4 leading-relaxed"
+          className="flex-grow w-full bg-transparent border-none resize-none focus:ring-0 focus:outline-none font-sans text-white/90 placeholder-white/20 py-4 landscape:py-2 leading-relaxed"
           placeholder={t('contentPlaceholder') || 'Metninizi buraya yazın...'}
           value={script.content}
           onChange={(e) => { updateActiveScript({ content: e.target.value }); setIsDirty(true); }}
@@ -126,7 +143,7 @@ export default function ScriptEditor() {
       </main>
 
       {/* Floating Editor Toolbar */}
-      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-auto z-40">
+      <div className="fixed bottom-24 landscape:bottom-4 left-1/2 -translate-x-1/2 w-auto z-40">
         <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-full border border-white/10 shadow-2xl py-2 px-6 flex items-center justify-center gap-4">
           <div className="flex items-center gap-4">
             <button

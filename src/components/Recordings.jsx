@@ -189,7 +189,7 @@ export default function Recordings() {
 
 // —— Günlük Klasör Bileşeni ——
 function DayGroup({ label, videos, onShare, onDelete }) {
-  const [collapsed, setCollapsed] = React.useState(false);
+  const [collapsed, setCollapsed] = React.useState(true);
   const audioCount = videos.filter(v => v.name.includes('_Audio_') || v.name.endsWith('.m4a')).length;
   const videoCount = videos.length - audioCount;
 
@@ -220,7 +220,7 @@ function DayGroup({ label, videos, onShare, onDelete }) {
 
       {/* İçerik grid */}
       {!collapsed && (
-        <div className="px-3 pb-3">
+        <div className="px-3 pb-3 max-h-[480px] overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
             {videos.map((video, idx) => (
               <VideoCard

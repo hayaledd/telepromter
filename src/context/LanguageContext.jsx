@@ -163,7 +163,7 @@ const legacyTranslations = {
     startRec: 'Kayda Başla',
     size: 'Boyut',
     viewMode: 'Görünüm',
-    prompterOnly: 'Sadece Metin',
+    prompterOnly: 'Prompter Modu',
     filters: 'Filtreler',
     layouts: 'Düzen',
     textSize: 'Yazı Boyutu',

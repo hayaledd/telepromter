@@ -191,6 +191,11 @@ export default function ProfessionalRecord() {
   };
 
   const toggleRecording = async () => {
+    if (layoutMode === 'prompter-only') {
+      alert(t('prompterOnlyNoRecord') || 'Prompter modunda video kaydedilemez.');
+      return;
+    }
+
     if (!isRecordingActive) {
       if (isPlaying) setIsPlaying(false);
       // Permissions already requested at screen mount — start countdown immediately
@@ -334,7 +339,7 @@ export default function ProfessionalRecord() {
       >
         <div
           ref={scrollContainerRef}
-          className="absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-10 text-center pt-[80vh] pb-[60vh]"
+          className={`absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-10 text-center pb-[85vh] ${layoutMode === 'bottom' ? 'pt-[40vh]' : 'pt-[80vh]'}`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', transform: 'translateZ(0)', willChange: 'scroll-position' }}
         >
           <div style={{ transform: 'translateZ(0)', willChange: 'transform', pointerEvents: isPlaying ? 'none' : 'auto' }}>
@@ -349,7 +354,7 @@ export default function ProfessionalRecord() {
 
       {/* Speed Control */}
       <div className="fixed bottom-[100px] right-4 z-40">
-        <div className="bg-black/60 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl py-3 px-1 flex flex-col items-center gap-2">
+        <div className="bg-transparent py-3 px-1 flex flex-col items-center gap-2">
           <button onClick={() => adjustSpeed(1)} className="w-7 h-10 flex items-center justify-center text-white/50 hover:text-white rounded-xl active:scale-95">
             <span className="material-symbols-outlined text-[20px]">add</span>
           </button>
@@ -486,9 +491,6 @@ export default function ProfessionalRecord() {
             </div>
           </div>
 
-          <button onClick={() => setShowSettings(false)} className="w-full mt-2 bg-indigo-500 text-white font-bold py-3 rounded-xl active:scale-95">
-            {t('save')}
-          </button>
         </div>
       )}
 
