@@ -143,7 +143,7 @@ export default function AudioRecord() {
     return () => clearTimeout(t);
   }, [countdown]);
 
-  const adjustSpeed = (delta) => setSpeed(prev => Math.max(1, Math.min(10, prev + delta)));
+  const adjustSpeed = (delta) => setSpeed(prev => Math.max(0.5, Math.min(10, prev + (delta * 0.5))));
 
   useEffect(() => {
     let cancelled = false;
