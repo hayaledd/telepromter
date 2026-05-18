@@ -379,7 +379,7 @@ export default function AudioRecord() {
                     const res = await fetch(recordedAudioUrl);
                     const blob = await res.blob();
                     const ext = recordedMimeType.includes('mp4') ? 'm4a' : 'webm';
-                    const fileName = `ScriptFlow_Recording_Audio_${Date.now()}.${ext}`;
+                    const fileName = `TelePromt_Recording_Audio_${Date.now()}.${ext}`;
 
                     const reader = new FileReader();
                     reader.readAsDataURL(blob);
