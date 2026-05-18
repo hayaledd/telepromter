@@ -411,6 +411,14 @@ export default function AudioRecord() {
             )}
 
             <button
+              onClick={() => navigate('/recordings')}
+              className="w-full bg-white/10 text-white/70 font-bold py-4 rounded-xl active:scale-95 transition-all border border-white/10 hover:bg-white/15 flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[20px]">video_library</span>
+              Kayıtlarım
+            </button>
+
+            <button
               disabled={saveStatus === 'saving'}
               onClick={() => {
                 setRecordedAudioUrl(null);

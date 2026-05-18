@@ -76,8 +76,8 @@ export const ScriptProvider = ({ children }) => {
     const newId = Date.now().toString();
     const newScript = {
       id: newId,
-      title: title ?? 'Untitled Script',
-      content: content ?? 'Start typing your new script here...',
+      title: title ?? '',
+      content: content ?? '',
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       duration: '1 MIN'
     };

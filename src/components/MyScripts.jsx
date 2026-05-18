@@ -130,9 +130,10 @@ export default function MyScripts() {
         <button
           onClick={() => setShowLangPicker(p => !p)}
           className="flex items-center gap-1.5 px-3 h-9 rounded-full bg-white/5 text-white/70 hover:text-white hover:bg-white/10 transition-colors border border-white/10 active:scale-95"
-          title="Change Language"
+          title={t('language')}
         >
-          <span className="font-bold text-[11px] tracking-widest">{t('language')}</span>
+          <span className="text-[16px] leading-none">{LANGUAGES.find(l => l.code === lang)?.flag || '🌐'}</span>
+          <span className="font-bold text-[11px] tracking-widest">{lang.toUpperCase()}</span>
           <span className="material-symbols-outlined text-[14px] text-white/40">expand_more</span>
         </button>
       </div>

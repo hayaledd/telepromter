@@ -134,6 +134,10 @@ const legacyTranslations = {
     width_wide: 'Wide',
     width_medium: 'Medium',
     width_narrow: 'Narrow',
+    cleanText: 'Clean Text',
+    emptyScriptError: 'Title or content cannot be empty!',
+    today: 'Today',
+    yesterday: 'Yesterday',
   },
   tr: {
     appName: 'TelePromt',
@@ -268,6 +272,10 @@ const legacyTranslations = {
     width_wide: 'Geniş',
     width_medium: 'Orta',
     width_narrow: 'Dar',
+    cleanText: 'Temiz',
+    emptyScriptError: 'Başlık veya içerik boş olamaz!',
+    today: 'Bugün',
+    yesterday: 'Dün',
   },
   de: {
     appName: 'TelePromt',
@@ -402,6 +410,10 @@ const legacyTranslations = {
     width_wide: 'Breit',
     width_medium: 'Mittel',
     width_narrow: 'Schmal',
+    cleanText: 'Reiner Text',
+    emptyScriptError: 'Titel oder Inhalt darf nicht leer sein!',
+    today: 'Heute',
+    yesterday: 'Gestern',
   }
 };
 
@@ -544,6 +556,10 @@ const esTranslations = {
   width_wide: 'Ancho',
   width_medium: 'Medio',
   width_narrow: 'Estrecho',
+  cleanText: 'Texto Limpio',
+  emptyScriptError: '¡El título o el contenido no pueden estar vacíos!',
+  today: 'Hoy',
+  yesterday: 'Ayer',
 };
 
 // ── FRANÇAIS ───────────────────────────────────────────────────────────────
@@ -680,6 +696,10 @@ const frTranslations = {
   width_wide: 'Large',
   width_medium: 'Moyen',
   width_narrow: 'Étroit',
+  cleanText: 'Texte Clair',
+  emptyScriptError: 'Le titre ou le contenu ne peut pas être vide !',
+  today: 'Aujourd\'hui',
+  yesterday: 'Hier',
 };
 
 // ── РУССКИЙ ───────────────────────────────────────────────────────────────
@@ -816,6 +836,10 @@ const ruTranslations = {
   width_wide: 'Широкий',
   width_medium: 'Средний',
   width_narrow: 'Узкий',
+  cleanText: 'Чистый текст',
+  emptyScriptError: 'Заголовок или содержание не могут быть пустыми!',
+  today: 'Сегодня',
+  yesterday: 'Вчера',
 };
 
 // ── PORTUGUÊS (Brasil) ───────────────────────────────────────────────────
@@ -878,6 +902,10 @@ const ptTranslations = {
   filter_cinema: 'Cinema', filter_portrait: 'Retrato', filter_studio: 'Estúdio',
   filter_bw: 'P&B', filter_vivid: 'Vivo', filter_beauty: 'Beleza', filter_retro: 'Retro', filter_dramatic: 'Dramático', filter_golden: 'Hora Dourada', filter_broadcast: 'Transmissão', filter_matte: 'Mate', filter_night: 'Noite',
   width_wide: 'Largo', width_medium: 'Médio', width_narrow: 'Estreito',
+  cleanText: 'Texto Limpo',
+  emptyScriptError: 'O título ou conteúdo não pode estar vazio!',
+  today: 'Hoje',
+  yesterday: 'Ontem',
 };
 
 // ── ITALIANO ──────────────────────────────────────────────────────────────
@@ -940,6 +968,10 @@ const itTranslations = {
   filter_cinema: 'Cinema', filter_portrait: 'Ritratto', filter_studio: 'Studio',
   filter_bw: 'B/N', filter_vivid: 'Vivido', filter_beauty: 'Bellezza', filter_retro: 'Retro', filter_dramatic: 'Drammatico', filter_golden: "Ora d'Oro", filter_broadcast: 'Trasmissione', filter_matte: 'Opaco', filter_night: 'Notte',
   width_wide: 'Largo', width_medium: 'Medio', width_narrow: 'Stretto',
+  cleanText: 'Testo Pulito',
+  emptyScriptError: 'Il titolo o il contenuto non può essere vuoto!',
+  today: 'Oggi',
+  yesterday: 'Ieri',
 };
 
 const koTranslations = {
@@ -1000,6 +1032,10 @@ const koTranslations = {
   filter_cinema:'시네마', filter_portrait:'인물', filter_studio:'스튜디오',
   filter_bw:'흑백', filter_vivid:'선명한', filter_beauty: '뷰티', filter_retro: '레트로', filter_dramatic: '드라마틱', filter_golden: '골든 아워', filter_broadcast: '방송', filter_matte: '매트', filter_night: '밤',
   width_wide:'넓게', width_medium:'중간', width_narrow:'좁게',
+  cleanText: '깨끗한 텍스트',
+  emptyScriptError: '제목이나 내용은 비어 있을 수 없습니다!',
+  today: '오늘',
+  yesterday: '어제',
 };
 
 const azTranslations = {
@@ -1061,6 +1097,10 @@ const azTranslations = {
   filter_cinema:'Kino', filter_portrait:'Portret', filter_studio:'Studiya',
   filter_bw:'Q/A', filter_vivid:'Canlı', filter_beauty: 'Hamar', filter_retro: 'Retro', filter_dramatic: 'Dramatik', filter_golden: 'Qızıl Saat', filter_broadcast: 'Yayım', filter_matte: 'Mat', filter_night: 'Gecə',
   width_wide:'Geniş', width_medium:'Orta', width_narrow:'Dar',
+  cleanText: 'Təmiz mətn',
+  emptyScriptError: 'Başlıq və ya məzmun boş ola bilməz!',
+  today: 'Bu gün',
+  yesterday: 'Dünən',
 };
 
 const translations = { tr: trTranslations, en: enTranslations, de: deTranslations, es: esTranslations, fr: frTranslations, ru: ruTranslations, pt: ptTranslations, it: itTranslations, ko: koTranslations, az: azTranslations };

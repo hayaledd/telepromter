@@ -85,6 +85,32 @@ export default function Recordings() {
     }
   };
 
+  // ── Günlük gruplama yardımcısı ──
+  const groupByDay = (files) => {
+    const groups = {};
+    files.forEach(video => {
+      // Dosya adından timestamp çıkar (örn: TelePromt_Recording_1716000000000.mp4)
+      const tsMatch = video.name.match(/(\d{13})/);
+      const date = tsMatch ? new Date(parseInt(tsMatch[1])) : new Date(video.date);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(video);
+    });
+    // En yeni gün önce
+    return Object.entries(groups).sort((a, b) => b[0].localeCompare(a[0]));
+  };
+
+  const formatDayLabel = (key) => {
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+    const yKey = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+    if (key === todayKey) return t('today') || 'Bugün';
+    if (key === yKey) return t('yesterday') || 'Dün';
+    const [y, m, d] = key.split('-');
+    return `${d}.${m}.${y}`;
+  };
+
   return (
     <div className="bg-[#0f0f14] text-white font-sans antialiased min-h-screen flex flex-col relative overflow-hidden pb-[100px]">
 
@@ -127,11 +153,12 @@ export default function Recordings() {
             <p className="text-white/40 text-[14px]">{t('noVideosDesc') || 'Henüz kayıtlı video bulunmuyor.'}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
-            {videos.map((video, idx) => (
-              <VideoCard
-                key={idx}
-                video={video}
+          <div className="flex flex-col gap-6">
+            {groupByDay(videos).map(([dayKey, dayVideos]) => (
+              <DayGroup
+                key={dayKey}
+                label={formatDayLabel(dayKey)}
+                videos={dayVideos}
                 onShare={shareVideo}
                 onDelete={deleteVideo}
               />
@@ -160,7 +187,56 @@ export default function Recordings() {
   );
 }
 
-// —— Video Thumbnail Kartı ——
+// —— Günlük Klasör Bileşeni ——
+function DayGroup({ label, videos, onShare, onDelete }) {
+  const [collapsed, setCollapsed] = React.useState(false);
+  const audioCount = videos.filter(v => v.name.includes('_Audio_') || v.name.endsWith('.m4a')).length;
+  const videoCount = videos.length - audioCount;
+
+  return (
+    <div className="rounded-2xl bg-white/3 border border-white/8 overflow-hidden">
+      {/* Gün başlığı */}
+      <button
+        onClick={() => setCollapsed(c => !c)}
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors active:scale-[0.99]"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center">
+            <span className="material-symbols-outlined text-[18px] text-indigo-400">folder</span>
+          </div>
+          <div className="text-left">
+            <p className="font-bold text-[15px] text-white">{label}</p>
+            <p className="text-[11px] text-white/40">
+              {videoCount > 0 && `${videoCount} video`}
+              {videoCount > 0 && audioCount > 0 && ' · '}
+              {audioCount > 0 && `${audioCount} ses`}
+            </p>
+          </div>
+        </div>
+        <span className={`material-symbols-outlined text-[20px] text-white/30 transition-transform duration-200 ${collapsed ? '-rotate-90' : 'rotate-0'}`}>
+          expand_more
+        </span>
+      </button>
+
+      {/* İçerik grid */}
+      {!collapsed && (
+        <div className="px-3 pb-3">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+            {videos.map((video, idx) => (
+              <VideoCard
+                key={idx}
+                video={video}
+                onShare={onShare}
+                onDelete={onDelete}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // —— Video Thumbnail Kartı ——
 function VideoCard({ video, onShare, onDelete }) {
   const { t } = useLanguage();

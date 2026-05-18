@@ -289,10 +289,15 @@ export default function ProfessionalRecord() {
   if (!script) return null;
   const scriptLines = script.content.split('\n').filter(l => l.trim() !== '');
 
-  const bgValue = prompterBg === 'none' ? 'transparent' : BG_COLORS.find(b => b.id === prompterBg)?.value || 'transparent';
+  // prompter-only modunda kamera yok → saydam seçimi beyaz ekrana yol açar, koyu fallback kullan
+  const bgValue = layoutMode === 'prompter-only' && prompterBg === 'none'
+    ? 'rgba(15,15,20,1)'
+    : prompterBg === 'none' ? 'transparent' : BG_COLORS.find(b => b.id === prompterBg)?.value || 'transparent';
+
+  const rootBg = layoutMode === 'prompter-only' ? '#0f0f14' : 'transparent';
 
   return (
-    <div className="fixed inset-0 h-[100dvh] w-screen overflow-hidden bg-transparent text-white font-sans" style={{ background: 'transparent' }}>
+    <div className="fixed inset-0 h-[100dvh] w-screen overflow-hidden text-white font-sans" style={{ background: rootBg }}>
 
       {/* HUD */}
       <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start pointer-events-none">
@@ -329,7 +334,7 @@ export default function ProfessionalRecord() {
       >
         <div
           ref={scrollContainerRef}
-          className="absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-10 text-center pt-[35vh] pb-[60vh]"
+          className="absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-10 text-center pt-[80vh] pb-[60vh]"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', transform: 'translateZ(0)', willChange: 'scroll-position' }}
         >
           <div style={{ transform: 'translateZ(0)', willChange: 'transform', pointerEvents: isPlaying ? 'none' : 'auto' }}>

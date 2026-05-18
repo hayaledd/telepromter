@@ -11,6 +11,8 @@ export default function ScriptEditor() {
 
   const script = getActiveScript();
   const [saved, setSaved] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [emptyError, setEmptyError] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
@@ -22,7 +24,15 @@ export default function ScriptEditor() {
   if (!script) return null;
 
   const handleSave = () => {
+    const titleEmpty = !script.title?.trim();
+    const contentEmpty = !script.content?.trim();
+    if (titleEmpty && contentEmpty) {
+      setEmptyError(true);
+      setTimeout(() => setEmptyError(false), 2000);
+      return;
+    }
     setSaved(true);
+    setIsDirty(false);
     setTimeout(() => {
       navigate('/scripts');
     }, 900);
@@ -63,6 +73,12 @@ export default function ScriptEditor() {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          {emptyError && (
+            <span className="text-rose-400 text-[12px] font-bold flex items-center gap-1 px-3 py-1.5 bg-rose-500/10 rounded-full border border-rose-500/20 animate-pulse">
+              <span className="material-symbols-outlined text-[14px]">warning</span>
+              {t('emptyScriptError') || 'Başlık veya içerik boş olamaz!'}
+            </span>
+          )}
           {saved && (
             <span className="text-teal-400 text-[12px] font-bold flex items-center gap-1 animate-pulse px-3 py-1.5 bg-teal-500/10 rounded-full border border-teal-500/20">
               <span className="material-symbols-outlined text-[14px]">check_circle</span>
@@ -71,7 +87,11 @@ export default function ScriptEditor() {
           )}
           <button
             onClick={handleSave}
-            className="text-white/60 font-bold px-4 py-2 rounded-full hover:bg-white/10 hover:text-white transition-colors active:scale-95 text-[13px]"
+            className={`font-bold px-4 py-2 rounded-full transition-all active:scale-95 text-[13px] ${
+              isDirty
+                ? 'bg-teal-500 text-white shadow-[0_0_14px_rgba(20,184,166,0.5)] hover:bg-teal-400'
+                : 'text-white/60 hover:bg-white/10 hover:text-white'
+            }`}
           >
             {t('save')}
           </button>
@@ -93,14 +113,14 @@ export default function ScriptEditor() {
           placeholder={t('titlePlaceholder') || 'Metin Başlığı'}
           type="text"
           value={script.title}
-          onChange={(e) => updateActiveScript({ title: e.target.value })}
+          onChange={(e) => { updateActiveScript({ title: e.target.value }); setIsDirty(true); }}
         />
         {/* Script Text Area */}
         <textarea
           className="flex-grow w-full bg-transparent border-none resize-none focus:ring-0 focus:outline-none font-sans text-white/90 placeholder-white/20 py-4 leading-relaxed"
           placeholder={t('contentPlaceholder') || 'Metninizi buraya yazın...'}
           value={script.content}
-          onChange={(e) => updateActiveScript({ content: e.target.value })}
+          onChange={(e) => { updateActiveScript({ content: e.target.value }); setIsDirty(true); }}
           style={{ fontSize: `${globalFontSize}px` }}
         />
       </main>
