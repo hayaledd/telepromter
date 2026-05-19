@@ -148,7 +148,11 @@ export default function ProfessionalRecord() {
     return () => {
       mounted = false;
       document.body.classList.remove('native-cam-active');
-      CameraPreview.stop().catch(() => { });
+      // Arka planda donanımın kilitli kalmaması için hem kaydı hem kamerayı zorla kapatıyoruz
+      (async () => {
+        try { await CameraPreview.stopRecordVideo(); } catch (e) {}
+        try { await CameraPreview.stop(); } catch (e) {}
+      })();
       setCameraReady(false);
     };
   }, [facingMode, layoutMode]);
