@@ -82,6 +82,21 @@ function BackButtonHandler() {
 }
 
 function App() {
+  useEffect(() => {
+    // Uygulama ilk açıldığında Kamera ve Mikrofon izinlerini topluca iste
+    const requestPermissions = async () => {
+      try {
+        if (CapacitorApp && navigator?.mediaDevices?.getUserMedia) {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          stream.getTracks().forEach(t => t.stop()); // İzinleri aldıktan sonra donanımı hemen serbest bırak
+        }
+      } catch (e) {
+        console.warn('Initial permissions not granted:', e);
+      }
+    };
+    requestPermissions();
+  }, []);
+
   return (
     <LanguageProvider>
       <ScriptProvider>
