@@ -35,14 +35,15 @@ export default function Recordings() {
         });
 
         const videoUrl = Capacitor.convertFileSrc(stat.uri);
-        const date = new Date(stat.ctime || stat.mtime || Date.now());
-        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        const dateObj = new Date(stat.ctime || stat.mtime || Date.now());
+        const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()} ${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
 
         return {
           name: file.name,
           url: videoUrl,
           rawUri: stat.uri,
           date: formattedDate,
+          timestamp: dateObj.getTime(),
           size: (stat.size / (1024 * 1024)).toFixed(2) + ' MB'
         };
       }));
@@ -89,9 +90,9 @@ export default function Recordings() {
   const groupByDay = (files) => {
     const groups = {};
     files.forEach(video => {
-      // Dosya adından timestamp çıkar (örn: TelePromt_Recording_1716000000000.mp4)
+      // Dosya adında timestamp varsa onu, yoksa dosyanın değiştirilme zamanını kullan
       const tsMatch = video.name.match(/(\d{13})/);
-      const date = tsMatch ? new Date(parseInt(tsMatch[1])) : new Date(video.date);
+      const date = tsMatch ? new Date(parseInt(tsMatch[1])) : new Date(video.timestamp);
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       if (!groups[key]) groups[key] = [];
       groups[key].push(video);
