@@ -26,18 +26,25 @@ export default function ScriptEditor() {
     scriptRef.current = script;
   }, [script]);
 
+  const deleteScriptRef = useRef(deleteScript);
   useEffect(() => {
-    // Sayfadan çıkıldığında (unmount) çalışır
+    deleteScriptRef.current = deleteScript;
+  }, [deleteScript]);
+
+  useEffect(() => {
+    // Sadece component tamamen sayfadan çıktığında (unmount) çalışır
     return () => {
       const current = scriptRef.current;
       if (current) {
         const contentEmpty = !current.content?.trim();
-        if (contentEmpty) {
-          deleteScript(current.id);
+        const titleEmpty = !current.title?.trim();
+        // Sadece hem başlık hem içerik boşsa çöp olmasın diye sil (veya sadece içerik)
+        if (contentEmpty && titleEmpty) {
+          deleteScriptRef.current(current.id);
         }
       }
     };
-  }, [deleteScript]);
+  }, []);
 
   if (!script) return null;
 
