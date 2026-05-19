@@ -358,22 +358,23 @@ export default function AudioRecord() {
 
       {/* Audio Save Modal */}
       {recordedAudioUrl && (
-        <div className="fixed inset-0 z-[100] bg-[#0f0f14]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center border border-indigo-500/30 mb-6 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
-            <span className="material-symbols-outlined text-[40px] text-indigo-400">mic_external_on</span>
-          </div>
-          <h2 className="text-white font-bold text-[22px] mb-2">Ses Kaydı Tamamlandı</h2>
-          <p className="text-white/40 text-[13px] mb-8 text-center max-w-[250px]">Kayıt başarılı bir şekilde oluşturuldu. Dinleyebilir veya cihazına kaydedebilirsin.</p>
+        <div className="fixed inset-0 z-[100] bg-[#0f0f14]/95 backdrop-blur-3xl p-6 overflow-y-auto flex animate-in fade-in duration-300">
+          <div className="m-auto flex flex-col items-center w-full max-w-xs py-8">
+            <div className="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center border border-indigo-500/30 mb-6 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
+              <span className="material-symbols-outlined text-[40px] text-indigo-400">mic_external_on</span>
+            </div>
+            <h2 className="text-white font-bold text-[22px] mb-2">Ses Kaydı Tamamlandı</h2>
+            <p className="text-white/40 text-[13px] mb-8 text-center max-w-[250px]">Kayıt başarılı bir şekilde oluşturuldu. Dinleyebilir veya cihazına kaydedebilirsin.</p>
 
-          <div className="w-full max-w-xs bg-white/5 rounded-2xl p-4 border border-white/10 mb-8">
-            <audio src={recordedAudioUrl} controls className="w-full h-12" />
-          </div>
+            <div className="w-full bg-white/5 rounded-2xl p-4 border border-white/10 mb-8">
+              <audio src={recordedAudioUrl} controls className="w-full h-12" />
+            </div>
 
-          {saveStatus === 'error' && <p className="text-rose-400 text-sm mb-4">Kaydedilirken hata oluştu!</p>}
-          {saveStatus === 'ok' && <p className="text-emerald-400 text-sm mb-4">Başarıyla kaydedildi!</p>}
+            {saveStatus === 'error' && <p className="text-rose-400 text-sm mb-4">Kaydedilirken hata oluştu!</p>}
+            {saveStatus === 'ok' && <p className="text-emerald-400 text-sm mb-4">Başarıyla kaydedildi!</p>}
 
-          <div className="w-full max-w-xs flex flex-col gap-3">
-            {!saveStatus || saveStatus === 'error' ? (
+            <div className="w-full flex flex-col gap-3">
+              {!saveStatus || saveStatus === 'error' ? (
               <button
                 disabled={saveStatus === 'saving'}
                 onClick={async () => {
@@ -441,6 +442,7 @@ export default function AudioRecord() {
               Sil ve Tekrar Çek
             </button>
           </div>
+        </div>
         </div>
       )}
     </div>
