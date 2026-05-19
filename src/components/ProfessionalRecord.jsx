@@ -222,7 +222,15 @@ export default function ProfessionalRecord() {
             try {
               const res = await Filesystem.readdir({ path: '', directory: Directory.Documents });
               const todayVids = res.files.filter(f => f.name.startsWith(dateStr));
-              nextIndex = todayVids.length + 1;
+              let maxIndex = 0;
+              todayVids.forEach(f => {
+                const match = f.name.match(/-(\d+)\.mp4$/);
+                if (match) {
+                  const idx = parseInt(match[1]);
+                  if (idx > maxIndex) maxIndex = idx;
+                }
+              });
+              nextIndex = maxIndex + 1;
             } catch(e) {}
             const fileName = `${dateStr}-${nextIndex}.mp4`;
             

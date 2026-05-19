@@ -389,7 +389,15 @@ export default function AudioRecord() {
                     try {
                       const res = await Filesystem.readdir({ path: '', directory: Directory.Documents });
                       const todayVids = res.files.filter(f => f.name.startsWith(dateStr));
-                      nextIndex = todayVids.length + 1;
+                      let maxIndex = 0;
+                      todayVids.forEach(f => {
+                        const match = f.name.match(/-(\d+)_Ses\.(m4a|webm)$/);
+                        if (match) {
+                          const idx = parseInt(match[1]);
+                          if (idx > maxIndex) maxIndex = idx;
+                        }
+                      });
+                      nextIndex = maxIndex + 1;
                     } catch(e) {}
                     const fileName = `${dateStr}-${nextIndex}_Ses.${ext}`;
 
