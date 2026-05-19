@@ -292,12 +292,7 @@ function VideoCard({ video, onShare, onDelete }) {
 
         {/* Alt bilgi */}
         <div className="p-2 flex flex-col gap-1">
-          <h3 className="font-bold text-[11px] text-white truncate" title={video.name}>
-            {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ').replace('TelePromt_Recording_', t('recordingPrefix') || 'Kayıt ').replace('_Audio_', ' (Ses) ').replace('_Ses', ' (Ses)')}
-          </h3>
-          <div className="flex flex-col gap-1 mt-0.5">
-            <p className="text-[9px] text-white/40">{video.date}</p>
-            <div className="flex gap-1">
+          <div className="flex gap-1 mt-0.5">
               <button
                 onClick={() => onShare(video)}
                 className="w-6 h-6 flex items-center justify-center bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white rounded-md transition-all active:scale-90"
@@ -313,7 +308,6 @@ function VideoCard({ video, onShare, onDelete }) {
                 <span className="material-symbols-outlined text-[12px]">delete</span>
               </button>
             </div>
-          </div>
         </div>
       </div>
 
@@ -386,13 +380,7 @@ function VideoPlayerModal({ video, isAudio, onClose }) {
         <span className="material-symbols-outlined text-white text-[24px]">close</span>
       </button>
 
-      {/* Video adı ve tarihi */}
-      <div className="absolute top-8 left-5 right-20 z-10">
-        <p className={`text-[16px] font-bold truncate ${isAudio ? 'text-indigo-400' : 'text-white'}`}>
-          {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ').replace('TelePromt_Recording_', t('recordingPrefix') || 'Kayıt ').replace('_Audio_', ' (Ses) ').replace('_Ses', ' (Ses)')}
-        </p>
-        <p className="text-white/60 text-[12px] mt-1">{video.date}</p>
-      </div>
+
 
       {/* Video oynatıcı */}
       {isAudio ? (
