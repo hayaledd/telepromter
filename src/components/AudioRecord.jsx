@@ -384,7 +384,7 @@ export default function AudioRecord() {
                     const blob = await res.blob();
                     const ext = recordedMimeType.includes('mp4') ? 'm4a' : 'webm';
                     const now = new Date();
-                    const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+                    const dateStr = `${String(now.getDate()).padStart(2, '0')}_${String(now.getMonth() + 1).padStart(2, '0')}_${now.getFullYear()}`;
                     let nextIndex = 1;
                     try {
                       const res = await Filesystem.readdir({ path: '', directory: Directory.Documents });

@@ -217,7 +217,7 @@ export default function ProfessionalRecord() {
           try {
             // Android CameraPreview saves to cache. We MUST copy it to Documents for Recordings.jsx to see it.
             const now = new Date();
-            const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+            const dateStr = `${String(now.getDate()).padStart(2, '0')}_${String(now.getMonth() + 1).padStart(2, '0')}_${now.getFullYear()}`;
             let nextIndex = 1;
             try {
               const res = await Filesystem.readdir({ path: '', directory: Directory.Documents });

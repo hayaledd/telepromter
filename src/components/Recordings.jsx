@@ -22,9 +22,9 @@ export default function Recordings() {
         directory: Directory.Documents
       });
 
-      // Filter webm and mp4 files created by the app
+      // Filter webm, mp4, and m4a files created by the app
       const videoFiles = result.files.filter(f =>
-        (f.name.startsWith('ScriptFlow_Recording_') || f.name.startsWith('TelePromt_Recording_') || f.name.endsWith('.webm') || f.name.endsWith('.mp4')) && (!f.type || f.type === 'file')
+        (f.name.startsWith('ScriptFlow_Recording_') || f.name.startsWith('TelePromt_Recording_') || f.name.endsWith('.webm') || f.name.endsWith('.mp4') || f.name.endsWith('.m4a')) && (!f.type || f.type === 'file')
       );
 
       // Map to usable objects
