@@ -291,8 +291,9 @@ function VideoCard({ video, onShare, onDelete }) {
         </button>
 
         {/* Alt bilgi */}
-        <div className="p-2 flex flex-col gap-1">
-          <div className="flex gap-1 mt-0.5">
+        <div className="p-2 flex flex-col gap-1.5">
+          <p className="text-[10px] text-white/60 font-medium">{video.date}</p>
+          <div className="flex gap-1">
               <button
                 onClick={() => onShare(video)}
                 className="w-6 h-6 flex items-center justify-center bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white rounded-md transition-all active:scale-90"
