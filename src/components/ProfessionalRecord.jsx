@@ -252,6 +252,7 @@ export default function ProfessionalRecord() {
             setSavedVideoPath(newStat.uri);
           } catch(copyErr) {
             console.error('Copy to Documents failed:', copyErr);
+            alert("Video kaydedilemedi! Lütfen bu mesajı yazılımcıya iletin: HATA: " + (copyErr.message || JSON.stringify(copyErr)) + " | YOL: " + videoPath);
             setSavedVideoPath(videoPath); // fallback
           }
         } else {
