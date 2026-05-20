@@ -218,21 +218,9 @@ export default function ProfessionalRecord() {
             // Android CameraPreview saves to cache. We MUST copy it to Documents for Recordings.jsx to see it.
             const now = new Date();
             const dateStr = `${String(now.getDate()).padStart(2, '0')}_${String(now.getMonth() + 1).padStart(2, '0')}_${now.getFullYear()}`;
-            let nextIndex = 1;
-            try {
-              const res = await Filesystem.readdir({ path: '', directory: Directory.Documents });
-              const todayVids = res.files.filter(f => f.name.startsWith(dateStr));
-              let maxIndex = 0;
-              todayVids.forEach(f => {
-                const match = f.name.match(/-(\d+)\.mp4$/);
-                if (match) {
-                  const idx = parseInt(match[1]);
-                  if (idx > maxIndex) maxIndex = idx;
-                }
-              });
-              nextIndex = maxIndex + 1;
-            } catch(e) {}
-            const fileName = `${dateStr}-${nextIndex}.mp4`;
+            // Use HHMMSS to guarantee unique filename and avoid MediaStore ghost file collisions
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+            const fileName = `${dateStr}-${timeStr}.mp4`;
             
             let normalizedPath = videoPath;
             if (!normalizedPath.startsWith('file://') && normalizedPath.startsWith('/')) {

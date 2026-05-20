@@ -385,21 +385,8 @@ export default function AudioRecord() {
                     const ext = recordedMimeType.includes('mp4') ? 'm4a' : 'webm';
                     const now = new Date();
                     const dateStr = `${String(now.getDate()).padStart(2, '0')}_${String(now.getMonth() + 1).padStart(2, '0')}_${now.getFullYear()}`;
-                    let nextIndex = 1;
-                    try {
-                      const res = await Filesystem.readdir({ path: '', directory: Directory.Documents });
-                      const todayVids = res.files.filter(f => f.name.startsWith(dateStr));
-                      let maxIndex = 0;
-                      todayVids.forEach(f => {
-                        const match = f.name.match(/-(\d+)_Ses\.(m4a|webm)$/);
-                        if (match) {
-                          const idx = parseInt(match[1]);
-                          if (idx > maxIndex) maxIndex = idx;
-                        }
-                      });
-                      nextIndex = maxIndex + 1;
-                    } catch(e) {}
-                    const fileName = `${dateStr}-${nextIndex}_Ses.${ext}`;
+                    const timeStr = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+                    const fileName = `${dateStr}-${timeStr}_Ses.${ext}`;
 
                     const reader = new FileReader();
                     reader.readAsDataURL(blob);
