@@ -48,8 +48,8 @@ export default function Recordings() {
         };
       }));
 
-      // Sort newest first
-      formattedVideos.sort((a, b) => b.name.localeCompare(a.name));
+      // Sort newest first based on actual timestamp, not alphabetical filename
+      formattedVideos.sort((a, b) => b.timestamp - a.timestamp);
 
       setVideos(formattedVideos);
     } catch (e) {
