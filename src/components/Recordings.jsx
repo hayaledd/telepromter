@@ -38,11 +38,13 @@ export default function Recordings() {
         const dateObj = new Date(stat.ctime || stat.mtime || Date.now());
         const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()} ${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
 
+        const formattedTime = `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
         return {
           name: file.name,
           url: videoUrl,
           rawUri: stat.uri,
           date: formattedDate,
+          time: formattedTime,
           timestamp: dateObj.getTime(),
           size: (stat.size / (1024 * 1024)).toFixed(2) + ' MB'
         };
@@ -287,9 +289,9 @@ function VideoCard({ video, onShare, onDelete }) {
           </div>
         </button>
 
-        {/* Tarih Etiketi - Sol Üst (Floating) */}
+        {/* Saat Etiketi - Sol Üst (Floating) */}
         <div className="absolute top-2.5 left-2.5 pointer-events-none z-10 bg-black/60 backdrop-blur-md rounded-lg px-2 py-1 border border-white/5">
-          <span className="text-[10px] text-white/95 font-medium tracking-tight">{video.date}</span>
+          <span className="text-[10px] text-white/95 font-medium tracking-tight">{video.time}</span>
         </div>
 
         {/* Aksiyon Butonları - Sağ Üst (Floating) */}
