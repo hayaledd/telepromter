@@ -254,11 +254,11 @@ function VideoCard({ video, onShare, onDelete }) {
 
   return (
     <>
-      <div className={`bg-white/5 rounded-2xl overflow-hidden border ${isAudio ? 'border-indigo-500/20' : 'border-white/10'} shadow-lg flex flex-col group backdrop-blur-sm transition-all hover:bg-white/10`}>
+      <div className={`relative bg-white/5 rounded-2xl overflow-hidden border ${isAudio ? 'border-indigo-500/20' : 'border-white/10'} shadow-lg group backdrop-blur-sm transition-all hover:bg-white/10`}>
         {/* Thumbnail alanı */}
         <button
           onClick={() => setPlayerOpen(true)}
-          className={`relative aspect-[9/16] w-full overflow-hidden focus:outline-none ${isAudio ? 'bg-[#12121a]' : 'bg-black'}`}
+          className={`relative aspect-[9/16] w-full overflow-hidden focus:outline-none block ${isAudio ? 'bg-[#12121a]' : 'bg-black'}`}
           aria-label={t('playVideo')}
         >
           {isAudio ? (
@@ -285,31 +285,40 @@ function VideoCard({ video, onShare, onDelete }) {
               </span>
             </div>
           </div>
-          {/* Boyut rozeti */}
-          <div className={`absolute bottom-2 left-2 backdrop-blur-md rounded-lg px-2 py-1 ${isAudio ? 'bg-indigo-500/40' : 'bg-black/70'}`}>
-            <span className={`text-[10px] font-bold ${isAudio ? 'text-indigo-100' : 'text-white/80'}`}>{video.size}</span>
-          </div>
         </button>
 
-        {/* Alt bilgi */}
-        <div className="p-2 flex flex-col gap-1.5">
-          <p className="text-[10px] text-white/60 font-medium">{video.date}</p>
-          <div className="flex gap-1">
-              <button
-                onClick={() => onShare(video)}
-                className="w-6 h-6 flex items-center justify-center bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white rounded-md transition-all active:scale-90"
-                title={t('share')}
-              >
-                <span className="material-symbols-outlined text-[12px]">share</span>
-              </button>
-              <button
-                onClick={() => onDelete(video.name)}
-                className="w-6 h-6 flex items-center justify-center bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-md transition-all active:scale-90"
-                title={t('delete')}
-              >
-                <span className="material-symbols-outlined text-[12px]">delete</span>
-              </button>
-            </div>
+        {/* Tarih Etiketi - Sol Üst (Floating) */}
+        <div className="absolute top-2.5 left-2.5 pointer-events-none z-10 bg-black/60 backdrop-blur-md rounded-lg px-2 py-1 border border-white/5">
+          <span className="text-[10px] text-white/95 font-medium tracking-tight">{video.date}</span>
+        </div>
+
+        {/* Aksiyon Butonları - Sağ Üst (Floating) */}
+        <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 z-10">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onShare(video);
+            }}
+            className="w-8 h-8 flex items-center justify-center bg-black/60 backdrop-blur-md text-white/80 hover:bg-indigo-500 hover:text-white border border-white/5 rounded-full transition-all active:scale-90"
+            title={t('share')}
+          >
+            <span className="material-symbols-outlined text-[16px]">share</span>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(video.name);
+            }}
+            className="w-8 h-8 flex items-center justify-center bg-black/60 backdrop-blur-md text-rose-400 hover:bg-rose-500 hover:text-white border border-white/5 rounded-full transition-all active:scale-90"
+            title={t('delete')}
+          >
+            <span className="material-symbols-outlined text-[16px]">delete</span>
+          </button>
+        </div>
+
+        {/* Boyut Rozeti - Sol Alt (Floating) */}
+        <div className={`absolute bottom-2.5 left-2.5 pointer-events-none z-10 backdrop-blur-md rounded-lg px-2 py-1 border border-white/5 ${isAudio ? 'bg-indigo-500/40' : 'bg-black/60'}`}>
+          <span className={`text-[10px] font-bold ${isAudio ? 'text-indigo-100' : 'text-white/90'}`}>{video.size}</span>
         </div>
       </div>
 
