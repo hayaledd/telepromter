@@ -395,15 +395,15 @@ export default function ProfessionalRecord() {
       {/* Speed Control */}
       <div className="fixed bottom-[100px] right-4 z-40">
         <div className="bg-transparent py-3 px-1 flex flex-col items-center gap-2">
-          <button onClick={() => adjustSpeed(1)} className="w-7 h-10 flex items-center justify-center text-white/50 hover:text-white rounded-xl active:scale-95">
+          <button onClick={() => adjustSpeed(1)} className="w-7 h-10 flex items-center justify-center text-indigo-400 hover:text-indigo-300 rounded-xl active:scale-95">
             <span className="material-symbols-outlined text-[20px]">add</span>
           </button>
           <span className="font-black text-indigo-400 text-[14px]">{speed / 5}x</span>
-          <button onClick={() => adjustSpeed(-1)} className="w-7 h-10 flex items-center justify-center text-white/50 hover:text-white rounded-xl active:scale-95">
+          <button onClick={() => adjustSpeed(-1)} className="w-7 h-10 flex items-center justify-center text-indigo-400 hover:text-indigo-300 rounded-xl active:scale-95">
             <span className="material-symbols-outlined text-[20px]">remove</span>
           </button>
-          <div className="border-t border-white/10 pt-2 w-full flex justify-center">
-            <span className="text-[10px] text-white/40 font-bold">{getReadTime()}</span>
+          <div className="border-t border-indigo-500/20 pt-2 w-full flex justify-center">
+            <span className="text-[10px] text-indigo-400 font-bold">{getReadTime()}</span>
           </div>
         </div>
       </div>
