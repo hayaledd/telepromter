@@ -134,7 +134,6 @@ const legacyTranslations = {
     width_wide: 'Wide',
     width_medium: 'Medium',
     width_narrow: 'Narrow',
-    cleanText: 'Clean Text',
     emptyScriptError: 'Title or content cannot be empty!',
     today: 'Today',
     yesterday: 'Yesterday',
@@ -145,6 +144,8 @@ const legacyTranslations = {
     audioRecordSuccessTitle: 'Audio Recording Completed',
     audioRecordSuccessDesc: 'Recording created successfully. You can listen or save it to your device.',
     goToMyVideos: 'Go to My Recordings',
+    privacyPolicy: 'Privacy Policy',
+    contactSupport: 'Contact & Support',
   },
   tr: {
     appName: 'TelePromt',
@@ -279,7 +280,6 @@ const legacyTranslations = {
     width_wide: 'Geniş',
     width_medium: 'Orta',
     width_narrow: 'Dar',
-    cleanText: 'Temiz',
     emptyScriptError: 'Başlık veya içerik boş olamaz!',
     today: 'Bugün',
     yesterday: 'Dün',
@@ -290,6 +290,8 @@ const legacyTranslations = {
     audioRecordSuccessTitle: 'Ses Kaydı Tamamlandı',
     audioRecordSuccessDesc: 'Kayıt başarılı bir şekilde oluşturuldu. Dinleyebilir veya cihazınıza kaydedebilirsiniz.',
     goToMyVideos: 'Kayıtlarıma Git',
+    privacyPolicy: 'Gizlilik Politikası',
+    contactSupport: 'İletişim & Destek',
   },
   de: {
     appName: 'TelePromt',
@@ -424,7 +426,6 @@ const legacyTranslations = {
     width_wide: 'Breit',
     width_medium: 'Mittel',
     width_narrow: 'Schmal',
-    cleanText: 'Reiner Text',
     emptyScriptError: 'Titel oder Inhalt darf nicht leer sein!',
     today: 'Heute',
     yesterday: 'Gestern',
@@ -435,6 +436,8 @@ const legacyTranslations = {
     audioRecordSuccessTitle: 'Audioaufnahme abgeschlossen',
     audioRecordSuccessDesc: 'Aufnahme erfolgreich erstellt. Sie können sie anhören oder auf Ihrem Gerät speichern.',
     goToMyVideos: 'Zu meinen Aufnahmen gehen',
+    privacyPolicy: 'Datenschutzerklärung',
+    contactSupport: 'Kontakt & Support',
   }
 };
 
@@ -577,7 +580,6 @@ const esTranslations = {
   width_wide: 'Ancho',
   width_medium: 'Medio',
   width_narrow: 'Estrecho',
-  cleanText: 'Texto Limpio',
   emptyScriptError: '¡El título o el contenido no pueden estar vacíos!',
   today: 'Hoy',
   yesterday: 'Ayer',
@@ -588,6 +590,8 @@ const esTranslations = {
   audioRecordSuccessTitle: 'Grabación de audio completada',
   audioRecordSuccessDesc: 'Grabación creada con éxito. Puedes escucharla o guardarla en tu dispositivo.',
   goToMyVideos: 'Ir a Mis grabaciones',
+  privacyPolicy: 'Política de privacidad',
+  contactSupport: 'Contacto y soporte',
 };
 
 // ── FRANÇAIS ───────────────────────────────────────────────────────────────
@@ -724,7 +728,6 @@ const frTranslations = {
   width_wide: 'Large',
   width_medium: 'Moyen',
   width_narrow: 'Étroit',
-  cleanText: 'Texte Clair',
   emptyScriptError: 'Le titre ou le contenu ne peut pas être vide !',
   today: 'Aujourd\'hui',
   yesterday: 'Hier',
@@ -735,6 +738,8 @@ const frTranslations = {
   audioRecordSuccessTitle: 'Enregistrement audio terminé',
   audioRecordSuccessDesc: 'Enregistrement créé avec succès. Vous pouvez l\'écouter ou l\'enregistrer sur votre appareil.',
   goToMyVideos: 'Aller à Mes enregistrements',
+  privacyPolicy: 'Politique de confidentialité',
+  contactSupport: 'Contact & Support',
 };
 
 // ── РУССКИЙ ───────────────────────────────────────────────────────────────
@@ -871,7 +876,6 @@ const ruTranslations = {
   width_wide: 'Широкий',
   width_medium: 'Средний',
   width_narrow: 'Узкий',
-  cleanText: 'Чистый текст',
   emptyScriptError: 'Заголовок или содержание не могут быть пустыми!',
   today: 'Сегодня',
   yesterday: 'Вчера',
@@ -882,6 +886,8 @@ const ruTranslations = {
   audioRecordSuccessTitle: 'Аудиозапись завершена',
   audioRecordSuccessDesc: 'Запись успешно создана. Вы можете прослушать её или сохранить на устройстве.',
   goToMyVideos: 'Перейти к моим записям',
+  privacyPolicy: 'Политика конфиденциальности',
+  contactSupport: 'Контакты и поддержка',
 };
 
 // ── PORTUGUÊS (Brasil) ───────────────────────────────────────────────────
@@ -955,6 +961,8 @@ const ptTranslations = {
   audioRecordSuccessTitle: 'Gravação de áudio concluída',
   audioRecordSuccessDesc: 'Gravação criada com sucesso. Você pode ouvir ou salvar no seu dispositivo.',
   goToMyVideos: 'Ir para Meus roteiros',
+  privacyPolicy: 'Política de privacidade',
+  contactSupport: 'Contato e suporte',
 };
 
 // ── ITALIANO ──────────────────────────────────────────────────────────────
@@ -1028,6 +1036,8 @@ const itTranslations = {
   audioRecordSuccessTitle: 'Registrazione audio completata',
   audioRecordSuccessDesc: 'Registrazione creata con successo. Puoi ascoltarla o salvarla sul tuo dispositivo.',
   goToMyVideos: 'Vai alle mie registrazioni',
+  privacyPolicy: 'Informativa sulla privacy',
+  contactSupport: 'Contatti e supporto',
 };
 
 const koTranslations = {
@@ -1099,6 +1109,8 @@ const koTranslations = {
   audioRecordSuccessTitle: '오디오 녹음 완료',
   audioRecordSuccessDesc: '녹음이 성공적으로 완료되었습니다. 듣거나 기기에 저장할 수 있습니다.',
   goToMyVideos: '나의 녹음으로 가기',
+  privacyPolicy: '개인정보 처리방침',
+  contactSupport: '문의 및 지원',
 };
 
 const azTranslations = {
@@ -1171,6 +1183,8 @@ const azTranslations = {
   audioRecordSuccessTitle: 'Səs yazısı tamamlandı',
   audioRecordSuccessDesc: 'Qeyd uğurla yaradıldı. Dinləyə bilərsiniz və ya cihazınıza saxlaya bilərsiniz.',
   goToMyVideos: 'Qeydlərimə get',
+  privacyPolicy: 'Məxfilik siyasəti',
+  contactSupport: 'Əlaqə və dəstək',
 };
 
 const translations = { tr: trTranslations, en: enTranslations, de: deTranslations, es: esTranslations, fr: frTranslations, ru: ruTranslations, pt: ptTranslations, it: itTranslations, ko: koTranslations, az: azTranslations };

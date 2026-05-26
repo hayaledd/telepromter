@@ -42,7 +42,7 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
         </div>
 
         {/* Menu Items - No Icons */}
-        <div className="flex flex-col gap-3 flex-1 px-2">
+        <div className="flex flex-col gap-3 flex-1 px-2 overflow-y-auto">
           <button onClick={() => { navigate('/scripts'); onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
             <span className="text-[15px] font-bold text-white">{t('scripts')}</span>
             <span className="material-symbols-outlined text-white/20">chevron_right</span>
@@ -62,6 +62,16 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
 
           <button onClick={() => { navigate('/tutorial'); onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
             <span className="text-[15px] font-bold text-white">{t('tutorial')}</span>
+            <span className="material-symbols-outlined text-white/20">chevron_right</span>
+          </button>
+
+          <button onClick={() => { window.open('https://telepromt.github.io/privacy', '_blank'); onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
+            <span className="text-[15px] font-bold text-white">{t('privacyPolicy')}</span>
+            <span className="material-symbols-outlined text-white/20">chevron_right</span>
+          </button>
+
+          <button onClick={() => { window.location.href = 'mailto:destek.telepromt@gmail.com'; onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
+            <span className="text-[15px] font-bold text-white">{t('contactSupport')}</span>
             <span className="material-symbols-outlined text-white/20">chevron_right</span>
           </button>
 
