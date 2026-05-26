@@ -289,11 +289,6 @@ function VideoCard({ video, onShare, onDelete }) {
           </div>
         </button>
 
-        {/* Saat Etiketi - Sol Üst (Floating) */}
-        <div className="absolute top-2.5 left-2.5 pointer-events-none z-10 bg-black/60 backdrop-blur-md rounded-lg px-2 py-1 border border-white/5">
-          <span className="text-[10px] text-white/95 font-medium tracking-tight">{video.time}</span>
-        </div>
-
         {/* Aksiyon Butonları - Sağ Üst (Floating) */}
         <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 z-10">
           <button
@@ -318,9 +313,11 @@ function VideoCard({ video, onShare, onDelete }) {
           </button>
         </div>
 
-        {/* Boyut Rozeti - Sol Alt (Floating) */}
+        {/* Bilgi Rozeti (Boyut & Saat) - Sol Alt (Floating) */}
         <div className={`absolute bottom-2.5 left-2.5 pointer-events-none z-10 backdrop-blur-md rounded-lg px-2 py-1 border border-white/5 ${isAudio ? 'bg-indigo-500/40' : 'bg-black/60'}`}>
-          <span className={`text-[10px] font-bold ${isAudio ? 'text-indigo-100' : 'text-white/90'}`}>{video.size}</span>
+          <span className={`text-[10px] font-bold ${isAudio ? 'text-indigo-100' : 'text-white/90'}`}>
+            {video.size} • {video.time}
+          </span>
         </div>
       </div>
 
