@@ -313,9 +313,9 @@ function VideoCard({ video, onShare, onDelete }) {
           </button>
         </div>
 
-        {/* Bilgi Rozeti (Boyut & Saat) - Sol Alt (Floating) */}
-        <div className={`absolute bottom-2.5 left-2.5 pointer-events-none z-10 backdrop-blur-md rounded-lg px-2 py-1 border border-white/5 ${isAudio ? 'bg-indigo-500/40' : 'bg-black/60'}`}>
-          <span className={`text-[10px] font-bold ${isAudio ? 'text-indigo-100' : 'text-white/90'}`}>
+        {/* Bilgi Rozeti (Boyut & Saat) - Alt Orta (Floating) */}
+        <div className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 pointer-events-none z-10 backdrop-blur-md rounded-md px-1.5 py-0.5 border border-white/5 flex items-center justify-center whitespace-nowrap ${isAudio ? 'bg-indigo-500/40' : 'bg-black/60'}`}>
+          <span className={`text-[9px] font-bold tracking-tight text-center leading-none ${isAudio ? 'text-indigo-100' : 'text-white/90'}`}>
             {video.size} • {video.time}
           </span>
         </div>
