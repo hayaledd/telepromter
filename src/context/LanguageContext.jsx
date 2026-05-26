@@ -146,6 +146,9 @@ const legacyTranslations = {
     goToMyVideos: 'Go to My Recordings',
     privacyPolicy: 'Privacy Policy',
     contactSupport: 'Contact & Support',
+    rateApp: 'Rate Us',
+    about: 'About',
+    aboutDesc: 'Smart teleprompter application for professional video and audio recordings.',
   },
   tr: {
     appName: 'TelePromt',
@@ -292,6 +295,9 @@ const legacyTranslations = {
     goToMyVideos: 'Kayıtlarıma Git',
     privacyPolicy: 'Gizlilik Politikası',
     contactSupport: 'İletişim & Destek',
+    rateApp: 'Bizi Puanlayın',
+    about: 'Hakkında',
+    aboutDesc: 'Profesyonel video ve ses çekimleri için akıllı teleprompter uygulaması.',
   },
   de: {
     appName: 'TelePromt',
@@ -438,6 +444,9 @@ const legacyTranslations = {
     goToMyVideos: 'Zu meinen Aufnahmen gehen',
     privacyPolicy: 'Datenschutzerklärung',
     contactSupport: 'Kontakt & Support',
+    rateApp: 'Bewerten',
+    about: 'Über',
+    aboutDesc: 'Intelligenter Prompter für professionelle Video- und Audioaufnahmen.',
   }
 };
 
@@ -592,6 +601,9 @@ const esTranslations = {
   goToMyVideos: 'Ir a Mis grabaciones',
   privacyPolicy: 'Política de privacidad',
   contactSupport: 'Contacto y soporte',
+  rateApp: 'Valóranos',
+  about: 'Acerca de',
+  aboutDesc: 'Aplicación de teleprompter inteligente para grabaciones profesionales de video y audio.',
 };
 
 // ── FRANÇAIS ───────────────────────────────────────────────────────────────
@@ -740,6 +752,9 @@ const frTranslations = {
   goToMyVideos: 'Aller à Mes enregistrements',
   privacyPolicy: 'Politique de confidentialité',
   contactSupport: 'Contact & Support',
+  rateApp: 'Évaluez-nous',
+  about: 'À propos',
+  aboutDesc: 'Application de téléprompteur intelligente pour des enregistrements vidéo et audio professionnels.',
 };
 
 // ── РУССКИЙ ───────────────────────────────────────────────────────────────
@@ -888,6 +903,9 @@ const ruTranslations = {
   goToMyVideos: 'Перейти к моим записям',
   privacyPolicy: 'Политика конфиденциальности',
   contactSupport: 'Контакты и поддержка',
+  rateApp: 'Оценить нас',
+  about: 'О приложении',
+  aboutDesc: 'Умный суфлер для профессиональной записи видео и аудио.',
 };
 
 // ── PORTUGUÊS (Brasil) ───────────────────────────────────────────────────
@@ -963,6 +981,9 @@ const ptTranslations = {
   goToMyVideos: 'Ir para Meus roteiros',
   privacyPolicy: 'Política de privacidade',
   contactSupport: 'Contato e suporte',
+  rateApp: 'Avalie-nos',
+  about: 'Sobre',
+  aboutDesc: 'Aplicativo de teleprompter inteligente para gravações profissionais de vídeo e áudio.',
 };
 
 // ── ITALIANO ──────────────────────────────────────────────────────────────
@@ -1038,6 +1059,9 @@ const itTranslations = {
   goToMyVideos: 'Vai alle mie registrazioni',
   privacyPolicy: 'Informativa sulla privacy',
   contactSupport: 'Contatti e supporto',
+  rateApp: 'Valutaci',
+  about: 'Informazioni',
+  aboutDesc: 'Applicazione teleprompter intelligente per registrazioni video e audio professionali.',
 };
 
 const koTranslations = {
@@ -1111,6 +1135,9 @@ const koTranslations = {
   goToMyVideos: '나의 녹음으로 가기',
   privacyPolicy: '개인정보 처리방침',
   contactSupport: '문의 및 지원',
+  rateApp: '앱 평가하기',
+  about: '정보',
+  aboutDesc: '전문 비디오 및 오디오 녹화를 위한 스마트 프롬프터 앱.',
 };
 
 const azTranslations = {
@@ -1185,6 +1212,9 @@ const azTranslations = {
   goToMyVideos: 'Qeydlərimə get',
   privacyPolicy: 'Məxfilik siyasəti',
   contactSupport: 'Əlaqə və dəstək',
+  rateApp: 'Bizi qiymətləndirin',
+  about: 'Haqqında',
+  aboutDesc: 'Peşəkar video və səs yazıları üçün ağıllı prompter tətbiqi.',
 };
 
 const translations = { tr: trTranslations, en: enTranslations, de: deTranslations, es: esTranslations, fr: frTranslations, ru: ruTranslations, pt: ptTranslations, it: itTranslations, ko: koTranslations, az: azTranslations };
