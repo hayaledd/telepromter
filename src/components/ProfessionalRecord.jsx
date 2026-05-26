@@ -32,6 +32,7 @@ export default function ProfessionalRecord() {
   const [prompterBg, setPrompterBg] = useState('none');
   const [facingMode, setFacingMode] = useState('front');
   const [cameraReady, setCameraReady] = useState(false);
+  const [permissionError, setPermissionError] = useState('checking');
 
   const scrollContainerRef = useRef(null);
   const animationRef = useRef(null);
@@ -94,6 +95,38 @@ export default function ProfessionalRecord() {
     return () => clearInterval(interval);
   }, [isPlaying]);
 
+  // ── Kamera ve Mikrofon İzinlerini Kontrol Et ──
+  useEffect(() => {
+    let mounted = true;
+
+    async function verifyPermissions() {
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          // İzin verilmişse doğrudan geçer, verilmemişse sorar
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+          stream.getTracks().forEach(track => track.stop());
+        }
+        if (mounted) {
+          setPermissionError(null);
+        }
+      } catch (err) {
+        console.error("Permission verification failed:", err);
+        if (mounted) {
+          setPermissionError(
+            t('permissionDeniedMsg') || 
+            "Kamera veya mikrofon izinleri verilmedi. Video kaydı yapabilmek için lütfen ayarlardan izinleri açın."
+          );
+        }
+      }
+    }
+
+    verifyPermissions();
+
+    return () => {
+      mounted = false;
+    };
+  }, [t]);
+
   // Native Camera Setup — body must be transparent so native layer shows through WebView
   useEffect(() => {
     let mounted = true;
@@ -102,6 +135,11 @@ export default function ProfessionalRecord() {
     document.body.classList.add('native-cam-active');
 
     async function startNativeCamera() {
+      if (permissionError !== null) {
+        if (mounted) setCameraReady(false);
+        return;
+      }
+
       if (layoutMode === 'prompter-only') {
         try { await CameraPreview.stop(); } catch (_) { }
         if (mounted) setCameraReady(false);
@@ -109,15 +147,7 @@ export default function ProfessionalRecord() {
       }
 
       try {
-        // ── Step 1: Request MICROPHONE permission upfront via getUserMedia ──
-        if (Capacitor.isNativePlatform()) {
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-            stream.getTracks().forEach(t => t.stop()); // release immediately
-          } catch (audioErr) {
-            console.warn('Audio permission not granted at mount:', audioErr);
-          }
-        }
+        // İzinler zaten verifyPermissions ile kontrol edildi
         if (!mounted) return;
 
         // ── Step 2: Stop any existing camera session ──
@@ -155,7 +185,7 @@ export default function ProfessionalRecord() {
       })();
       setCameraReady(false);
     };
-  }, [facingMode, layoutMode]);
+  }, [facingMode, layoutMode, permissionError]);
 
   // Flip = change facingMode state → useEffect above restarts camera
   const flipCamera = () => {
@@ -553,6 +583,44 @@ export default function ProfessionalRecord() {
             >
               <span className="material-symbols-outlined text-[20px]">video_library</span>
               {t('myVideos') || 'Kayıtlarım'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {permissionError && permissionError !== 'checking' && (
+        <div className="fixed inset-0 z-[1000] bg-[#0f0f14]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 text-center">
+          <div className="w-20 h-20 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
+            <span className="material-symbols-outlined text-[40px] text-indigo-400">videocam_off</span>
+          </div>
+          <h2 className="text-2xl font-black text-white mb-3">İzinler Gerekli</h2>
+          <p className="text-white/60 text-[14px] max-w-xs mb-8 leading-relaxed">
+            {permissionError}
+          </p>
+          <div className="flex flex-col gap-3 w-full max-w-xs">
+            <button
+              onClick={async () => {
+                // Tekrar izin istemeyi dene
+                try {
+                  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                    stream.getTracks().forEach(t => t.stop());
+                    setPermissionError(null);
+                  }
+                } catch (e) {
+                  alert(t('pleaseOpenSettings') || "İzin pencereleri açılamadı. Lütfen telefon ayarlarından uygulamanın kamera ve mikrofon izinlerini manuel olarak etkinleştirin.");
+                }
+              }}
+              className="w-full bg-indigo-500 text-white font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[20px]">lock_open</span>
+              Tekrar Dene / İzin Ver
+            </button>
+            <button
+              onClick={() => navigate('/scripts')}
+              className="w-full bg-white/5 text-white/70 font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] border border-white/10 flex items-center justify-center gap-2"
+            >
+              Geri Dön
             </button>
           </div>
         </div>
