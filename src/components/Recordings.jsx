@@ -255,7 +255,7 @@ function VideoCard({ video, onShare, onDelete }) {
   }, [video.url, isAudio]);
 
   return (
-    <>
+    <div className="flex flex-col gap-1.5">
       <div className={`relative bg-white/5 rounded-2xl overflow-hidden border ${isAudio ? 'border-indigo-500/20' : 'border-white/10'} shadow-lg group backdrop-blur-sm transition-all hover:bg-white/10`}>
         {/* Thumbnail alanı */}
         <button
@@ -324,11 +324,19 @@ function VideoCard({ video, onShare, onDelete }) {
         </div>
       </div>
 
+      {/* Video Adı ve Tarihi - Kart Altı */}
+      <div className="px-1 py-0.5 flex flex-col gap-0.5">
+        <p className="text-[12px] font-semibold text-white/90 truncate" title={video.name}>
+          {video.name.replace('ScriptFlow_Recording_', t('recordingPrefix') || 'Kayıt ').replace('TelePromt_Recording_', t('recordingPrefix') || 'Kayıt ').replace('_Audio_', ' (Ses) ').replace('_Ses', ' (Ses)')}
+        </p>
+        <p className="text-[10px] text-white/40">{video.date}</p>
+      </div>
+
       {/* Tam ekran oynatıcı modal */}
       {playerOpen && (
         <VideoPlayerModal video={video} isAudio={isAudio} onClose={() => setPlayerOpen(false)} />
       )}
-    </>
+    </div>
   );
 }
 
