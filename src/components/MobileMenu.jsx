@@ -70,7 +70,7 @@ export default function MobileMenu({ show, onClose, onImportClick }) {
             <span className="material-symbols-outlined text-white/20">chevron_right</span>
           </button>
 
-          <button onClick={() => { window.location.href = 'mailto:destek.telepromt@gmail.com'; onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
+          <button onClick={() => { window.location.href = 'mailto:zynexapp@gmail.com'; onClose(); }} className="flex items-center justify-between px-5 py-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors active:scale-95">
             <span className="text-[15px] font-bold text-white">{t('contactSupport')}</span>
             <span className="material-symbols-outlined text-white/20">chevron_right</span>
           </button>
