@@ -275,7 +275,7 @@ export default function AudioRecord() {
               <span className={`relative inline-flex rounded-full h-3 w-3 ${isRecordingActive ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]' : isPlaying ? 'bg-indigo-500' : 'bg-white/30'}`}></span>
             </span>
             <span className={`font-bold text-[12px] tracking-widest uppercase ${isRecordingActive ? 'text-rose-400' : isPlaying ? 'text-indigo-400' : 'text-white/40'}`}>
-              {isRecordingActive ? 'SES KAYDI' : isPlaying ? 'OKUNUYOR' : 'HAZIR'}
+              {isRecordingActive ? t('audioRecord') : isPlaying ? t('reading') : t('ready')}
             </span>
             <span ref={timerDisplayRef} className="font-mono text-white/90 ml-2 text-[13px]">{formatTime(elapsedSecondsRef.current)}</span>
           </div>
@@ -352,7 +352,7 @@ export default function AudioRecord() {
       {countdown !== null && (
         <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#0f0f14]/80 backdrop-blur-md">
           <span className="text-[120px] font-black text-indigo-400 drop-shadow-[0_0_40px_rgba(99,102,241,0.5)] animate-pulse">{countdown}</span>
-          <span className="text-white/60 font-bold tracking-widest mt-4">HAZIRLAN...</span>
+          <span className="text-white/60 font-bold tracking-widest mt-4">{t('getReady').toUpperCase()}</span>
         </div>
       )}
 
@@ -363,15 +363,15 @@ export default function AudioRecord() {
             <div className="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center border border-indigo-500/30 mb-6 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
               <span className="material-symbols-outlined text-[40px] text-indigo-400">mic_external_on</span>
             </div>
-            <h2 className="text-white font-bold text-[22px] mb-2">Ses Kaydı Tamamlandı</h2>
-            <p className="text-white/40 text-[13px] mb-8 text-center max-w-[250px]">Kayıt başarılı bir şekilde oluşturuldu. Dinleyebilir veya cihazına kaydedebilirsin.</p>
+            <h2 className="text-white font-bold text-[22px] mb-2">{t('audioRecordSuccessTitle')}</h2>
+            <p className="text-white/40 text-[13px] mb-8 text-center max-w-[250px]">{t('audioRecordSuccessDesc')}</p>
 
             <div className="w-full bg-white/5 rounded-2xl p-4 border border-white/10 mb-8">
               <audio src={recordedAudioUrl} controls className="w-full h-12" />
             </div>
 
-            {saveStatus === 'error' && <p className="text-rose-400 text-sm mb-4">Kaydedilirken hata oluştu!</p>}
-            {saveStatus === 'ok' && <p className="text-emerald-400 text-sm mb-4">Başarıyla kaydedildi!</p>}
+            {saveStatus === 'error' && <p className="text-rose-400 text-sm mb-4">{t('saveError')}</p>}
+            {saveStatus === 'ok' && <p className="text-emerald-400 text-sm mb-4">{t('saved')}</p>}
 
             <div className="w-full flex flex-col gap-3">
               {!saveStatus || saveStatus === 'error' ? (
@@ -405,7 +405,7 @@ export default function AudioRecord() {
                 className="w-full bg-indigo-500 text-white font-bold py-4 rounded-xl active:scale-95 transition-all shadow-[0_0_20px_rgba(99,102,241,0.4)] flex items-center justify-center gap-2"
               >
                 {saveStatus === 'saving' ? <span className="material-symbols-outlined animate-spin">sync</span> : <span className="material-symbols-outlined">download</span>}
-                Cihaza Kaydet
+                {t('saveToDevice')}
               </button>
             ) : (
               <button
@@ -413,7 +413,7 @@ export default function AudioRecord() {
                 className="w-full bg-indigo-500 text-white font-bold py-4 rounded-xl active:scale-95 transition-all flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined">video_library</span>
-                Kayıtlarıma Git
+                {t('goToMyVideos')}
               </button>
             )}
 
@@ -422,7 +422,7 @@ export default function AudioRecord() {
               className="w-full bg-white/10 text-white/70 font-bold py-4 rounded-xl active:scale-95 transition-all border border-white/10 hover:bg-white/15 flex items-center justify-center gap-2"
             >
               <span className="material-symbols-outlined text-[20px]">video_library</span>
-              Kayıtlarım
+              {t('myVideos')}
             </button>
 
             <button
@@ -434,7 +434,7 @@ export default function AudioRecord() {
               }}
               className="w-full bg-white/5 text-white/60 font-bold py-4 rounded-xl active:scale-95 transition-all border border-white/5 hover:bg-white/10"
             >
-              Sil ve Tekrar Çek
+              {t('discardRetake')}
             </button>
           </div>
         </div>

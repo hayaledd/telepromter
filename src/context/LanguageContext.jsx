@@ -138,6 +138,13 @@ const legacyTranslations = {
     emptyScriptError: 'Title or content cannot be empty!',
     today: 'Today',
     yesterday: 'Yesterday',
+    permissionDeniedMsg: 'Camera or microphone permissions not granted. Please enable them in your device settings to record video.',
+    prompterOnlyNoRecord: 'Videos cannot be recorded in Prompter Only mode.',
+    savedToGallery: 'Video saved to your gallery',
+    pleaseOpenSettings: 'Could not open permission dialogs. Please manually enable camera and microphone permissions in your phone settings.',
+    audioRecordSuccessTitle: 'Audio Recording Completed',
+    audioRecordSuccessDesc: 'Recording created successfully. You can listen or save it to your device.',
+    goToMyVideos: 'Go to My Recordings',
   },
   tr: {
     appName: 'TelePromt',
@@ -276,6 +283,13 @@ const legacyTranslations = {
     emptyScriptError: 'Başlık veya içerik boş olamaz!',
     today: 'Bugün',
     yesterday: 'Dün',
+    permissionDeniedMsg: 'Kamera veya mikrofon izinleri verilmedi. Video kaydı yapabilmek için lütfen ayarlardan izinleri açın.',
+    prompterOnlyNoRecord: 'Prompter modunda video kaydedilemez.',
+    savedToGallery: 'Video galerinize kaydedildi',
+    pleaseOpenSettings: 'İzin pencereleri açılamadı. Lütfen telefon ayarlarından uygulamanın kamera ve mikrofon izinlerini manuel olarak etkinleştirin.',
+    audioRecordSuccessTitle: 'Ses Kaydı Tamamlandı',
+    audioRecordSuccessDesc: 'Kayıt başarılı bir şekilde oluşturuldu. Dinleyebilir veya cihazınıza kaydedebilirsiniz.',
+    goToMyVideos: 'Kayıtlarıma Git',
   },
   de: {
     appName: 'TelePromt',
@@ -414,6 +428,13 @@ const legacyTranslations = {
     emptyScriptError: 'Titel oder Inhalt darf nicht leer sein!',
     today: 'Heute',
     yesterday: 'Gestern',
+    permissionDeniedMsg: 'Kamera- oder Mikrofonberechtigungen nicht erteilt. Bitte aktivieren Sie diese in den Einstellungen, um Videos aufzunehmen.',
+    prompterOnlyNoRecord: 'Videos können im reinen Prompter-Modus nicht aufgenommen werden.',
+    savedToGallery: 'Video in der Galerie gespeichert',
+    pleaseOpenSettings: 'Berechtigungsdialoge konnten nicht geöffnet werden. Bitte aktivieren Sie die Kamera- und Mikrofonberechtigungen manuell in den Telefoneinstellungen.',
+    audioRecordSuccessTitle: 'Audioaufnahme abgeschlossen',
+    audioRecordSuccessDesc: 'Aufnahme erfolgreich erstellt. Sie können sie anhören oder auf Ihrem Gerät speichern.',
+    goToMyVideos: 'Zu meinen Aufnahmen gehen',
   }
 };
 
@@ -560,6 +581,13 @@ const esTranslations = {
   emptyScriptError: '¡El título o el contenido no pueden estar vacíos!',
   today: 'Hoy',
   yesterday: 'Ayer',
+  permissionDeniedMsg: 'Permisos de cámara o micrófono no concedidos. Por favor, actívalos en los ajustes de tu dispositivo para grabar video.',
+  prompterOnlyNoRecord: 'No se pueden grabar videos en el modo solo prompter.',
+  savedToGallery: 'Video guardado en tu galería',
+  pleaseOpenSettings: 'No se pudieron abrir los diálogos de permisos. Por favor, activa manualmente los permisos de cámara y micrófono en los ajustes de tu teléfono.',
+  audioRecordSuccessTitle: 'Grabación de audio completada',
+  audioRecordSuccessDesc: 'Grabación creada con éxito. Puedes escucharla o guardarla en tu dispositivo.',
+  goToMyVideos: 'Ir a Mis grabaciones',
 };
 
 // ── FRANÇAIS ───────────────────────────────────────────────────────────────
@@ -700,6 +728,13 @@ const frTranslations = {
   emptyScriptError: 'Le titre ou le contenu ne peut pas être vide !',
   today: 'Aujourd\'hui',
   yesterday: 'Hier',
+  permissionDeniedMsg: 'Autorisations de caméra ou de microphone non accordées. Veuillez les activer dans les paramètres de votre appareil pour enregistrer des vidéos.',
+  prompterOnlyNoRecord: 'Les vidéos ne peuvent pas être enregistrées en mode Téléprompteur uniquement.',
+  savedToGallery: 'Vidéo enregistrée dans votre galerie',
+  pleaseOpenSettings: 'Impossible d\'ouvrir les boîtes de dialogue d\'autorisation. Veuillez activer manuellement les autorisations de caméra et de microphone dans les paramètres de votre téléphone.',
+  audioRecordSuccessTitle: 'Enregistrement audio terminé',
+  audioRecordSuccessDesc: 'Enregistrement créé avec succès. Vous pouvez l\'écouter ou l\'enregistrer sur votre appareil.',
+  goToMyVideos: 'Aller à Mes enregistrements',
 };
 
 // ── РУССКИЙ ───────────────────────────────────────────────────────────────
@@ -840,6 +875,13 @@ const ruTranslations = {
   emptyScriptError: 'Заголовок или содержание не могут быть пустыми!',
   today: 'Сегодня',
   yesterday: 'Вчера',
+  permissionDeniedMsg: 'Разрешения на использование камеры или микрофона не предоставлены. Пожалуйста, включите их в настройках вашего устройства для записи видео.',
+  prompterOnlyNoRecord: 'В режиме «Только суфлёр» запись видео невозможна.',
+  savedToGallery: 'Видео сохранено в галерею',
+  pleaseOpenSettings: 'Не удалось открыть диалоги разрешений. Пожалуйста, вручную включите разрешения для камеры и микрофона в настройках телефона.',
+  audioRecordSuccessTitle: 'Аудиозапись завершена',
+  audioRecordSuccessDesc: 'Запись успешно создана. Вы можете прослушать её или сохранить на устройстве.',
+  goToMyVideos: 'Перейти к моим записям',
 };
 
 // ── PORTUGUÊS (Brasil) ───────────────────────────────────────────────────
@@ -906,6 +948,13 @@ const ptTranslations = {
   emptyScriptError: 'O título ou conteúdo não pode estar vazio!',
   today: 'Hoje',
   yesterday: 'Ontem',
+  permissionDeniedMsg: 'Permissões de câmera ou microfone não concedidas. Ative-as nas configurações do dispositivo para gravar vídeos.',
+  prompterOnlyNoRecord: 'Os vídeos não podem ser gravados no modo Só Prompter.',
+  savedToGallery: 'Vídeo salvo na sua galeria',
+  pleaseOpenSettings: 'Não foi possível abrir os diálogos de permissão. Ative manualmente as permissões de câmera e microfone nas configurações do seu telefone.',
+  audioRecordSuccessTitle: 'Gravação de áudio concluída',
+  audioRecordSuccessDesc: 'Gravação criada com sucesso. Você pode ouvir ou salvar no seu dispositivo.',
+  goToMyVideos: 'Ir para Meus roteiros',
 };
 
 // ── ITALIANO ──────────────────────────────────────────────────────────────
@@ -972,6 +1021,13 @@ const itTranslations = {
   emptyScriptError: 'Il titolo o il contenuto non può essere vuoto!',
   today: 'Oggi',
   yesterday: 'Ieri',
+  permissionDeniedMsg: 'Autorizzazioni per fotocamera o microfono non concesse. Abilita queste autorizzazioni nelle impostazioni del dispositivo per registrare video.',
+  prompterOnlyNoRecord: 'I video non possono essere registrati nella modalità Solo Prompter.',
+  savedToGallery: 'Video salvato nella galleria',
+  pleaseOpenSettings: 'Impossibile aprire le finestre di dialogo delle autorizzazioni. Abilita manualmente le autorizzazioni di fotocamera e microfono nelle impostazioni del telefono.',
+  audioRecordSuccessTitle: 'Registrazione audio completata',
+  audioRecordSuccessDesc: 'Registrazione creata con successo. Puoi ascoltarla o salvarla sul tuo dispositivo.',
+  goToMyVideos: 'Vai alle mie registrazioni',
 };
 
 const koTranslations = {
@@ -1036,6 +1092,13 @@ const koTranslations = {
   emptyScriptError: '제목이나 내용은 비어 있을 수 없습니다!',
   today: '오늘',
   yesterday: '어제',
+  permissionDeniedMsg: '카메라 또는 마이크 권한이 허용되지 않았습니다. 비디오를 녹화하려면 기기 설정에서 권한을 활성화하세요.',
+  prompterOnlyNoRecord: '프롬프터 전용 모드에서는 비디오를 녹화할 수 없습니다.',
+  savedToGallery: '동영상이 갤러리에 저장되었습니다',
+  pleaseOpenSettings: '권한 대화 상자를 열 수 없습니다. 휴대폰 설정에서 카메라 및 마이크 권한을 수동으로 활성화하십시오.',
+  audioRecordSuccessTitle: '오디오 녹음 완료',
+  audioRecordSuccessDesc: '녹음이 성공적으로 완료되었습니다. 듣거나 기기에 저장할 수 있습니다.',
+  goToMyVideos: '나의 녹음으로 가기',
 };
 
 const azTranslations = {
@@ -1101,6 +1164,13 @@ const azTranslations = {
   emptyScriptError: 'Başlıq və ya məzmun boş ola bilməz!',
   today: 'Bu gün',
   yesterday: 'Dünən',
+  permissionDeniedMsg: 'Kamera və ya mikrofon icazələri verilməyib. Video yazmaq üçün parametrlərdən icazələri aktivləşdirin.',
+  prompterOnlyNoRecord: 'Yalnız Prompter rejimində video qeyd edilə bilməz.',
+  savedToGallery: 'Video qalereyanıza saxlanıldı',
+  pleaseOpenSettings: 'İcazə dialoqları açıla bilmədi. Zəhmət olmasa telefon parametrlərindən kamera və mikrofon icazələrini əl ilə aktivləşdirin.',
+  audioRecordSuccessTitle: 'Səs yazısı tamamlandı',
+  audioRecordSuccessDesc: 'Qeyd uğurla yaradıldı. Dinləyə bilərsiniz və ya cihazınıza saxlaya bilərsiniz.',
+  goToMyVideos: 'Qeydlərimə get',
 };
 
 const translations = { tr: trTranslations, en: enTranslations, de: deTranslations, es: esTranslations, fr: frTranslations, ru: ruTranslations, pt: ptTranslations, it: itTranslations, ko: koTranslations, az: azTranslations };
