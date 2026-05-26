@@ -10,15 +10,17 @@
 @layer base {
   html {
     /* Prevents layout bounce on iOS/Android when keyboard opens */
-    height: 100%;
+    height: 100dvh;
     -webkit-text-size-adjust: 100%;
+    overflow: hidden;
   }
   body {
-    min-height: max(884px, 100dvh);
+    height: 100dvh;
     background-color: #111317;
     color: #e2e2e8;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
   }
   /* When native camera is active, make body transparent so camera shows through WebView */
   body.native-cam-active {
@@ -34,16 +36,16 @@
   }
 }
 
-/* Custom scrollbar for script area */
+/* Hide all scrollbars globally */
 ::-webkit-scrollbar {
-    width: 8px;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background-color: #333539; /* surface-variant */
-    border-radius: 4px;
+
+* {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
 }
 
 /* Custom range slider */
