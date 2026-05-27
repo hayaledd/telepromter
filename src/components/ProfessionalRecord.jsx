@@ -181,6 +181,7 @@ export default function ProfessionalRecord() {
         if (mounted) setCameraReady(true);
       } catch (e) {
         console.error('CameraPreview.start error:', e);
+        alert('Kamera başlatılamadı (CameraPreview.start Hatası): ' + (e?.message || JSON.stringify(e)));
         if (mounted) setCameraReady(false);
       }
     }

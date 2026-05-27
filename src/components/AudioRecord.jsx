@@ -116,6 +116,7 @@ export default function AudioRecord() {
           const mimeType = getSupportedAudioMimeType();
           if (!mimeType) {
             console.error('No supported audio MIME type');
+            alert('Hata: Cihazınızda desteklenen bir ses formatı (MIME type) bulunamadı!');
             setSaveStatus('error');
             return;
           }
@@ -133,8 +134,11 @@ export default function AudioRecord() {
           mediaRecorder.start(1000);
         } catch (e) {
           console.error(e);
+          alert('Ses kayıt başlatılamadı (MediaRecorder Hatası): ' + (e?.message || String(e)));
           setSaveStatus('error');
         }
+      } else {
+        alert('Hata: Mikrofon akışı hazır değil veya erişilemiyor (mediaStreamRef boş)!');
       }
       setIsRecordingActive(true);
       setIsPlaying(true);
@@ -159,6 +163,7 @@ export default function AudioRecord() {
         setPermissionError(null);
       } catch (err) {
         console.error('Mic access failed:', err);
+        alert('Mikrofon erişim hatası (setupAudio Hatası): ' + (err?.message || String(err)));
         if (!cancelled) {
           setPermissionError(
             t('permissionDeniedMsg') || 
