@@ -24,6 +24,7 @@ export default function AudioRecord() {
   const [recordedMimeType, setRecordedMimeType] = useState(null);
   const [saveStatus, setSaveStatus] = useState(null);
   const [countdown, setCountdown] = useState(null);
+  const [permissionError, setPermissionError] = useState('checking');
   const elapsedSecondsRef = useRef(0);
   const timerDisplayRef = useRef(null);
 
@@ -149,14 +150,39 @@ export default function AudioRecord() {
     let cancelled = false;
     async function setupAudio() {
       try {
+        let needsPrompt = true;
+        try {
+          if (navigator.permissions && navigator.permissions.query) {
+            const micQuery = await navigator.permissions.query({ name: 'microphone' });
+            if (micQuery.state === 'granted') {
+              needsPrompt = false;
+            }
+          }
+        } catch (e) {
+          console.warn("Permissions query not supported", e);
+        }
+
+        if (needsPrompt) {
+          const promptStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+          promptStream.getTracks().forEach(t => t.stop());
+          await new Promise(r => setTimeout(r, 300));
+        }
+
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         if (cancelled) {
           stream.getTracks().forEach(t => t.stop());
           return;
         }
         mediaStreamRef.current = stream;
+        setPermissionError(null);
       } catch (err) {
         console.error('Mic access failed:', err);
+        if (!cancelled) {
+          setPermissionError(
+            t('permissionDeniedMsg') || 
+            "Mikrofon izni verilmedi. Ses kaydı yapabilmek için lütfen ayarlardan mikrofon iznini açın."
+          );
+        }
       }
     }
     setupAudio();
@@ -169,7 +195,7 @@ export default function AudioRecord() {
         mediaStreamRef.current.getTracks().forEach(t => t.stop());
       }
     };
-  }, []);
+  }, [t]);
 
   // Bluetooth / Keyboard Remote Support
   useEffect(() => {
@@ -438,6 +464,43 @@ export default function AudioRecord() {
             </button>
           </div>
         </div>
+        </div>
+      )}
+
+      {permissionError && permissionError !== 'checking' && (
+        <div className="fixed inset-0 z-[1000] bg-[#0f0f14]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 text-center text-white">
+          <div className="w-20 h-20 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
+            <span className="material-symbols-outlined text-[40px] text-indigo-400">mic_off</span>
+          </div>
+          <h2 className="text-2xl font-black text-white mb-3">Mikrofon İzni Gerekli</h2>
+          <p className="text-white/60 text-[14px] max-w-xs mb-8 leading-relaxed">
+            {permissionError}
+          </p>
+          <div className="flex flex-col gap-3 w-full max-w-xs">
+            <button
+              onClick={async () => {
+                try {
+                  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                    mediaStreamRef.current = stream;
+                    setPermissionError(null);
+                  }
+                } catch (e) {
+                  alert(t('pleaseOpenSettings') || "İzin pencereleri açılamadı. Lütfen telefon ayarlarından uygulamanın mikrofon iznini manuel olarak etkinleştirin.");
+                }
+              }}
+              className="w-full bg-indigo-500 text-white font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[20px]">lock_open</span>
+              Tekrar Dene / İzin Ver
+            </button>
+            <button
+              onClick={() => navigate('/scripts')}
+              className="w-full bg-white/5 text-white/70 font-bold text-[16px] py-4 rounded-2xl active:scale-[0.98] border border-white/10 flex items-center justify-center gap-2"
+            >
+              Geri Dön
+            </button>
+          </div>
         </div>
       )}
     </div>

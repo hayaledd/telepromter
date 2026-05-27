@@ -101,10 +101,25 @@ export default function ProfessionalRecord() {
 
     async function verifyPermissions() {
       try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        let needsPrompt = true;
+        try {
+          if (navigator.permissions && navigator.permissions.query) {
+            const camQuery = await navigator.permissions.query({ name: 'camera' });
+            const micQuery = await navigator.permissions.query({ name: 'microphone' });
+            if (camQuery.state === 'granted' && micQuery.state === 'granted') {
+              needsPrompt = false;
+            }
+          }
+        } catch (e) {
+          console.warn("Permissions query not supported", e);
+        }
+
+        if (needsPrompt && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           // İzin verilmişse doğrudan geçer, verilmemişse sorar
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           stream.getTracks().forEach(track => track.stop());
+          // Donanım kaynağının serbest kalması için kısa bir süre bekle
+          await new Promise(r => setTimeout(r, 300));
         }
 
         // Native Capacitor permission check
