@@ -148,7 +148,7 @@ const legacyTranslations = {
     contactSupport: 'Contact & Support',
     rateApp: 'Rate Us',
     about: 'About',
-    aboutDesc: 'Smart teleprompter application for professional video and audio recordings.',
+    aboutDesc: 'TelePromt is a smart prompter application that enables you to deliver professional video and audio presentations. Easily write your scripts, adjust the scrolling speed, and look directly into the camera to speak in your most natural voice. Designed for content creators, presenters, and business professionals, TelePromt makes every shot flawless.',
   },
   tr: {
     appName: 'TelePromt',
@@ -297,7 +297,7 @@ const legacyTranslations = {
     contactSupport: 'İletişim & Destek',
     rateApp: 'Bizi Puanlayın',
     about: 'Hakkında',
-    aboutDesc: 'Profesyonel video ve ses çekimleri için akıllı teleprompter uygulaması.',
+    aboutDesc: 'TelePromt, videolarınızda ve ses kayıtlarınızda profesyonel bir sunum yapmanızı sağlayan akıllı bir prompter uygulamasıdır. Metinlerinizi kolayca hazırlayın, okuma hızınızı ayarlayın ve doğrudan kameraya bakarak en doğal halinizle konuşun. İçerik üreticileri, sunucular ve iş dünyası için tasarlanan TelePromt ile her çekiminiz kusursuz olsun.',
   },
   de: {
     appName: 'TelePromt',
@@ -446,7 +446,7 @@ const legacyTranslations = {
     contactSupport: 'Kontakt & Support',
     rateApp: 'Bewerten',
     about: 'Über',
-    aboutDesc: 'Intelligenter Prompter für professionelle Video- und Audioaufnahmen.',
+    aboutDesc: 'TelePromt ist eine intelligente Prompter-App, mit der Sie professionelle Video- und Audiopräsentationen halten können. Schreiben Sie Ihre Skripte ganz einfach, passen Sie die Scrollgeschwindigkeit an und blicken Sie direkt in die Kamera, um mit Ihrer natürlichsten Stimme zu sprechen. Entwickelt für Content-Ersteller, Moderatoren und Geschäftsleute – TelePromt macht jede Aufnahme fehlerfrei.',
   }
 };
 
@@ -603,7 +603,7 @@ const esTranslations = {
   contactSupport: 'Contacto y soporte',
   rateApp: 'Valóranos',
   about: 'Acerca de',
-  aboutDesc: 'Aplicación de teleprompter inteligente para grabaciones profesionales de video y audio.',
+  aboutDesc: 'TelePromt es una aplicación de teleprompter inteligente que te permite realizar presentaciones profesionales de video y audio. Escribe tus guiones fácilmente, ajusta la velocidad de desplazamiento y mira directamente a la cámara para hablar con tu voz más natural. Diseñada para creadores de contenido, presentadores y profesionales de negocios, TelePromt hace que cada toma sea impecable.',
 };
 
 // ── FRANÇAIS ───────────────────────────────────────────────────────────────
@@ -754,7 +754,7 @@ const frTranslations = {
   contactSupport: 'Contact & Support',
   rateApp: 'Évaluez-nous',
   about: 'À propos',
-  aboutDesc: 'Application de téléprompteur intelligente pour des enregistrements vidéo et audio professionnels.',
+  aboutDesc: 'TelePromt est une application de téléprompteur intelligente qui vous permet de réaliser des présentations vidéo et audio professionnelles. Rédigez facilement vos scripts, ajustez la vitesse de défilement et regardez directement la caméra pour parler avec votre voix la plus naturelle. Conçu pour les créateurs de contenu, les présentateurs et les professionnels, TelePromt rend chaque prise parfaite.',
 };
 
 // ── РУССКИЙ ───────────────────────────────────────────────────────────────
@@ -905,7 +905,7 @@ const ruTranslations = {
   contactSupport: 'Контакты и поддержка',
   rateApp: 'Оценить нас',
   about: 'О приложении',
-  aboutDesc: 'Умный суфлер для профессиональной записи видео и аудио.',
+  aboutDesc: 'TelePromt — это умное приложение-суфлер, позволяющее проводить профессиональные видео- и аудиопрезентации. Легко пишите сценарии, настраивайте скорость прокрутки и смотрите прямо в камеру, чтобы говорить своим самым естественным голосом. Созданный для создателей контента, ведущих и бизнес-профессионалов, TelePromt делает каждый дубль безупречным.',
 };
 
 // ── PORTUGUÊS (Brasil) ───────────────────────────────────────────────────
@@ -983,7 +983,7 @@ const ptTranslations = {
   contactSupport: 'Contato e suporte',
   rateApp: 'Avalie-nos',
   about: 'Sobre',
-  aboutDesc: 'Aplicativo de teleprompter inteligente para gravações profissionais de vídeo e áudio.',
+  aboutDesc: 'TelePromt é um aplicativo de teleprompter inteligente que permite realizar apresentações profissionais de vídeo e áudio. Escreva seus roteiros facilmente, ajuste a velocidade de rolagem e olhe diretamente para a câmera para falar com sua voz mais natural. Projetado para criadores de conteúdo, apresentadores e profissionais de negócios, o TelePromt torna cada tomada impecável.',
 };
 
 // ── ITALIANO ──────────────────────────────────────────────────────────────
@@ -1061,7 +1061,7 @@ const itTranslations = {
   contactSupport: 'Contatti e supporto',
   rateApp: 'Valutaci',
   about: 'Informazioni',
-  aboutDesc: 'Applicazione teleprompter intelligente per registrazioni video e audio professionali.',
+  aboutDesc: 'TelePromt è un\'applicazione teleprompter intelligente che ti consente di realizzare presentazioni video e audio professionali. Scrivi facilmente i tuoi copioni, regola la velocità di scorrimento e guarda direttamente la fotocamera per parlare con la tua voce più naturale. Progettato per creatori di contenuti, presentatori e professionisti, TelePromt rende perfetto ogni scatto.',
 };
 
 const koTranslations = {
@@ -1137,7 +1137,7 @@ const koTranslations = {
   contactSupport: '문의 및 지원',
   rateApp: '앱 평가하기',
   about: '정보',
-  aboutDesc: '전문 비디오 및 오디오 녹화를 위한 스마트 프롬프터 앱.',
+  aboutDesc: 'TelePromt는 전문적인 비디오 및 오디오 프레젠테이션을 진행할 수 있도록 돕는 스마트 프롬프터 앱입니다. 스크립트를 작성하고 스크롤 속도를 조절하여, 카메라를 정면으로 바라보며 가장 자연스러운 목소리로 말해보세요. 콘텐츠 크리에이터, 발표자, 비즈니스 전문가를 위해 설계된 TelePromt가 여러분의 모든 촬영을 완벽하게 만들어 드립니다.',
 };
 
 const azTranslations = {
@@ -1214,7 +1214,7 @@ const azTranslations = {
   contactSupport: 'Əlaqə və dəstək',
   rateApp: 'Bizi qiymətləndirin',
   about: 'Haqqında',
-  aboutDesc: 'Peşəkar video və səs yazıları üçün ağıllı prompter tətbiqi.',
+  aboutDesc: 'TelePromt, videolarınızda və səs yazılarda peşəkar təqdimat etməyinizi təmin edən ağıllı prompter tətbiqidir. Mətnlərinizi asanlıqla hazırlayın, oxuma sürətinizi tənzimləyin və birbaşa kameraya baxaraq ən təbii səsinizlə danışın. Kontent yaradıcıları, aparıcılar və biznes peşəkarları üçün dizayn edilmiş TelePromt ilə hər çəkilişiniz qüsursuz olacaq.',
 };
 
 const translations = { tr: trTranslations, en: enTranslations, de: deTranslations, es: esTranslations, fr: frTranslations, ru: ruTranslations, pt: ptTranslations, it: itTranslations, ko: koTranslations, az: azTranslations };
