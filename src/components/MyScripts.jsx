@@ -288,7 +288,7 @@ export default function MyScripts() {
               <p className="text-white/20 text-[11px] mt-1">{t('createBelow')}</p>
             </div>
           ) : (
-            <div className="max-h-[280px] overflow-y-auto pr-1 -mr-1" style={{ scrollbarWidth: 'thin' }}>
+            <div className="max-h-[280px] overflow-y-auto pr-1 -mr-1" style={{ scrollbarWidth: 'none' }}>
               <div className="grid grid-cols-2 gap-2 pb-2">
                 {scripts.map((script, idx) => {
                   const dot = dotColors[idx % dotColors.length];
