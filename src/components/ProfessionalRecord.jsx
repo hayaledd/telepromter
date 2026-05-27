@@ -35,6 +35,8 @@ export default function ProfessionalRecord() {
   const [facingMode, setFacingMode] = useState('front');
   const [cameraReady, setCameraReady] = useState(false);
   const [permissionError, setPermissionError] = useState('checking');
+  const [debugLogs, setDebugLogs] = useState([]);
+  const addLog = (msg) => setDebugLogs(prev => [...prev, `${new Date().toLocaleTimeString()}: ${msg}`]);
 
   const scrollContainerRef = useRef(null);
   const animationRef = useRef(null);
@@ -102,27 +104,26 @@ export default function ProfessionalRecord() {
     let mounted = true;
 
     async function verifyPermissions() {
+      addLog("verifyPermissions() başlatıldı");
       try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          // İzin verilmişse doğrudan geçer, verilmemişse sorar
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-          stream.getTracks().forEach(track => track.stop());
-          // Donanım kaynağının serbest kalması için kısa bir süre bekle
-          await new Promise(r => setTimeout(r, 300));
-        }
-
         // Native Capacitor permission check
         if (CameraPreview && CameraPreview.requestPermissions) {
+          addLog("verifyPermissions: CameraPreview.requestPermissions() çağrılıyor...");
           const status = await CameraPreview.requestPermissions();
+          addLog(`verifyPermissions: Native İzin durumu: ${JSON.stringify(status)}`);
           if (status.camera !== 'granted') {
             throw new Error(t('permissionDeniedMsg') || "Kamera izni verilmedi.");
           }
+        } else {
+          addLog("verifyPermissions: CameraPreview.requestPermissions bulunamadı!");
         }
 
         if (mounted) {
           setPermissionError(null);
+          addLog("verifyPermissions: İzinler başarıyla doğrulandı");
         }
       } catch (err) {
+        addLog(`verifyPermissions HATA: ${err?.message || String(err)}`);
         console.error("Permission verification failed:", err);
         if (mounted) {
           setPermissionError(
@@ -148,28 +149,31 @@ export default function ProfessionalRecord() {
     document.body.classList.add('native-cam-active');
 
     function startNativeCamera() {
+      addLog(`startNativeCamera() çağrıldı. permissionError: ${permissionError}`);
       if (permissionError !== null) {
         if (mounted) setCameraReady(false);
         return;
       }
 
+      addLog("startNativeCamera: İşlem kuyruğa ekleniyor...");
       cameraTransitionPromise = cameraTransitionPromise
         .then(async () => {
-          if (!mounted) return;
+          if (!mounted) { addLog("startNativeCamera: mounted=false, iptal"); return; }
 
           if (layoutMode === 'prompter-only') {
+            addLog("startNativeCamera: layoutMode prompter-only, kamera durduruluyor...");
             try { await CameraPreview.stop(); } catch (_) { }
             if (mounted) setCameraReady(false);
             return;
           }
 
           try {
-            // ── Step 2: Stop any existing camera session ──
+            addLog("startNativeCamera: CameraPreview.stop() çağrılıyor...");
             try { await CameraPreview.stop(); } catch (_) { }
             await new Promise(r => setTimeout(r, 200));
             if (!mounted) return;
 
-            // ── Step 3: Start native camera ──
+            addLog("startNativeCamera: CameraPreview.start() çağrılıyor...");
             await CameraPreview.start({
               parent: "cameraPreview",
               position: facingMode,   // 'front' | 'rear'
@@ -181,15 +185,15 @@ export default function ProfessionalRecord() {
               storeToFile: false,
               disableAudio: false,
             });
+            addLog("startNativeCamera: CameraPreview.start() başarılı!");
             if (mounted) setCameraReady(true);
           } catch (e) {
-            console.error('CameraPreview.start error:', e);
-            alert('Kamera başlatılamadı (CameraPreview.start Hatası): ' + (e?.message || JSON.stringify(e)));
+            addLog(`startNativeCamera HATA: ${e?.message || JSON.stringify(e)}`);
             if (mounted) setCameraReady(false);
           }
         })
         .catch(err => {
-          console.error("Camera start queue failure:", err);
+          addLog(`startNativeCamera Kuyruk HATASI: ${err?.message || String(err)}`);
         });
     }
 
@@ -252,6 +256,11 @@ export default function ProfessionalRecord() {
   const toggleRecording = async () => {
     if (layoutMode === 'prompter-only') {
       alert(t('prompterOnlyNoRecord') || 'Prompter modunda video kaydedilemez.');
+      return;
+    }
+
+    if (!isRecordingActive && !cameraReady) {
+      alert('Hata: Kamera henüz hazır değil! Lütfen kameranın açılmasını bekleyin.');
       return;
     }
 
@@ -473,8 +482,8 @@ export default function ProfessionalRecord() {
           </div>
 
           <div className="flex flex-col items-center gap-1">
-            <button onClick={toggleRecording} disabled={isPlaying && !isRecordingActive}
-              className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all ${isRecordingActive ? 'bg-black border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.5)]' : 'bg-black/60 border-white/10'} ${(isPlaying && !isRecordingActive) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <button onClick={toggleRecording} disabled={(isPlaying && !isRecordingActive) || (!isRecordingActive && !cameraReady) || (layoutMode === 'prompter-only')}
+              className={`w-[60px] h-[60px] rounded-full flex items-center justify-center border-[3px] active:scale-95 transition-all ${isRecordingActive ? 'bg-black border-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.5)]' : 'bg-black/60 border-white/10'} ${(isPlaying && !isRecordingActive) || (!isRecordingActive && !cameraReady) || (layoutMode === 'prompter-only') ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <div className={`transition-all ${isRecordingActive ? 'w-5 h-5 rounded-md bg-rose-500 animate-pulse' : 'w-7 h-7 rounded-full bg-rose-500'}`}></div>
             </button>
             <span className={`text-[9px] uppercase font-bold ${isRecordingActive ? 'text-rose-400' : 'text-white/60'}`}>
@@ -614,6 +623,17 @@ export default function ProfessionalRecord() {
         </div>
       )}
 
+      {/* Debug Logs Panel */}
+      <div className="fixed top-20 left-4 right-4 max-h-[160px] overflow-y-auto bg-black/90 text-[10px] font-mono p-2 rounded-xl border border-red-500/40 z-[99999] pointer-events-auto">
+        <div className="font-bold text-red-400 mb-1 flex justify-between">
+          <span>DEBUG LOGS (Video):</span>
+          <button onClick={() => setDebugLogs([])} className="text-white bg-white/10 px-1.5 py-0.5 rounded">Clear</button>
+        </div>
+        {debugLogs.map((log, idx) => (
+          <div key={idx} className="text-white/80">{log}</div>
+        ))}
+      </div>
+
       {permissionError && permissionError !== 'checking' && (
         <div className="fixed inset-0 z-[1000] bg-[#0f0f14]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 text-center">
           <div className="w-20 h-20 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
@@ -628,10 +648,13 @@ export default function ProfessionalRecord() {
               onClick={async () => {
                 // Tekrar izin istemeyi dene
                 try {
-                  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-                    stream.getTracks().forEach(t => t.stop());
-                    setPermissionError(null);
+                  if (CameraPreview && CameraPreview.requestPermissions) {
+                    const status = await CameraPreview.requestPermissions();
+                    if (status.camera === 'granted') {
+                      setPermissionError(null);
+                    } else {
+                      throw new Error("İzin verilmedi.");
+                    }
                   }
                 } catch (e) {
                   alert(t('pleaseOpenSettings') || "İzin pencereleri açılamadı. Lütfen telefon ayarlarından uygulamanın kamera ve mikrofon izinlerini manuel olarak etkinleştirin.");

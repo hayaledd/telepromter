@@ -25,6 +25,8 @@ export default function AudioRecord() {
   const [saveStatus, setSaveStatus] = useState(null);
   const [countdown, setCountdown] = useState(null);
   const [permissionError, setPermissionError] = useState('checking');
+  const [debugLogs, setDebugLogs] = useState([]);
+  const addLog = (msg) => setDebugLogs(prev => [...prev, `${new Date().toLocaleTimeString()}: ${msg}`]);
   const elapsedSecondsRef = useRef(0);
   const timerDisplayRef = useRef(null);
 
@@ -154,18 +156,25 @@ export default function AudioRecord() {
     let cancelled = false;
     let localStream = null;
     async function setupAudio() {
+      addLog("setupAudio() başlatıldı");
       try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error("navigator.mediaDevices.getUserMedia tanımsız!");
+        }
+        addLog("getUserMedia çağrılıyor...");
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        addLog(`getUserMedia başarılı. Stream ID: ${stream.id}, Track sayısı: ${stream.getTracks().length}`);
         if (cancelled) {
+          addLog("setupAudio iptal edildi (cancelled=true)");
           stream.getTracks().forEach(t => t.stop());
           return;
         }
         localStream = stream;
         mediaStreamRef.current = stream;
         setPermissionError(null);
+        addLog("mediaStreamRef atandı");
       } catch (err) {
-        console.error('Mic access failed:', err);
-        alert('Mikrofon erişim hatası (setupAudio Hatası): ' + (err?.message || String(err)));
+        addLog(`setupAudio HATA: ${err?.message || String(err)}`);
         if (!cancelled) {
           setPermissionError(
             t('permissionDeniedMsg') || 
@@ -455,6 +464,17 @@ export default function AudioRecord() {
         </div>
         </div>
       )}
+
+      {/* Debug Logs Panel */}
+      <div className="fixed top-20 left-4 right-4 max-h-[160px] overflow-y-auto bg-black/90 text-[10px] font-mono p-2 rounded-xl border border-red-500/40 z-[99999] pointer-events-auto">
+        <div className="font-bold text-red-400 mb-1 flex justify-between">
+          <span>DEBUG LOGS (Audio):</span>
+          <button onClick={() => setDebugLogs([])} className="text-white bg-white/10 px-1.5 py-0.5 rounded">Clear</button>
+        </div>
+        {debugLogs.map((log, idx) => (
+          <div key={idx} className="text-white/80">{log}</div>
+        ))}
+      </div>
 
       {permissionError && permissionError !== 'checking' && (
         <div className="fixed inset-0 z-[1000] bg-[#0f0f14]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 text-center text-white">

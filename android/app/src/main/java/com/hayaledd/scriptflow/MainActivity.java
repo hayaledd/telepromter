@@ -7,6 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import com.getcapacitor.BridgeActivity;
 
+import android.webkit.PermissionRequest;
+import com.getcapacitor.BridgeWebChromeClient;
+
 public class MainActivity extends BridgeActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -21,5 +24,13 @@ public class MainActivity extends BridgeActivity {
         requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 1234);
       }
     }
+
+    // Set custom WebChromeClient to handle WebRTC permissions reliably
+    getBridge().getWebView().setWebChromeClient(new BridgeWebChromeClient(getBridge()) {
+      @Override
+      public void onPermissionRequest(final PermissionRequest request) {
+        request.grant(request.getResources());
+      }
+    });
   }
 }
