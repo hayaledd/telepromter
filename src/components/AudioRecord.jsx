@@ -150,24 +150,6 @@ export default function AudioRecord() {
     let cancelled = false;
     async function setupAudio() {
       try {
-        let needsPrompt = true;
-        try {
-          if (navigator.permissions && navigator.permissions.query) {
-            const micQuery = await navigator.permissions.query({ name: 'microphone' });
-            if (micQuery.state === 'granted') {
-              needsPrompt = false;
-            }
-          }
-        } catch (e) {
-          console.warn("Permissions query not supported", e);
-        }
-
-        if (needsPrompt) {
-          const promptStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-          promptStream.getTracks().forEach(t => t.stop());
-          await new Promise(r => setTimeout(r, 300));
-        }
-
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         if (cancelled) {
           stream.getTracks().forEach(t => t.stop());

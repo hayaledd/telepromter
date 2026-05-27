@@ -101,20 +101,7 @@ export default function ProfessionalRecord() {
 
     async function verifyPermissions() {
       try {
-        let needsPrompt = true;
-        try {
-          if (navigator.permissions && navigator.permissions.query) {
-            const camQuery = await navigator.permissions.query({ name: 'camera' });
-            const micQuery = await navigator.permissions.query({ name: 'microphone' });
-            if (camQuery.state === 'granted' && micQuery.state === 'granted') {
-              needsPrompt = false;
-            }
-          }
-        } catch (e) {
-          console.warn("Permissions query not supported", e);
-        }
-
-        if (needsPrompt && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           // İzin verilmişse doğrudan geçer, verilmemişse sorar
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           stream.getTracks().forEach(track => track.stop());
