@@ -182,7 +182,7 @@ export default function AudioRecord() {
         mediaStreamRef.current.getTracks().forEach(t => t.stop());
       }
     };
-  }, [t]);
+  }, []);
 
   // Bluetooth / Keyboard Remote Support
   useEffect(() => {

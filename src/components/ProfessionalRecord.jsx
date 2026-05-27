@@ -136,7 +136,7 @@ export default function ProfessionalRecord() {
     return () => {
       mounted = false;
     };
-  }, [t]);
+  }, []);
 
   // Native Camera Setup — body must be transparent so native layer shows through WebView
   useEffect(() => {
