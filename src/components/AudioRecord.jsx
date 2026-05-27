@@ -266,10 +266,10 @@ export default function AudioRecord() {
       {/* Top HUD */}
       <div className="relative z-40 p-5 flex justify-between items-start pointer-events-none">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="pointer-events-auto w-10 h-10 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+          <button onClick={() => navigate(-1)} className="pointer-events-auto w-10 h-10 rounded-full bg-white/5 backdrop-blur-xl border-none shadow-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors">
             <span className="material-symbols-outlined text-[20px]">arrow_back_ios_new</span>
           </button>
-          <div className="flex items-center gap-2 pointer-events-auto bg-white/5 backdrop-blur-xl rounded-full px-4 py-2 border border-white/10">
+          <div className="flex items-center gap-2 pointer-events-auto bg-white/5 backdrop-blur-xl rounded-full px-4 py-2 border-none">
             <span className="flex h-3 w-3 relative">
               {isRecordingActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>}
               <span className={`relative inline-flex rounded-full h-3 w-3 ${isRecordingActive ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]' : isPlaying ? 'bg-indigo-500' : 'bg-white/30'}`}></span>
@@ -283,20 +283,20 @@ export default function AudioRecord() {
       </div>
 
       {/* Teleprompter Area */}
-      <div className="flex-1 w-full relative z-10">
-        <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center pb-[60vh] pt-[30vh]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', transform: 'translateZ(0)', willChange: 'scroll-position, transform' }}>
+      <div className="absolute inset-0 z-10 w-full h-full">
+        <div ref={scrollContainerRef} className="absolute inset-0 w-full h-full px-6 overflow-y-auto overscroll-none touch-pan-y space-y-12 text-center pb-[75vh] pt-[45vh]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', transform: 'translateZ(0)', willChange: 'scroll-position, transform' }}>
           {scriptLines.map((line, idx) => (
             <p key={idx} className="font-bold text-white/90" style={{ fontSize: `${globalFontSize}px`, lineHeight: 1.4, willChange: 'transform' }}>
               {line}
             </p>
           ))}
         </div>
-        <div className="absolute top-0 w-full h-24 bg-gradient-to-b from-[#0f0f14] to-transparent z-10 pointer-events-none"></div>
-        <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-[#0f0f14] to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute top-0 w-full h-36 bg-gradient-to-b from-[#0f0f14] to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute bottom-0 w-full h-36 bg-gradient-to-t from-[#0f0f14] to-transparent z-10 pointer-events-none"></div>
 
         {/* Floating Speed Control */}
         <div className="fixed bottom-[120px] right-4 w-auto z-40">
-          <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl py-3 px-1 flex flex-col items-center gap-2">
+          <div className="bg-[#1a1a24]/90 backdrop-blur-xl rounded-2xl border-none shadow-2xl py-3 px-1 flex flex-col items-center gap-2">
             <button onClick={() => adjustSpeed(1)} className="w-7 h-10 flex items-center justify-center text-indigo-400 hover:text-indigo-300 bg-white/5 hover:bg-white/10 rounded-xl transition-colors active:scale-95">
               <span className="material-symbols-outlined text-[20px] font-bold">add</span>
             </button>
@@ -311,10 +311,10 @@ export default function AudioRecord() {
       </div>
 
       {/* Bottom Control Bar */}
-      <div className="relative z-50 w-full bg-[#0f0f14]/90 backdrop-blur-2xl h-[100px] flex items-center justify-between px-6 border-t border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+      <div className="relative mt-auto z-50 w-full bg-transparent h-[100px] flex items-center justify-between px-6 border-none shadow-none">
         {/* Left Actions */}
         <div className="flex items-center gap-3 w-[80px]">
-          <div className="flex items-center bg-white/5 rounded-full px-1 border border-white/5">
+          <div className="flex items-center bg-white/5 rounded-full px-1 border-none">
             <button onClick={() => setGlobalFontSize(prev => Math.max(16, prev - 4))} className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white">
               <span className="material-symbols-outlined text-[18px]">text_decrease</span>
             </button>
