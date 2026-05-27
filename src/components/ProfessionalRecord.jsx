@@ -106,6 +106,15 @@ export default function ProfessionalRecord() {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
           stream.getTracks().forEach(track => track.stop());
         }
+
+        // Native Capacitor permission check
+        if (CameraPreview && CameraPreview.requestPermissions) {
+          const status = await CameraPreview.requestPermissions();
+          if (status.camera !== 'granted') {
+            throw new Error(t('permissionDeniedMsg') || "Kamera izni verilmedi.");
+          }
+        }
+
         if (mounted) {
           setPermissionError(null);
         }
@@ -157,6 +166,7 @@ export default function ProfessionalRecord() {
 
         // ── Step 3: Start native camera ──
         await CameraPreview.start({
+          parent: "cameraPreview",
           position: facingMode,   // 'front' | 'rear'
           toBack: true,           // render BEHIND the WebView
           width: window.screen.width,
@@ -343,6 +353,7 @@ export default function ProfessionalRecord() {
 
   return (
     <div className="fixed inset-0 h-[100dvh] w-screen overflow-hidden text-white font-sans" style={{ background: rootBg }}>
+      <div id="cameraPreview" className="absolute inset-0 pointer-events-none z-0"></div>
 
       {/* HUD */}
       <div className="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-start pointer-events-none">
