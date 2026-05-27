@@ -8,6 +8,8 @@ import { Capacitor } from '@capacitor/core';
 import MobileMenu from './MobileMenu';
 import { useLanguage } from '../context/LanguageContext';
 
+let cameraTransitionPromise = Promise.resolve();
+
 export default function ProfessionalRecord() {
   const navigate = useNavigate();
   const { getActiveScript, globalFontSize, setGlobalFontSize } = useScript();
@@ -145,45 +147,50 @@ export default function ProfessionalRecord() {
     // Make body transparent while on this screen
     document.body.classList.add('native-cam-active');
 
-    async function startNativeCamera() {
+    function startNativeCamera() {
       if (permissionError !== null) {
         if (mounted) setCameraReady(false);
         return;
       }
 
-      if (layoutMode === 'prompter-only') {
-        try { await CameraPreview.stop(); } catch (_) { }
-        if (mounted) setCameraReady(false);
-        return;
-      }
+      cameraTransitionPromise = cameraTransitionPromise
+        .then(async () => {
+          if (!mounted) return;
 
-      try {
-        // İzinler zaten verifyPermissions ile kontrol edildi
-        if (!mounted) return;
+          if (layoutMode === 'prompter-only') {
+            try { await CameraPreview.stop(); } catch (_) { }
+            if (mounted) setCameraReady(false);
+            return;
+          }
 
-        // ── Step 2: Stop any existing camera session ──
-        try { await CameraPreview.stop(); } catch (_) { }
-        await new Promise(r => setTimeout(r, 300));
-        if (!mounted) return;
+          try {
+            // ── Step 2: Stop any existing camera session ──
+            try { await CameraPreview.stop(); } catch (_) { }
+            await new Promise(r => setTimeout(r, 200));
+            if (!mounted) return;
 
-        // ── Step 3: Start native camera ──
-        await CameraPreview.start({
-          parent: "cameraPreview",
-          position: facingMode,   // 'front' | 'rear'
-          toBack: true,           // render BEHIND the WebView
-          width: window.screen.width,
-          height: window.screen.height,
-          x: 0,
-          y: 0,
-          storeToFile: false,
-          disableAudio: false,
+            // ── Step 3: Start native camera ──
+            await CameraPreview.start({
+              parent: "cameraPreview",
+              position: facingMode,   // 'front' | 'rear'
+              toBack: true,           // render BEHIND the WebView
+              width: window.screen.width,
+              height: window.screen.height,
+              x: 0,
+              y: 0,
+              storeToFile: false,
+              disableAudio: false,
+            });
+            if (mounted) setCameraReady(true);
+          } catch (e) {
+            console.error('CameraPreview.start error:', e);
+            alert('Kamera başlatılamadı (CameraPreview.start Hatası): ' + (e?.message || JSON.stringify(e)));
+            if (mounted) setCameraReady(false);
+          }
+        })
+        .catch(err => {
+          console.error("Camera start queue failure:", err);
         });
-        if (mounted) setCameraReady(true);
-      } catch (e) {
-        console.error('CameraPreview.start error:', e);
-        alert('Kamera başlatılamadı (CameraPreview.start Hatası): ' + (e?.message || JSON.stringify(e)));
-        if (mounted) setCameraReady(false);
-      }
     }
 
     startNativeCamera();
@@ -191,12 +198,17 @@ export default function ProfessionalRecord() {
     return () => {
       mounted = false;
       document.body.classList.remove('native-cam-active');
-      // Arka planda donanımın kilitli kalmaması için hem kaydı hem kamerayı zorla kapatıyoruz
-      (async () => {
-        try { await CameraPreview.stopRecordVideo(); } catch (e) {}
-        try { await CameraPreview.stop(); } catch (e) {}
-      })();
       setCameraReady(false);
+      
+      // Stop operations queued to ensure they run in order
+      cameraTransitionPromise = cameraTransitionPromise
+        .then(async () => {
+          try { await CameraPreview.stopRecordVideo(); } catch (e) {}
+          try { await CameraPreview.stop(); } catch (e) {}
+        })
+        .catch(err => {
+          console.error("Camera stop queue failure:", err);
+        });
     };
   }, [facingMode, layoutMode, permissionError]);
 

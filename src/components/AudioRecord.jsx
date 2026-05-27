@@ -152,6 +152,7 @@ export default function AudioRecord() {
 
   useEffect(() => {
     let cancelled = false;
+    let localStream = null;
     async function setupAudio() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -159,6 +160,7 @@ export default function AudioRecord() {
           stream.getTracks().forEach(t => t.stop());
           return;
         }
+        localStream = stream;
         mediaStreamRef.current = stream;
         setPermissionError(null);
       } catch (err) {
@@ -178,8 +180,8 @@ export default function AudioRecord() {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
         try { mediaRecorderRef.current.stop(); } catch(e) {}
       }
-      if (mediaStreamRef.current) {
-        mediaStreamRef.current.getTracks().forEach(t => t.stop());
+      if (localStream) {
+        localStream.getTracks().forEach(t => t.stop());
       }
     };
   }, []);
